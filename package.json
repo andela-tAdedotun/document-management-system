@@ -38,6 +38,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-coveralls": "^0.1.4",
     "gulp-eslint": "^3.0.1",
-    "gulp-nodemon": "^2.2.1"
+    "gulp-nodemon": "^2.2.1",
+    "istanbul": "0.4.5"
   }
 }
