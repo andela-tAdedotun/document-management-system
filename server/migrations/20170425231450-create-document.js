@@ -24,10 +24,8 @@ module.exports = {
         defaultValue: 0
       },
       access: {
+        allowNull: false,
         type: Sequelize.STRING
-      },
-      ownerId: {
-        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

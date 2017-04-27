@@ -16,8 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: 0
     },
-    access: DataTypes.STRING,
-    ownerId: DataTypes.INTEGER,
+    access: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     classMethods: {
       associate: (models) => {
