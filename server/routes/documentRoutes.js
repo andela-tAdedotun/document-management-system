@@ -1,15 +1,18 @@
 const express = require('express');
-const documentController = require('../controllers/documentController');
+const documentController = require('../controllers/DocumentController');
+const passport = require('../middlewares/authentication');
+const authorization = require('../middlewares/authorization');
 
 const documentRouter = express.Router();
 
 documentRouter.route('/')
   .post(documentController.createDocument)
-  .get(documentController.getDocuments);
+  .get(passport.authenticate(), documentController.getDocuments);
 
 documentRouter.route('/:id')
-  .get(documentController.findDocument)
-  .put(documentController.updateDocument)
-  .delete(documentController.deleteDocument);
+  .get(passport.authenticate(), documentController.findDocument)
+  .put(passport.authenticate(), authorization.isAdminOrAuthorizedUser,
+      documentController.updateDocument)
+  .delete(passport.authenticate(), documentController.deleteDocument);
 
 module.exports = documentRouter;

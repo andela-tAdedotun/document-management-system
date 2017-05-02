@@ -1,12 +1,13 @@
 const express = require('express');
-const searchController = require('../controllers/searchController');
+const searchController = require('../controllers/SearchController');
+const passport = require('../middlewares/authentication');
 
 const searchRouter = express.Router();
 
 searchRouter.route('/users/')
-  .get(searchController.searchUsers);
+  .get(passport.authenticate(), searchController.searchUsers);
 
 searchRouter.route('/documents/')
-  .get(searchController.searchDocuments);
+  .get(passport.authenticate(), searchController.searchDocuments);
 
 module.exports = searchRouter;
