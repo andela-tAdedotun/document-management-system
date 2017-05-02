@@ -1,3 +1,6 @@
+/* eslint-disable no-underscore-dangle */
+const bcrypt = require('bcrypt');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
@@ -36,6 +39,55 @@ module.exports = (sequelize, DataTypes) => {
         });
       },
     },
+
+    instanceMethods: {
+      /**
+      * @desc - Hashes password before it is saved into the database
+      * @return {Void} - None
+      */
+      hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 10);
+      },
+
+      /**
+      * @desc - Checks if password provided by user is the same as the one
+        stored for the user in the database
+      * @param {String} password - Password user is trying to log in with
+      * @return {Boolean} - Truthy of falsy depending on whether password
+        is valid or not
+      */
+      isValidPassword(password) {
+        return bcrypt.compareSync(password, this.password);
+      }
+    },
+
+    hooks: {
+      /**
+      * @desc - Performs actions on user before creation
+      * @param {Object} user - object representing user to be created
+      * @return {Void} - None
+      */
+      beforeCreate: (user) => {
+        user.email = user.email.toLowerCase();
+        user.hashPassword();
+      },
+
+      /**
+      * @desc - Performs actions on user before it is updated
+      * @param {Object} updateDetails - object representing details to update
+        user with
+      * @return {Void} - None
+      */
+      beforeUpdate: (updateDetails) => {
+        if (updateDetails._changed.email) {
+          updateDetails.email = updateDetails.email.toLowerCase();
+        }
+
+        if (updateDetails._changed.password) {
+          updateDetails.hashPassword();
+        }
+      }
+    }
   });
   return User;
 };
