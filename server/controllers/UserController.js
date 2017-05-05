@@ -1,10 +1,12 @@
-const User = require('../models/').User;
-const Document = require('../models/').Document;
-const pagination = require('../helpers/paginationHelper');
-const jwt = require('jsonwebtoken');
-const config = require('../config/config.js');
+import jwt from 'jsonwebtoken';
+import models from '../models/';
+import pagination from '../helpers/PaginationHelper';
+import config from '../config/config';
 
-module.exports = {
+const User = models.User;
+const Document = models.Document;
+
+export default {
   /**
   * @desc - Creates a new user in the database
   * @param {Object} req - Request object

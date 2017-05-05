@@ -1,6 +1,8 @@
-const Role = require('../models/').Role;
+import models from '../models/';
 
-module.exports = {
+const Role = models.Role;
+
+export default {
   /**
   * @desc - Creates a new user in the database
   * @param {Object} req - Request object

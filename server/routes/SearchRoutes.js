@@ -1,6 +1,6 @@
-const express = require('express');
-const searchController = require('../controllers/SearchController');
-const passport = require('../middlewares/authentication');
+import express from 'express';
+import searchController from '../controllers/SearchController';
+import passport from '../middlewares/Authentication';
 
 const searchRouter = express.Router();
 
@@ -10,4 +10,4 @@ searchRouter.route('/users/')
 searchRouter.route('/documents/')
   .get(passport.authenticate(), searchController.searchDocuments);
 
-module.exports = searchRouter;
+export default searchRouter;

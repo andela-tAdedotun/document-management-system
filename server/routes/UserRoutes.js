@@ -1,7 +1,7 @@
-const express = require('express');
-const userController = require('../controllers/UserController');
-const passport = require('../middlewares/authentication');
-const authorization = require('../middlewares/authorization');
+import express from 'express';
+import userController from '../controllers/UserController';
+import passport from '../middlewares/Authentication';
+import authorization from '../middlewares/Authorization';
 
 const userRouter = express.Router();
 
@@ -26,4 +26,4 @@ userRouter.route('/login')
 userRouter.route('/logout')
   .post(userController.logUserOut);
 
-module.exports = userRouter;
+export default userRouter;

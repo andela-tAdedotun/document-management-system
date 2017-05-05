@@ -1,7 +1,7 @@
-const express = require('express');
-const roleController = require('../controllers/RoleController');
-const passport = require('../middlewares/authentication');
-const authorization = require('../middlewares/authorization');
+import express from 'express';
+import roleController from '../controllers/RoleController';
+import passport from '../middlewares/Authentication';
+import authorization from '../middlewares/Authorization';
 
 const roleRouter = express.Router();
 
@@ -15,4 +15,4 @@ roleRouter.route('/:id')
   .delete(passport.authenticate(),
    authorization.isSuperAdmin, roleController.deleteRole);
 
-module.exports = roleRouter;
+export default roleRouter;

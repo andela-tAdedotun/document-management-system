@@ -1,7 +1,9 @@
-const User = require('../models/').User;
-const Document = require('../models/').Document;
+import models from '../models/';
 
-module.exports = {
+const User = models.User;
+const Document = models.Document;
+
+export default {
   /**
   * @desc - Search the database for users
   * @param {Object} req - Request object

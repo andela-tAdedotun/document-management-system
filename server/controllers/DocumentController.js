@@ -1,8 +1,10 @@
-const Document = require('../models/').Document;
-const pagination = require('../helpers/paginationHelper');
-const User = require('../models/').User;
+import models from '../models/';
+import pagination from '../helpers/PaginationHelper';
 
-module.exports = {
+const User = models.User;
+const Document = models.Document;
+
+export default {
   /**
   * @desc - Creates a new document in the database
   * @param {Object} req - Request object
@@ -244,7 +246,7 @@ module.exports = {
 
     /*
       Document access for super admins and admins.
-      A super admin can delete any document while an admin can delete any
+      A super admin can update any document while an admin can update any
       document belonging to a user with less privilege and their own documents.
     */
     if (req.user.roleId === 1 || req.user.roleId === 2) {

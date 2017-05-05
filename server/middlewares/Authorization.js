@@ -1,7 +1,7 @@
 // const jwt = require('jsonwebtoken');
 // const config = require('../config/config.js');
 
-module.exports = {
+export default {
   isAdminOrSuperAdmin: (req, res, next) => {
     if (req.user.roleId === 1 || req.user.roleId === 2) {
       next();

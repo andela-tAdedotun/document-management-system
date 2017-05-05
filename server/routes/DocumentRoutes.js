@@ -1,7 +1,7 @@
-const express = require('express');
-const documentController = require('../controllers/DocumentController');
-const passport = require('../middlewares/authentication');
-const authorization = require('../middlewares/authorization');
+import express from 'express';
+import documentController from '../controllers/DocumentController';
+import passport from '../middlewares/Authentication';
+import authorization from '../middlewares/Authorization';
 
 const documentRouter = express.Router();
 
@@ -15,4 +15,4 @@ documentRouter.route('/:id')
       documentController.updateDocument)
   .delete(passport.authenticate(), documentController.deleteDocument);
 
-module.exports = documentRouter;
+export default documentRouter;
