@@ -41,7 +41,7 @@ export default {
               },
             });
           })
-          .catch(error => res.send(error.message));
+          .catch(error => res.send(error));
       });
   },
 
@@ -156,12 +156,12 @@ export default {
           where
         }],
       })
-      .then((user) => {
-        if (!user) {
-          return res.status(404).send('User not found');
+      .then((userAndDocuments) => {
+        if (!userAndDocuments) {
+          return res.status(404).send('No documents yet.');
         }
 
-        res.status(200).send(user);
+        res.status(200).send(userAndDocuments);
       })
       .catch(error => res.status(400).send(error));
   },
@@ -244,7 +244,7 @@ export default {
         if (user.isValidPassword(req.body.password)) {
           const payload = { id: user.id, roleId: user.RoleId };
           const token = jwt.sign(payload, config.secret);
-          res.json({ message: 'Ok.', token: `JWT ${token}` });
+          res.json({ message: 'Ok.', token });
         } else {
           res.status(401).send('Incorrect password or email. Try again.');
         }
@@ -260,6 +260,6 @@ export default {
   */
   logUserOut(req, res) {
     req.logOut();
-    res.redirect('/');
+    res.json({ redirectTo: '/' });
   }
 };
