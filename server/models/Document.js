@@ -2,11 +2,17 @@ export default (sequelize, DataTypes) => {
   const Document = sequelize.define('Document', {
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     },
     content: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true
+      }
     },
     protected: {
       type: DataTypes.BOOLEAN,
@@ -19,6 +25,9 @@ export default (sequelize, DataTypes) => {
     access: {
       type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        isIn: [['public', 'private', 'role']]
+      }
     },
   }, {
     classMethods: {
