@@ -18,7 +18,7 @@ export default {
         content: req.body.content,
         protected: req.body.protected,
         access: req.body.access,
-        documentOwnerId: req.body.ownerId
+        documentOwnerId: req.user.id
       })
       .then(document => res.status(201).send(document))
       .catch(error => res.send(error));
