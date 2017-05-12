@@ -5,11 +5,20 @@ export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          message: 'You must input a username.'
+        }
+      }
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        len: [6, 15]
+      }
     },
     email: {
       type: DataTypes.STRING,
