@@ -27,10 +27,10 @@ app.use(WebpackDevMiddleware(compiler, {
 }));
 app.use(WebpackHotMiddleware(compiler));
 
-app.use('/users', userRouter);
-app.use('/documents/', documentRouter);
-app.use('/search', searchRouter);
-app.use('/roles', roleRouter);
+app.use('/api/users', userRouter);
+app.use('/api/documents/', documentRouter);
+app.use('/api/search', searchRouter);
+app.use('/api/roles', roleRouter);
 
 app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/client/index.html`);
