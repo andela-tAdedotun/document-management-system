@@ -6,7 +6,7 @@ import authorization from '../middlewares/Authorization';
 const documentRouter = express.Router();
 
 documentRouter.route('/')
-  .post(documentController.createDocument)
+  .post(passport.authenticate(), documentController.createDocument)
   .get(passport.authenticate(), documentController.getDocuments);
 
 documentRouter.route('/:id')
