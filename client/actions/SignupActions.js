@@ -10,10 +10,11 @@ const userSignup = (userData) => {
   // }
   return dispatch => axios.post('/api/users', userData).then((res) => {
     const token = res.data.token;
-    localStorage.setItem('jwtToken', `JWT ${token}`);
+    localStorage.setItem('jwtToken', token);
     setAuthorizationToken(token);
     dispatch(setCurrentUser(jwtDecode(token)));
-  });
+  })
+  .catch(() => 'Invalid parameters');
 };
 
 export default userSignup;
