@@ -20,5 +20,7 @@ export const displayUserDocuments = () => {
   });
 };
 
+export const createDocument = documentData =>
+  () => axios.post('api/documents', documentData);
 
 export const hello = 'Taiwo';
