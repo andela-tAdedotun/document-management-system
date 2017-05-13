@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import DocumentEditor from './DocumentEditor';
 import Navbar from './Navbar';
 import logUserOut from '../../actions/LogoutActions';
-import { displayUserDocuments } from '../../actions/DocumentsActions';
+import { displayUserDocuments, createDocument }
+  from '../../actions/DocumentsActions';
 import DisplayUserDocuments from './DisplayUserDocuments';
 
 /**
@@ -26,7 +27,7 @@ class Homepage extends React.Component {
    * @return {type}  description
    */
   render() {
-    const { logUserOut } = this.props;
+    const { logUserOut, createDocument } = this.props;
     let allUserDocuments;
     if (this.props.userDocumentsInStore[0] !== undefined) {
       const userDocuments = this.props.userDocumentsInStore[0].userDocuments;
@@ -51,7 +52,7 @@ class Homepage extends React.Component {
         <div>
           {allUserDocuments}
         </div>
-        <DocumentEditor />
+        <DocumentEditor createDocument={createDocument} />
       </div>
     );
   }
@@ -61,7 +62,8 @@ Homepage.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
   displayUserDocuments: React.PropTypes.func.isRequired,
   errorMessage: React.PropTypes.string,
-  userDocumentsInStore: React.PropTypes.array.isRequired
+  userDocumentsInStore: React.PropTypes.array.isRequired,
+  createDocument: React.PropTypes.func.isRequired
 };
 
 // Homepage.defaultProps = {
@@ -75,4 +77,4 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps,
-   { logUserOut, displayUserDocuments })(Homepage);
+   { logUserOut, displayUserDocuments, createDocument })(Homepage);
