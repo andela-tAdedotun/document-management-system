@@ -1,7 +1,4 @@
 import React from 'react';
-// import ReactDOM from 'react-dom';
-import { Editor, EditorState, RichUtils } from 'draft-js';
-
 
 /**
  *
@@ -16,12 +13,39 @@ class DocumentEditor extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = { editorState: EditorState.createEmpty() };
-    this.onChange = editorState => this.setState({ editorState });
+    this.state = {
+      title: '',
+      content: '',
+      access: 'public'
+    };
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  _onBoldClick() {
-    this.onChange(RichUtils.toggleInlineStyle(this.state.editorState, 'UNDERLINE'));
+  /**
+   * onChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  onChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  /**
+   * onSubmit - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  onSubmit(event) {
+    event.preventDefault();
+    console.log(this)
+    this.props.createDocument(this.state).then(() => {
+      console.log('Done, oga ade!');
+    });
   }
 
   /**
@@ -30,16 +54,48 @@ class DocumentEditor extends React.Component {
    * @return {type}  description
    */
   render() {
+    const { title, content } = this.state;
     return (
-      <div style={{ 'border': '2px solid black' }}>
-        <Editor
-          editorState={this.state.editorState}
-          handleKeyCommand={this.handleKeyCommand}
-          onChange={this.onChange}
-        />
-      </div>
+      <form onSubmit={this.onSubmit}>
+        <div>
+          Title: <br />
+          <input
+            name="title"
+            value={title}
+            type="text"
+            onChange={this.onChange}
+            required
+          />
+        </div>
+        <div>
+          Content: <br />
+          <textarea
+            name="content"
+            onChange={this.onChange}
+            value={content}
+            required
+          />
+          <br />
+          <div>
+            <select
+              name="access"
+              label="Who Can Access"
+              onChange={this.onChange}
+            >
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+              <option value="role">Role</option>
+            </select>
+          </div>
+          <button type="submit"> Submit! </button>
+        </div>
+      </form>
     );
   }
 }
+
+DocumentEditor.propTypes = {
+  createDocument: React.PropTypes.func.isRequired
+};
 
 export default DocumentEditor;
