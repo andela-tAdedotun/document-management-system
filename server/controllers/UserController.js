@@ -151,6 +151,7 @@ export default {
 
     return User
       .findById(req.params.id, {
+        attributes: { exclude: ['password'] },
         include: [{
           model: Document,
           where
