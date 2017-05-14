@@ -1,12 +1,14 @@
 import { combineReducers } from 'redux';
 import flashMessages from './reducers/FlashMessages';
 import authorization from './reducers/Authorization';
-import displayUserDocuments from './reducers/DocumentsReducer';
+import displayDocuments from './reducers/DocumentsReducer';
+import displayUserDocuments from './reducers/UserDocumentsReducer';
 
 const appReducer = combineReducers({
   flashMessages,
   authorization,
-  displayUserDocuments
+  displayUserDocuments,
+  displayDocuments
 });
 
 const rootReducer = (state, action) => {
