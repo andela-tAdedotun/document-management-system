@@ -243,7 +243,12 @@ export default {
         }
 
         if (user.isValidPassword(req.body.password)) {
-          const payload = { id: user.id, roleId: user.RoleId };
+          const payload = {
+            id: user.id,
+            roleId: user.RoleId,
+            name: user.name,
+            email: user.email
+          };
           const token = jwt.sign(payload, config.secret);
           res.json({ message: 'Ok.', token });
         } else {
