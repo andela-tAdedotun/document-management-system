@@ -14,7 +14,7 @@ export default {
       .create({
         userRole: req.body.userRole
       })
-      .then(res.send('Role successfully created.'))
+      .then(role => res.send(role))
       .error(error => res.status(400).send(error));
   },
 
