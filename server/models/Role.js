@@ -2,10 +2,7 @@ export default (sequelize, DataTypes) => {
   const Role = sequelize.define('Role', {
     userRole: {
       type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isIn: [['Super Admin', 'Admin', 'Regular']]
-      }
+      unique: true
     },
   }, {
     classMethods: {
