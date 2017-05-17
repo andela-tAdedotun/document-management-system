@@ -13,6 +13,7 @@ documentRouter.route('/:id')
   .get(passport.authenticate(), documentController.findDocument)
   .put(passport.authenticate(), authorization.isAdminOrAuthorizedUser,
       documentController.updateDocument)
-  .delete(passport.authenticate(), documentController.deleteDocument);
+  .delete(passport.authenticate(), authorization.isAdminOrAuthorizedUser,
+      documentController.deleteDocument);
 
 export default documentRouter;

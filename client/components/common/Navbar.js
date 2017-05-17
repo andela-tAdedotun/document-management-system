@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router';
 
 /**
  *
@@ -37,9 +37,22 @@ class NavigationBar extends React.Component {
    */
   render() {
     return (
-      <button onClick={this.onClick}>
-        Log Out!
-      </button>
+      <nav>
+        <div className="nav-wrapper">
+          <ul>
+            <span className="left"> <Link to="/"> Home </Link> </span>
+          </ul>
+          <ul id="nav-mobile" className="right">
+            <li> <Link to="explore"> Explore </Link> </li>
+            <li> <Link to="dashboard"> Dashboard </Link> </li>
+            <li>
+              <a href="/logout" className="red" onClick={this.onClick}>
+                Log Out!
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }

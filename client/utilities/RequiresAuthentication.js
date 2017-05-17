@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { addFlashMessage } from '../actions/FlashMessages';
-
 
 /**
  * anonymous function - description
@@ -24,10 +22,6 @@ export default function (ComponentRequiresAuth) {
      */
     componentWillMount() {
       if (!this.props.isAuthenticated) {
-        this.props.addFlashMessage({
-          type: 'error',
-          text: 'You must be signed in to view this page.'
-        });
         browserHistory.push('/');
       }
     }
@@ -45,8 +39,7 @@ export default function (ComponentRequiresAuth) {
   }
 
   RequiresAuthentication.propTypes = {
-    isAuthenticated: React.PropTypes.bool.isRequired,
-    addFlashMessage: React.PropTypes.func.isRequired
+    isAuthenticated: React.PropTypes.bool.isRequired
   };
 
 
@@ -62,5 +55,5 @@ export default function (ComponentRequiresAuth) {
     };
   }
 
-  return connect(mapStateToProps, { addFlashMessage })(RequiresAuthentication);
+  return connect(mapStateToProps, {})(RequiresAuthentication);
 }

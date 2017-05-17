@@ -46,10 +46,6 @@ class SignupForm extends React.Component {
   onSubmit(event) {
     event.preventDefault();
     this.props.userSignup(this.state).then(() => {
-      this.props.addFlashMessage({
-        type: 'success',
-        text: 'You have successfully signed up.'
-      });
       browserHistory.push('/documents');
     });
   }
@@ -109,8 +105,7 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignup: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  userSignup: React.PropTypes.func.isRequired
 };
 
 export default SignupForm;

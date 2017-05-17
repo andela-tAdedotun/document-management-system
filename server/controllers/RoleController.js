@@ -49,6 +49,10 @@ export default {
         if (!role) {
           res.send('No such role exists.');
         }
+
+        if (role.id === 1) {
+          return res.status(403).send('You can\'t delete this role.');
+        }
         return role.destroy()
           .then(() => res.status(200).send('Role successfully deleted.'))
           .catch(() => res.send('Could not delete role.'));

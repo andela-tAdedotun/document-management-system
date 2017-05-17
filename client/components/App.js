@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FlashMessagesList from './flash/FlashMessagesList';
 
 class App extends React.Component {
 
@@ -13,7 +12,6 @@ class App extends React.Component {
   render() {
     return (
       <div className="parent-container">
-        <FlashMessagesList />
         { this.props.children }
       </div>
     );

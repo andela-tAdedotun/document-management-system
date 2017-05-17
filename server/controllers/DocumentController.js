@@ -16,7 +16,7 @@ export default {
       .create({
         title: req.body.title,
         content: req.body.content,
-        protected: req.body.protected,
+        protected: req.body.isProtected,
         access: req.body.access,
         documentOwnerId: req.user.id
       })
@@ -32,7 +32,7 @@ export default {
   */
   getDocuments(req, res) {
     const queryOptions = {};
-    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 40;
+    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
     /*

@@ -3,7 +3,7 @@ import { browserHistory } from 'react-router';
 
 
 /**
- * 
+ *
  */
 class LoginForm extends React.Component {
 
@@ -37,10 +37,7 @@ class LoginForm extends React.Component {
       browserHistory.push('/documents');
     })
     .catch(() => {
-      this.props.addFlashMessage({
-        type: 'error',
-        text: 'Invalid credentials. Check the email or password and try again.'
-      });
+
     });
   }
 
@@ -62,36 +59,38 @@ class LoginForm extends React.Component {
    */
   render() {
     return (
-      <form onSubmit={this.onSubmit}>
-        <div>
-          <htmlFor>Email</htmlFor>
-          <input
-            value={this.state.email}
-            onChange={this.onChange}
-            type="text"
-            name="email" required
-          />
-          <br />
-          <br />
-          <htmlFor>Password</htmlFor>
-          <input
-            value={this.state.password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Enter Password" name="password" required
-          />
-          <br />
-          <br />
-          <button type="submit">Oya Login!</button>
-        </div>
-      </form>
+      <div className="col s4">
+        <form onSubmit={this.onSubmit}>
+          <div>
+            <htmlFor>Email</htmlFor>
+            <input
+              className="validate"
+              value={this.state.email}
+              onChange={this.onChange}
+              type="email"
+              name="email" required
+            />
+            <br />
+            <br />
+            <htmlFor>Password</htmlFor>
+            <input
+              value={this.state.password}
+              onChange={this.onChange}
+              type="password"
+              placeholder="Enter Password" name="password" required
+            />
+            <br />
+            <br />
+            <button className="btn blue" type="submit">Oya Login!</button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
 
 LoginForm.propTypes = {
-  userLogin: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  userLogin: React.PropTypes.func.isRequired
 };
 
 export default LoginForm;

@@ -1,4 +1,4 @@
-// const jwt = require('jsonwebtoken');
+// const jwtDecode = require('jsonwebtoken');
 // const config = require('../config/config.js');
 
 export default {
@@ -12,7 +12,7 @@ export default {
 
   isAdminOrAuthorizedUser: (req, res, next) => {
     if (req.user.roleId === 1 || req.user.roleId === 2
-      || Number(req.params.id) === req.user.id) {
+      || req.user.id) {
       next();
     } else {
       res.status(403).send('You are not authorized to perform action.');

@@ -37,7 +37,9 @@ export default {
                 name: user.name,
                 email: user.email,
                 RoleId: user.RoleId,
-                privacy: user.privacy
+                privacy: user.privacy,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
               },
             });
           })
@@ -56,6 +58,12 @@ export default {
     findQuery.limit = req.query.limit > 0 ? req.query.limit : 15;
     findQuery.offset = req.query.offset > 0 ? req.query.offset : 0;
     findQuery.attributes = { exclude: ['password'] };
+
+    if (req.user.roleId === 2) {
+      findQuery.where = {
+        RoleId: 3
+      };
+    }
 
     return User
       .findAndCountAll(findQuery)
@@ -198,7 +206,7 @@ export default {
           .then(updatedUser => res.status(200).send(updatedUser))
           .catch(error => res.status(400).send(error));
       })
-      .catch(() => res.status(400).send('You are not authorized.'));
+      .catch(() => res.status(401).send('You are not authorized.'));
   },
 
   /**

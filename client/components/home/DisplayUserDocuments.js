@@ -35,10 +35,12 @@ class DisplayUserDocuments extends React.Component {
     });
   }
 
+
   /**
    * onSubmit - description
    *
-   * @return {type}  description
+   * @param  {type} event description
+   * @return {type}       description
    */
   onSubmit(event) {
     event.preventDefault();
@@ -63,72 +65,77 @@ class DisplayUserDocuments extends React.Component {
   render() {
     const { title, content } = this.props.document;
     return (
-      <div className="row">
-        <div className="col m3">
-          <div className="card small blue-grey darken-1">
-            <div className="card-content white-text">
-              <span className="card-title">{title}</span>
-              {content.slice(0, 200)}...
+      <div className="col m3">
+        <div className="card small #bdbdbd grey lighten-1">
+          <div className="card-content black-grey-text">
+            <span className="card-title">{title}</span>
+            <div>
+              {content.slice(0, 150)}{content.length > 150 ? '...' : ''}
             </div>
-            <div className="card-action">
+            <Modal
+              header={title}
+              trigger={<a href=""> Read More </a>}
+            >
+              {content}
+            </Modal>
+          </div>
+          <div className="card-action">
 
-              <Modal
-                fixedFooter
-                trigger={<button className="btn">
-                  Edit
-                </button>}
-              >
+            <Modal
+              fixedFooter
+              trigger={<button className="btn cyan">
+                Edit
+              </button>}
+            >
 
-                <form onSubmit={this.onSubmit}>
-                  <div>
-                    Title: <br />
-                    <input
-                      name="title"
-                      value={this.state.title}
-                      type="text"
+              <form onSubmit={this.onSubmit}>
+                <div>
+                  Title: <br />
+                  <input
+                    name="title"
+                    value={this.state.title}
+                    type="text"
+                    onChange={this.onChange}
+                    required
+                  />
+                </div>
+                <div className="input-field">
+                  Content: <br />
+                  <textarea
+                    id="textarea1" className="materialize-textarea"
+                    name="content"
+                    onChange={this.onChange}
+                    value={this.state.content}
+                    required
+                  />
+
+                  <br />
+                </div>
+
+                <div>
+                  <Row>
+                    <Input
+                      s={12}
+                      type="select"
+                      name="access"
+                      label="Who Can Access"
                       onChange={this.onChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                    Content: <br />
-                    <textarea
-                      name="content"
-                      onChange={this.onChange}
-                      value={this.state.content}
-                      required
-                    />
-                    <br />
-                  </div>
-
-                  <div>
-                    <Row>
-                      <Input
-                        s={12}
-                        type="select"
-                        name="access"
-                        label="Who Can Access"
-                        onChange={this.onChange}
-                      >
-                        <option value="public">Public</option>
-                        <option value="private">Private</option>
-                        <option value="role">Role</option>
-                      </Input>
-                    </Row>
-                  </div>
-                  <button type="submit"> Submit! </button>
-                </form>
-              </Modal>
-              <button className="btn red" onClick={this.deleteDocument}>
-                Delete
-              </button>
-            </div>
+                    >
+                      <option value="public">Public</option>
+                      <option value="private">Private</option>
+                      <option value="role">Role</option>
+                    </Input>
+                  </Row>
+                </div>
+                <button className="btn blue" type="submit"> Submit! </button>
+              </form>
+            </Modal>
+            <button className="btn red" onClick={this.deleteDocument}>
+              Delete
+            </button>
           </div>
         </div>
       </div>
-      // <div>
-      //   {title}: {content.slice(0, 25)}...
-      // </div>
     );
   }
 }

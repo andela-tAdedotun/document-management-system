@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { Modal } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
-import Navbar from './Navbar';
+import Navbar from '../common/Navbar';
 import logUserOut from '../../actions/LogoutActions';
-import { displayUserDocuments, createDocument }
+import { displayUserDocuments, createDocument, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
 import DisplayUserDocuments from './DisplayUserDocuments';
 
@@ -27,17 +29,22 @@ class Homepage extends React.Component {
    * @return {type}  description
    */
   render() {
-    const { logUserOut, createDocument } = this.props;
+    const { logUserOut, createDocument, deleteDocument, editDocument }
+      = this.props;
     let allUserDocuments;
     if (this.props.userDocumentsInStore[0] !== undefined) {
       const userDocuments = this.props.userDocumentsInStore[0].userDocuments;
       if (userDocuments) {
         allUserDocuments =
          userDocuments.map(document =>
-          <DisplayUserDocuments
-            key={document.id}
-            document={document}
-          />
+           <div key={document.id}>
+             <DisplayUserDocuments
+               deleteDocument={deleteDocument}
+               editDocument={editDocument}
+               documentId={document.id}
+               document={document}
+             />
+           </div>
         );
       } else {
         const noDocumentMessage = this.props.userDocumentsInStore[0].noDocument;
@@ -47,12 +54,20 @@ class Homepage extends React.Component {
 
     return (
       <div id="documents">
-        <h3> Here are your documents! </h3>
         <Navbar logUserOut={logUserOut} />
-        <div>
+        <br />
+        <Modal
+          fixedFooter
+          trigger={
+            <a className="btn-floating btn-large waves-effect waves-light blue">
+              <i className="material-icons">add</i>
+            </a>}
+        >
+          <DocumentEditor createDocument={createDocument} />
+        </Modal>
+        <div className="row">
           {allUserDocuments}
         </div>
-        <DocumentEditor createDocument={createDocument} />
       </div>
     );
   }
@@ -61,14 +76,11 @@ class Homepage extends React.Component {
 Homepage.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
   displayUserDocuments: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
   userDocumentsInStore: React.PropTypes.array.isRequired,
-  createDocument: React.PropTypes.func.isRequired
+  deleteDocument: React.PropTypes.func.isRequired,
+  createDocument: React.PropTypes.func.isRequired,
+  editDocument: React.PropTypes.func.isRequired
 };
-
-// Homepage.defaultProps = {
-//   errorMessage: this.props.errorMessage
-// };
 
 const mapStateToProps = (state) => {
   return {
@@ -77,4 +89,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps,
-   { logUserOut, displayUserDocuments, createDocument })(Homepage);
+  { logUserOut,
+    displayUserDocuments,
+    createDocument,
+    deleteDocument,
+    editDocument })(Homepage);

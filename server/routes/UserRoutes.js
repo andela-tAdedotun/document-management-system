@@ -12,7 +12,7 @@ userRouter.route('/')
 
 userRouter.route('/:id')
   .get(passport.authenticate(), userController.findUser)
-  .put(passport.authenticate(), authorization.isAdminOrAuthorizedUser,
+  .put(passport.authenticate(),
       userController.updateUser)
   .delete(passport.authenticate(),
     authorization.isSuperAdmin, userController.deleteUser);

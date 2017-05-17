@@ -1,4 +1,5 @@
 import React from 'react';
+import { Row, Input } from 'react-materialize';
 
 /**
  *
@@ -42,7 +43,6 @@ class DocumentEditor extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    console.log(this)
     this.props.createDocument(this.state).then(() => {
       console.log('Done, oga ade!');
     });
@@ -54,6 +54,7 @@ class DocumentEditor extends React.Component {
    * @return {type}  description
    */
   render() {
+    // console.log('tayelolu', Store.getState());
     const { title, content } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
@@ -70,14 +71,20 @@ class DocumentEditor extends React.Component {
         <div>
           Content: <br />
           <textarea
+            className="materialize-textarea"
             name="content"
             onChange={this.onChange}
             value={content}
             required
           />
           <br />
-          <div>
-            <select
+        </div>
+
+        <div>
+          <Row>
+            <Input
+              s={12}
+              type="select"
               name="access"
               label="Who Can Access"
               onChange={this.onChange}
@@ -85,10 +92,10 @@ class DocumentEditor extends React.Component {
               <option value="public">Public</option>
               <option value="private">Private</option>
               <option value="role">Role</option>
-            </select>
-          </div>
-          <button type="submit"> Submit! </button>
+            </Input>
+          </Row>
         </div>
+        <button className="btn blue" type="submit"> Submit! </button>
       </form>
     );
   }
