@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import userLogin from '../../actions/LoginActions';
@@ -17,11 +16,19 @@ class LandingPage extends React.Component {
   render() {
     const { userLogin } = this.props;
     return (
-      <div className="signIn">
-
-        <h3> All Your Documents In One Place. </h3>
-        <Link to="signup">Sign up here...</Link><br /><br />
-        <LoginForm userLogin={userLogin} />
+      <div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <div className="container z-depth-4">
+          <br />
+          <h5 className="center-align"> Your documents. In one place. </h5>
+          <LoginForm userLogin={userLogin} />
+        </div>
       </div>
     );
   }

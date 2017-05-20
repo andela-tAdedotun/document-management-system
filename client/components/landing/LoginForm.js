@@ -1,6 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
-
+import { browserHistory, Link } from 'react-router';
 
 /**
  *
@@ -59,32 +58,35 @@ class LoginForm extends React.Component {
    */
   render() {
     return (
-      <div className="col s4">
-        <form onSubmit={this.onSubmit}>
-          <div>
-            <htmlFor>Email</htmlFor>
-            <input
-              className="validate"
-              value={this.state.email}
-              onChange={this.onChange}
-              type="email"
-              name="email" required
-            />
-            <br />
-            <br />
-            <htmlFor>Password</htmlFor>
-            <input
-              value={this.state.password}
-              onChange={this.onChange}
-              type="password"
-              placeholder="Enter Password" name="password" required
-            />
-            <br />
-            <br />
-            <button className="btn blue" type="submit">Oya Login!</button>
-          </div>
-        </form>
-      </div>
+      <form onSubmit={this.onSubmit}>
+        <div>
+          <htmlFor>Email</htmlFor>
+          <input
+            className="validate"
+            value={this.state.email}
+            onChange={this.onChange}
+            type="email"
+            name="email" required
+          />
+          <br />
+          <br />
+          <htmlFor>Password</htmlFor>
+          <input
+            value={this.state.password}
+            onChange={this.onChange}
+            type="password"
+            placeholder="Enter Password" name="password" required
+          />
+          <br />
+          <br />
+          <button className="btn cyan" type="submit">Enter</button>
+
+          <span className="right">
+          Already have an account?
+          <Link to="signup"><button className="btn">Signup</button></Link>
+          </span>
+        </div>
+      </form>
     );
   }
 }

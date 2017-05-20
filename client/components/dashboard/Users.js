@@ -1,5 +1,7 @@
 import React from 'react';
 import { Modal, Row, Input } from 'react-materialize';
+import Prompt from '../common/Prompt';
+import validate from '../../../shared/Validator';
 
 /**
  * export default - description
@@ -25,7 +27,9 @@ class Users extends React.Component {
       name: this.props.user.name,
       email: this.props.user.email,
       roleId: this.props.user.RoleId,
-      password: ''
+      password: '',
+      confirmPassword: '',
+      errors: {}
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -53,18 +57,41 @@ class Users extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    const stateCopy = Object.assign({}, this.state);
-    Object.keys(stateCopy).forEach((eachField) => {
-      if (!stateCopy[eachField]) {
-        delete stateCopy[eachField];
-      }
-    });
-    this.props
-    .updateUser(this.props.user.id, stateCopy, true);
+    if (this.isValid()) {
+      this.setState({ errors: {} });
+      const stateCopy = Object.assign({}, this.state);
+      Object.keys(stateCopy).forEach((eachField) => {
+        if (!stateCopy[eachField]) {
+          delete stateCopy[eachField];
+        }
+      });
+      this.props
+      .updateUser(this.props.user.id, stateCopy, true).then(() => {
+        Materialize.toast('User details successfully updated', 4000);
+      })
+      .catch(() =>
+        Materialize.toast('An error occurred.', 4000)
+      );
+    }
   }
 
   /**
-   * editDocument - description
+   * isValid - description
+   *
+   * @return {type}  description
+   */
+  isValid() {
+    const { errors, isValid } = validate(this.state);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
+  }
+
+  /**
+   * deleteUser - description
    *
    * @return {type}  description
    */
@@ -78,6 +105,7 @@ class Users extends React.Component {
    */
   render() {
     const user = this.props.user;
+    const { errors } = this.state;
     return (
       <tr>
         <td> {user.name} </td>
@@ -96,32 +124,69 @@ class Users extends React.Component {
           }
           >
             <form onSubmit={this.onSubmit}>
-              <div>
-                <htmlFor>Username</htmlFor>
+              <div className="input-field">
                 <input
                   value={this.state.name}
                   onChange={this.onChange}
                   type="text"
-                  name="name" required
+                  id="name"
+                  name="name"
                 />
+                <label htmlFor="name" className="active">Username</label>
                 <br />
                 <br />
-                <htmlFor>Email</htmlFor>
-                <input
-                  value={this.state.email}
-                  onChange={this.onChange}
-                  type="text"
-                  name="email"
-                />
+                <div className="input-field">
+                  <input
+                    value={this.state.email}
+                    onChange={this.onChange}
+                    type="text"
+                    id="email"
+                    name="email"
+                  />
+                  <label className="active" htmlFor="email">Email</label>
+                  {
+                    errors.email &&
+                    <span className="red-text">
+                      {errors.email}
+                    </span>
+                  }
+                </div>
                 <br />
                 <br />
-                <htmlFor>Password</htmlFor>
-                <input
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  type="password"
-                  placeholder="Enter Password" name="password"
-                />
+                <div className="input-field">
+                  <input
+                    value={this.state.password}
+                    onChange={this.onChange}
+                    type="password"
+                    id="password"
+                    name="password"
+                  />
+                  <label htmlFor="password">Password</label>
+                  {
+                    errors.password &&
+                    <span className="red-text">
+                      {errors.password}
+                    </span>
+                  }
+                </div>
+                <br />
+                <br />
+                <div className="input-field">
+                  <input
+                    value={this.state.confirmPassword}
+                    onChange={this.onChange}
+                    type="password"
+                    id="re-password"
+                    name="confirmPassword"
+                  />
+                  <label htmlFor="re-password">Re-enter Password</label>
+                  {
+                    errors.confirmPassword &&
+                    <span className="red-text">
+                      {errors.confirmPassword}
+                    </span>
+                  }
+                </div>
                 <br />
                 <br />
                 <div>
@@ -140,7 +205,7 @@ class Users extends React.Component {
                     </Input>
                   </Row>
                 </div>
-                <button className="btn blue" type="submit">Oya Update!</button>
+                <button className="btn cyan" type="submit">Update</button>
               </div>
             </form>
           </Modal>
@@ -148,13 +213,18 @@ class Users extends React.Component {
         <td>
           {this.props.roleId === 1
             ?
-              <button
-                onClick={this.deleteUser}
-                className="btn-floating
-                btn-large waves-effect waves-light cyan"
-              >
-                <i className="material-icons red">delete</i>
-              </button>
+              <Prompt
+                trigger={
+                  <button
+                    className="btn-floating
+                    btn-large waves-effect waves-light cyan"
+                  >
+                    <i className="material-icons red">delete</i>
+                  </button>
+                }
+
+                onClickFunction={this.deleteUser}
+              />
             :
             ''
           }

@@ -17,7 +17,8 @@ class DocumentEditor extends React.Component {
     this.state = {
       title: '',
       content: '',
-      access: 'public'
+      access: 'public',
+      isProtected: 'false'
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -30,6 +31,7 @@ class DocumentEditor extends React.Component {
    * @return {type}       description
    */
   onChange(event) {
+    $('#submit').prop('disabled', false);
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -43,8 +45,14 @@ class DocumentEditor extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
+    $('#submit').prop('disabled', true);
     this.props.createDocument(this.state).then(() => {
-      console.log('Done, oga ade!');
+      Materialize.toast('Document successfully created.', 4000);
+      this.state = {
+        title: this.state.title,
+        content: this.state.content,
+        access: this.state.access
+      };
     });
   }
 
@@ -54,7 +62,6 @@ class DocumentEditor extends React.Component {
    * @return {type}  description
    */
   render() {
-    // console.log('tayelolu', Store.getState());
     const { title, content } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
@@ -95,7 +102,24 @@ class DocumentEditor extends React.Component {
             </Input>
           </Row>
         </div>
-        <button className="btn blue" type="submit"> Submit! </button>
+
+        <div>
+          <Row>
+            <Input
+              s={12}
+              type="select"
+              name="isProtected"
+              label="Protected"
+              onChange={this.onChange}
+            >
+              <option value="">Choose</option>
+              <option value="true">Yes</option>
+              <option value="false">No</option>
+            </Input>
+          </Row>
+        </div>
+        <br />
+        <button id="submit" className="btn cyan" type="submit"> Submit </button>
       </form>
     );
   }

@@ -14,8 +14,7 @@ class SignupPage extends React.Component {
   render() {
     const { userSignup } = this.props;
     return (
-      <div className="signUp">
-        <h3> Welcome to the signup page... </h3>
+      <div className="container">
         <SignupForm userSignup={userSignup} />
       </div>
     );

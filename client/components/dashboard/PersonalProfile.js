@@ -1,5 +1,6 @@
 import React from 'react';
 import { Table, Modal } from 'react-materialize';
+import validate from '../../../shared/Validator';
 
 /**
  * export default - description
@@ -21,7 +22,10 @@ class PersonalProfile extends React.Component {
       name: this.props.currentState.authorization.user.name,
       email: this.props.currentState.authorization.user.email,
       roleId: this.props.currentState.authorization.user.roleId,
-      password: ''
+      password: '',
+      oldPassword: '',
+      confirmPassword: '',
+      errors: {}
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -48,14 +52,38 @@ class PersonalProfile extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    const stateCopy = Object.assign({}, this.state);
-    Object.keys(stateCopy).forEach((eachField) => {
-      if (!stateCopy[eachField]) {
-        delete stateCopy[eachField];
-      }
-    });
-    this.props
-    .updateUser(this.props.currentState.authorization.user.id, stateCopy);
+    if (this.isValid()) {
+      this.setState({ errors: {} });
+      const stateCopy = Object.assign({}, this.state);
+      Object.keys(stateCopy).forEach((eachField) => {
+        if (!stateCopy[eachField]) {
+          delete stateCopy[eachField];
+        }
+      });
+      this.props
+      .updateUser(this.props.currentState.authorization.user.id, stateCopy)
+      .then(() => {
+        Materialize.toast('Account details updated.', 4000);
+      })
+      .catch((error) => {
+        this.setState({ errors: { oldPassword: error.message } });
+      });
+    }
+  }
+
+  /**
+   * isValid - description
+   *
+   * @return {type}  description
+   */
+  isValid() {
+    const { errors, isValid } = validate(this.state);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
   }
 
   /**
@@ -65,6 +93,7 @@ class PersonalProfile extends React.Component {
    */
   render() {
     const user = this.props.currentState.authorization.user;
+    const { errors } = this.state;
     return (
       <div className="container">
         <Table className="bordered">
@@ -72,60 +101,154 @@ class PersonalProfile extends React.Component {
             <tr>
               <td>Name</td>
               <td>{user.name}</td>
+              <td>
+                <Modal
+                  trigger={
+                    <a className="btn-floating btn-large cyan">
+                      <i className="large material-icons">mode_edit</i>
+                    </a>
+                  }
+                >
+                  <form onSubmit={this.onSubmit}>
+                    <div>
+                      <label htmlFor="name">Username</label>
+                      <input
+                        value={this.state.name}
+                        onChange={this.onChange}
+                        type="text"
+                        name="name" required
+                      />
+                      <br />
+                      <br />
+                      <button className="btn cyan" type="submit">Update</button>
+                    </div>
+                  </form>
+                </Modal>
+              </td>
             </tr>
             <tr>
               <td>Email</td>
               <td>{user.email}</td>
+              <td>
+                <Modal
+                  trigger={
+                    <a className="btn-floating btn-large cyan">
+                      <i className="large material-icons">mode_edit</i>
+                    </a>
+                  }
+                >
+                  <form onSubmit={this.onSubmit}>
+                    <div className="input-field">
+                      <input
+                        value={this.state.email}
+                        className="validate active"
+                        onChange={this.onChange}
+                        id="email"
+                        type="email"
+                        name="email"
+                      />
+                      {
+                        errors.email &&
+                        <span className="red-text">
+                          {errors.email}
+                        </span>
+                      }
+                      <br />
+                      <br />
+                      <button className="btn cyan" type="submit">Update</button>
+                    </div>
+                  </form>
+                </Modal>
+              </td>
             </tr>
             <tr>
               <td>Password</td>
               <td>******</td>
+              <td>
+                <Modal
+                  trigger={
+                    <a className="btn-floating btn-large cyan">
+                      <i className="large material-icons">mode_edit</i>
+                    </a>
+                  }
+                >
+                  <form onSubmit={this.onSubmit}>
+                    <div>
+                      <div className="input-field">
+                        <input
+                          value={this.state.oldPassword}
+                          onChange={this.onChange}
+                          className="validate"
+                          type="password"
+                          name="oldPassword"
+                          required
+                        />
+                        <label className="active" htmlFor="oldPassword">
+                          Old Password
+                        </label>
+                        {
+                          errors.oldPassword &&
+                          <span className="red-text">
+                            {errors.oldPassword}
+                          </span>
+                        }
+                      </div>
+                      <br />
+                      <br />
+                      <div className="input-field">
+                        <input
+                          value={this.state.password}
+                          className="validate"
+                          onChange={this.onChange}
+                          type="password"
+                          name="password"
+                          required
+                        />
+                        <label
+                          className="active"
+                          htmlFor="password"
+                        >
+                          New Password
+                        </label>
+                        {
+                          errors.password &&
+                          <span className="red-text">
+                            {errors.password}
+                          </span>
+                        }
+                      </div>
+                      <br />
+                      <br />
+                      <div className="input-field">
+                        <input
+                          value={this.state.confirmPassword}
+                          className="validate"
+                          onChange={this.onChange}
+                          type="password"
+                          name="confirmPassword"
+                          required
+                        />
+                        <label htmlFor="confirmPassword" className="active">
+                          Re-enter password
+                        </label>
+                        {
+                          errors.confirmPassword &&
+                          <span className="red-text">
+                            {errors.confirmPassword}
+                          </span>
+                        }
+                      </div>
+                      <br />
+                      <br />
+                      <button className="btn cyan" type="submit">Update</button>
+                    </div>
+                  </form>
+                </Modal>
+              </td>
             </tr>
           </tbody>
         </Table>
         <br />
-        <Modal
-          fixedFooter
-          header="Update Your Profile"
-          trigger={
-            <a className="btn-floating btn-large cyan">
-              <i className="large material-icons">mode_edit</i>
-            </a>
-          }
-        >
-          <form onSubmit={this.onSubmit}>
-            <div>
-              <htmlFor>Username</htmlFor>
-              <input
-                value={this.state.name}
-                onChange={this.onChange}
-                type="text"
-                name="name" required
-              />
-              <br />
-              <br />
-              <htmlFor>Email</htmlFor>
-              <input
-                value={this.state.email}
-                onChange={this.onChange}
-                type="text"
-                name="email"
-              />
-              <br />
-              <br />
-              <htmlFor>Password</htmlFor>
-              <input
-                value={this.state.password}
-                onChange={this.onChange}
-                type="password"
-                placeholder="Enter Password" name="password"
-              />
-              <br />
-              <br />
-              <button className="btn blue" type="submit">Update</button>
-            </div>
-          </form>
-        </Modal>
       </div>
     );
   }

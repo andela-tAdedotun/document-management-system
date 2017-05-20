@@ -1,7 +1,7 @@
 import axios from 'axios';
 import setCurrentUser from './AuthActions';
 
-export const updateUser = (userId, userData, isNotSelf) =>
+export const updateUser = (userId, userData, isAdmin) =>
   dispatch => axios.put(`/api/users/${userId}`, userData)
   .then((res) => {
     const currentUserDetails = {};
@@ -9,7 +9,7 @@ export const updateUser = (userId, userData, isNotSelf) =>
     currentUserDetails.email = res.data.email;
     currentUserDetails.id = res.data.id;
     currentUserDetails.roleId = res.data.RoleId;
-    if (isNotSelf) {
+    if (isAdmin) {
       delete res.data.password;
       dispatch({
         type: 'ADMIN_UPDATE_USER',
@@ -20,7 +20,11 @@ export const updateUser = (userId, userData, isNotSelf) =>
       dispatch(setCurrentUser(currentUserDetails));
     }
   })
-  .catch(() => 'Invalid parameters');
+  .catch((res) => {
+    if (res.data.type === 'Invalid password') {
+      throw new Error(res.data.message);
+    }
+  });
 
 export const getUsers = () =>
   dispatch => axios.get('/api/users').then((res) => {
