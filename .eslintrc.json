@@ -13,7 +13,8 @@
     "globals": {
     "localStorage": false,
     "document": false,
-    "$": false
+    "$": false,
+    "Materialize": false
     },
     "rules": {
     "max-len": ["error", 80, 4],
