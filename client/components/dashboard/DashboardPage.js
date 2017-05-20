@@ -86,7 +86,10 @@ class DashboardPage extends React.Component {
    */
   createRole(event) {
     event.preventDefault();
-    this.props.createRole(this.state);
+    this.props.createRole(this.state).then(() => {
+      Materialize
+      .toast(`You have successfully created role ${this.state.userRole}`, 4000);
+    });
   }
 
   /**
@@ -204,24 +207,24 @@ class DashboardPage extends React.Component {
                           </Input>
                         </Row>
                       </div>
-                      <button className="btn blue" type="submit">
+                      <button className="btn cyan" type="submit">
                         Submit
                       </button>
                     </div>
                   </form>
                 </Modal>
-              <Table>
-                <thead>
-                  <tr>
-                    <th> Name </th>
-                    <th> Email </th>
-                    <th> Role </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {allUsers}
-                </tbody>
-              </Table>
+                <Table className="bordered">
+                  <thead>
+                    <tr>
+                      <th> Name </th>
+                      <th> Email </th>
+                      <th> Role </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allUsers}
+                  </tbody>
+                </Table>
               </div>
             </Tab>
 
@@ -248,7 +251,7 @@ class DashboardPage extends React.Component {
                         name="userRole" required
                       />
 
-                      <button className="btn blue" type="submit">Submit!</button>
+                      <button className="btn cyan" type="submit">Submit</button>
                     </div>
                   </form>
                 </Modal>
