@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Modal, Input } from 'react-materialize';
+import Prompt from '../common/Prompt';
 
 /**
  *
@@ -16,7 +17,8 @@ class DisplayDocuments extends React.Component {
     this.state = {
       title: this.props.document.title,
       content: this.props.document.content,
-      access: this.props.document.access
+      access: this.props.document.access,
+      isProtected: 'false'
     };
     this.deleteDocument = this.deleteDocument.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -38,11 +40,15 @@ class DisplayDocuments extends React.Component {
   /**
    * onSubmit - description
    *
-   * @return {type}  description
+   * @param  {type} event description
+   * @return {type}       description
    */
   onSubmit(event) {
     event.preventDefault();
-    this.props.editDocument(this.props.document.id, this.state);
+    this.props.editDocument(this.props.document.id, this.state, true)
+    .then(() => {
+      Materialize.toast('Document successfully updated.', 4000);
+    });
   }
 
   /**
@@ -51,7 +57,7 @@ class DisplayDocuments extends React.Component {
    * @return {type}  description
    */
   deleteDocument() {
-    this.props.deleteDocument(this.props.document.id);
+    this.props.deleteDocument(this.props.document.id, true);
   }
 
   /**
@@ -65,7 +71,7 @@ class DisplayDocuments extends React.Component {
     if (currentUser.roleId === 1 || currentUser.roleId === 2) {
       return (
         <div className="col m3">
-          <div className="card small #bdbdbd grey lighten-1">
+          <div className="card hoverable small #bdbdbd grey lighten-1">
             <div className="card-content black-grey-text">
               <span className="card-title">{title}</span>
               <div>
@@ -83,9 +89,11 @@ class DisplayDocuments extends React.Component {
 
               <Modal
                 fixedFooter
-                trigger={<button className="btn">
-                  Edit
-                </button>}
+                trigger={
+                  <a className="btn-floating btn-large cyan">
+                    <i className="large material-icons">mode_edit</i>
+                  </a>
+                }
               >
 
                 <form onSubmit={this.onSubmit}>
@@ -100,13 +108,14 @@ class DisplayDocuments extends React.Component {
                     />
                   </div>
                   <div>
-                    Content: <br />
-                    <textarea
-                      name="content"
-                      onChange={this.onChange}
-                      value={this.state.content}
-                      required
-                    />
+                  Content: <br />
+                  <textarea
+                    id="textarea1" className="materialize-textarea"
+                    name="content"
+                    onChange={this.onChange}
+                    value={this.state.content}
+                    required
+                  />
                     <br />
                   </div>
 
@@ -125,12 +134,37 @@ class DisplayDocuments extends React.Component {
                       </Input>
                     </Row>
                   </div>
-                  <button type="submit"> Submit! </button>
+
+                  <div>
+                    <Row>
+                      <Input
+                        s={12}
+                        type="select"
+                        name="isProtected"
+                        label="Protected"
+                        onChange={this.onChange}
+                      >
+                        <option value="">Choose</option>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                      </Input>
+                    </Row>
+                  </div>
+                  <br />
+                  <button type="submit" className="cyan btn"> Submit </button>
                 </form>
               </Modal>
-              <button className="btn red" onClick={this.deleteDocument}>
-                Delete
-              </button>
+              <Prompt
+                trigger={
+                  <button
+                    className="btn-floating
+                    btn-large waves-effect waves-light cyan right"
+                  >
+                    <i className="material-icons red">delete</i>
+                  </button>
+                }
+                onClickFunction={this.deleteDocument}
+              />
             </div>
           </div>
         </div>

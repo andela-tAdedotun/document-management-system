@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Input, Row } from 'react-materialize';
+import { Input, Row, Pagination } from 'react-materialize';
 import Navbar from '../common/Navbar';
 import logUserOut from '../../actions/LogoutActions';
 import { displayDocuments, deleteDocument, editDocument }
@@ -24,6 +24,7 @@ class ExplorePage extends React.Component {
       access: 'all'
     };
     this.onChange = this.onChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
   }
 
   /**
@@ -50,6 +51,18 @@ class ExplorePage extends React.Component {
 
 
   /**
+   * onSelect - description
+   *
+   * @param  {type} pageNumber description
+   * @return {type}            description
+   */
+  onSelect(pageNumber) {
+    const offset = (pageNumber - 1) * 12;
+    this.props.displayDocuments(offset);
+  }
+
+
+  /**
    * filter - description
    *
    * @param  {type} documents description
@@ -57,9 +70,9 @@ class ExplorePage extends React.Component {
    * @return {type}           description
    */
   filter(documents, filterBy) {
-    return documents.filter((document) => {
-      return document.access === filterBy;
-    });
+    return documents.filter(document =>
+      document.access === filterBy
+    );
   }
 
   /**
@@ -71,10 +84,21 @@ class ExplorePage extends React.Component {
     const { logUserOut, deleteDocument, editDocument, currentState }
       = this.props;
     let allDocuments;
+    let paginationInfo;
+    let pageCount;
+    let currentPage;
 
-    if (this.props.currentState.displayDocuments[0] !== undefined) {
+    if (Object.keys(this.props.currentState.displayDocuments).length !== 0) {
       let documentsUserCanSee =
-        this.props.currentState.displayDocuments[0].documents.documents;
+        this.props.currentState.displayDocuments.documents;
+
+      if (this.props.currentState.displayDocuments
+      .paginationInfo !== undefined) {
+        paginationInfo = this.props.currentState.displayDocuments
+        .paginationInfo;
+        pageCount = paginationInfo.pageCount;
+        currentPage = paginationInfo.currentPage;
+      }
 
       if (documentsUserCanSee.length > 0) {
         if (this.state.access !== 'all') {
@@ -94,7 +118,9 @@ class ExplorePage extends React.Component {
            />
         );
       } else {
-        allDocuments = 'noDocumentMessage';
+        allDocuments = (<div className="center-align">
+          There appears to be no document. Try something else.
+        </div>);
       }
     }
 
@@ -103,17 +129,17 @@ class ExplorePage extends React.Component {
         <Navbar logUserOut={logUserOut} />
         <br />
         <Row className="right">
-        <Input
-          className="input-field"
-          type="select"
-          name="access"
-          label="Filter:"
-          onChange={this.onChange}
-        >
-          <option value="all">All</option>
-          <option value="public">Public</option>
-          <option value="role">Role</option>
-        </Input>
+          <Input
+            className="input-field"
+            type="select"
+            name="access"
+            label="Filter:"
+            onChange={this.onChange}
+          >
+            <option value="all">All</option>
+            <option value="public">Public</option>
+            <option value="role">Role</option>
+          </Input>
         </Row>
         <br />
         <br />
@@ -124,6 +150,19 @@ class ExplorePage extends React.Component {
         <div className="row">
           {allDocuments}
         </div>
+        {
+          allDocuments
+          ?
+            <div className="center-align">
+              <Pagination
+                items={pageCount} activePage={currentPage}
+                maxButtons={10}
+                onSelect={this.onSelect}
+              />
+            </div>
+          :
+          ''
+        }
       </div>
     );
   }
@@ -134,10 +173,6 @@ ExplorePage.propTypes = {
   displayDocuments: React.PropTypes.func.isRequired,
   currentState: React.PropTypes.object.isRequired
 };
-
-// Homepage.defaultProps = {
-//   errorMessage: this.props.errorMessage
-// };
 
 const mapStateToProps = (state) => {
   return {
