@@ -43,7 +43,7 @@ export default {
               },
             });
           })
-          .catch(error => res.send(error));
+          .catch(() => res.status(400).send('Invalid signup parameters.'));
       });
   },
 
@@ -105,7 +105,9 @@ export default {
   */
   findUserDocuments(req, res) {
     // Default value for a super admin. Can access all documents.
-    let where = {};
+    const queryOptions = {};
+    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
+    queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
     /*
       Document access for admins.
@@ -114,24 +116,27 @@ export default {
       to admins in addition to the admin's documents.
     */
     if (req.user.roleId === 2) {
-      where = {
-        $or: [
-          { access: 'public' },
-          { access: 'private',
-            $not: {
-              '$User.RoleId$': 1
+      queryOptions.where = {
+        documentOwnerId: req.params.id,
+        $and: {
+          $or: [
+            { access: 'public' },
+            { access: 'private',
+              $not: {
+                '$User.RoleId$': 1
+              },
+              $or: {
+                '$User.id$': req.user.id,
+                '$User.RoleId$': { $gt: 2 }
+              }
             },
-            $or: {
-              '$User.id$': req.user.id,
-              '$User.RoleId$': { $gt: 2 }
-            }
-          },
-          { access: 'role',
-            $not: {
-              '$User.RoleId$': 1
-            }
-          },
-        ]
+            { access: 'role',
+              $not: {
+                '$User.RoleId$': 1
+              }
+            },
+          ]
+        }
       };
       /*
         Document access for regular users.
@@ -140,37 +145,38 @@ export default {
         documents
       */
     } else if (req.user.roleId > 2) {
-      where = {
-        $or: [
-          { access: 'public' },
-          { access: 'role',
-            $and: {
-              '$User.RoleId$': req.user.roleId
+      queryOptions.where = {
+        documentOwnerId: req.params.id,
+        $and: {
+          $or: [
+            { access: 'public' },
+            { access: 'role',
+              $and: {
+                '$User.RoleId$': req.user.roleId
+              }
+            },
+            { access: 'private',
+              $and: {
+                documentOwnerId: req.user.id
+              }
             }
-          },
-          { access: 'private',
-            $and: {
-              documentOwnerId: req.user.id
-            }
-          }
-        ]
+          ]
+        }
       };
     }
 
-    return User
-      .findById(req.params.id, {
-        attributes: { exclude: ['password'] },
-        include: [{
-          model: Document,
-          where
-        }],
-      })
-      .then((userAndDocuments) => {
-        if (!userAndDocuments) {
+    return Document
+      .findAndCountAll(queryOptions)
+      .then((documents) => {
+        if (!documents) {
           return res.status(404).send('No documents yet.');
         }
-
-        res.status(200).send(userAndDocuments);
+        const paginationInfo = pagination(queryOptions.limit,
+        queryOptions.offset, documents.count);
+        res.status(200).send({
+          documents,
+          paginationInfo
+        });
       })
       .catch(error => res.status(400).send(error));
   },
@@ -199,6 +205,19 @@ export default {
           if (req.user.id !== user.id) {
             return res.status(403).send('You are not authorized to do that.');
           }
+        }
+
+        if (req.body.oldPassword) {
+          if (user.isValidPassword(req.body.oldPassword)) {
+            delete req.body.oldPassword;
+          } else {
+            return res.status(403).send({
+              type: 'Invalid password',
+              message: 'Incorrect old password. Try again.'
+            });
+          }
+        } else {
+          delete req.body.oldPassword;
         }
 
         return user
@@ -247,7 +266,7 @@ export default {
     User.findOne({ where: { email: userEmail } })
       .then((user) => {
         if (!user) {
-          res.status(401).send('No such user exists. Try again.');
+          res.status(401).send('Incorrect password or email. Try again.');
         }
 
         if (user.isValidPassword(req.body.password)) {
@@ -255,7 +274,8 @@ export default {
             id: user.id,
             roleId: user.RoleId,
             name: user.name,
-            email: user.email
+            email: user.email,
+            password: user.password
           };
           const token = jwt.sign(payload, config.secret);
           res.json({ message: 'Ok.', token });
