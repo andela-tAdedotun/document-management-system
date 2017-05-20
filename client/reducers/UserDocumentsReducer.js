@@ -3,18 +3,11 @@ import findIndex from 'lodash/findIndex';
 export default (state = [], action = {}) => {
   switch (action.type) {
     case 'CREATE_NEW_DOCUMENT': {
-      const stateCopy = [...state];
-      stateCopy[0].userDocuments = action.userDocuments;
-      return stateCopy;
+      return action.userDocuments;
     }
 
     case 'DISPLAY_USER_DOCUMENTS': {
-      return [
-        ...state,
-        {
-          userDocuments: action.userDocuments
-        }
-      ];
+      return action.userDocuments;
     }
 
     case 'USER_HAS_NO_DOCUMENT': {
@@ -37,8 +30,10 @@ export default (state = [], action = {}) => {
     }
 
     case 'EDIT_DOCUMENT': {
+      const index =
+        findIndex(state[0].userDocuments, { id: action.documentId });
       const stateCopy = [...state];
-      stateCopy[0].userDocuments = action.userDocuments;
+      stateCopy[0].userDocuments[index] = action.updatedDocument;
       return stateCopy;
     }
 
