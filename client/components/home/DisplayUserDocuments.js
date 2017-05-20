@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Modal, Input } from 'react-materialize';
+import Prompt from '../common/Prompt';
 
 /**
  *
@@ -16,7 +17,8 @@ class DisplayUserDocuments extends React.Component {
     this.state = {
       title: this.props.document.title,
       content: this.props.document.content,
-      access: this.props.document.access
+      access: this.props.document.access,
+      isProtected: 'false'
     };
     this.deleteDocument = this.deleteDocument.bind(this);
     this.onChange = this.onChange.bind(this);
@@ -44,7 +46,10 @@ class DisplayUserDocuments extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    this.props.editDocument(this.props.document.id, this.state);
+    this.props.editDocument(this.props.document.id, this.state).then(() =>
+      Materialize.toast('Update successful.', 4000)
+    )
+    .catch(() => Materialize.toast('An error occurred.', 4000));
   }
 
 
@@ -54,7 +59,8 @@ class DisplayUserDocuments extends React.Component {
    * @return {type}  description
    */
   deleteDocument() {
-    this.props.deleteDocument(this.props.document.id);
+    this.props.deleteDocument(this.props.document.id)
+    .catch(error => Materialize.toast(error.message, 4000));
   }
 
   /**
@@ -64,9 +70,10 @@ class DisplayUserDocuments extends React.Component {
    */
   render() {
     const { title, content } = this.props.document;
+
     return (
       <div className="col m3">
-        <div className="card small #bdbdbd grey lighten-1">
+        <div className="card hoverable small #bdbdbd grey lighten-1">
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
@@ -83,9 +90,11 @@ class DisplayUserDocuments extends React.Component {
 
             <Modal
               fixedFooter
-              trigger={<button className="btn cyan">
-                Edit
-              </button>}
+              trigger={
+                <a className="btn-floating btn-large cyan">
+                  <i className="large material-icons">mode_edit</i>
+                </a>
+              }
             >
 
               <form onSubmit={this.onSubmit}>
@@ -118,7 +127,7 @@ class DisplayUserDocuments extends React.Component {
                       s={12}
                       type="select"
                       name="access"
-                      label="Who Can Access"
+                      label="Access"
                       onChange={this.onChange}
                     >
                       <option value="public">Public</option>
@@ -127,12 +136,36 @@ class DisplayUserDocuments extends React.Component {
                     </Input>
                   </Row>
                 </div>
-                <button className="btn blue" type="submit"> Submit! </button>
+
+                <div>
+                  <Row>
+                    <Input
+                      s={12}
+                      type="select"
+                      name="isProtected"
+                      label="Protected"
+                      onChange={this.onChange}
+                    >
+                      <option value="">Choose</option>
+                      <option value="true">Yes</option>
+                      <option value="false">No</option>
+                    </Input>
+                  </Row>
+                </div>
+                <br />
+                <button className="btn cyan" type="submit"> Submit </button>
               </form>
             </Modal>
-            <button className="btn red" onClick={this.deleteDocument}>
-              Delete
-            </button>
+            <Prompt
+              trigger={<button
+                className="btn-floating
+                  btn-large waves-effect waves-light cyan right"
+              >
+                <i className="material-icons red">delete</i>
+              </button>}
+
+              onClickFunction={this.deleteDocument}
+            />
           </div>
         </div>
       </div>
