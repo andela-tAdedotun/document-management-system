@@ -16,7 +16,7 @@ export default {
       .create({
         title: req.body.title,
         content: req.body.content,
-        protected: req.body.isProtected,
+        isProtected: req.body.isProtected,
         access: req.body.access,
         documentOwnerId: req.user.id
       })
@@ -357,7 +357,7 @@ export default {
     return Document
       .findOne(queryOptions)
       .then((document) => {
-        if (document.protected) {
+        if (document.isProtected) {
           return res.status(403).send('This document is protected. ' +
            'Change this in the settings to delete it.');
         }
