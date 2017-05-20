@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-materialize';
+import Prompt from '../common/Prompt';
 
 /**
  * export default - description
@@ -45,7 +45,9 @@ class Roles extends React.Component {
    */
   onClick(event) {
     event.preventDefault();
-    this.props.deleteRole(this.props.role.id);
+    this.props.deleteRole(this.props.role.id).then(() => {
+      Materialize.toast('Role successfully deleted.', 4000);
+    });
   }
   /**
    * render - description
@@ -58,13 +60,18 @@ class Roles extends React.Component {
       <tr>
         <td> {role.userRole} </td>
         <td>
-          <button
-            onClick={this.deleteUser}
-            className="btn-floating
-            btn-large waves-effect waves-light cyan"
-          >
-            <i className="material-icons red">delete</i>
-          </button>
+          <Prompt
+            trigger={
+              <button
+                className="btn-floating
+                btn-large waves-effect waves-light cyan"
+              >
+                <i className="material-icons red">delete</i>
+              </button>
+            }
+
+            onClickFunction={this.onClick}
+          />
         </td>
         <td>
           {''}
