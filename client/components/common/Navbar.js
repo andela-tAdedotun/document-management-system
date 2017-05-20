@@ -43,8 +43,8 @@ class NavigationBar extends React.Component {
             <span className="left"> <Link to="/"> Home </Link> </span>
           </ul>
           <ul id="nav-mobile" className="right">
-            <li> <Link to="explore"> Explore </Link> </li>
             <li> <Link to="dashboard"> Dashboard </Link> </li>
+            <li> <Link to="explore"> Explore </Link> </li>
             <li>
               <a href="/logout" className="red" onClick={this.onClick}>
                 Log Out!
