@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 import { Row, Modal, Input } from 'react-materialize';
 import Prompt from '../common/Prompt';
 
@@ -69,11 +70,24 @@ class DisplayUserDocuments extends React.Component {
    * @return {type}  description
    */
   render() {
-    const { title, content } = this.props.document;
+    const document = this.props.document;
+    const { title, content } = document;
+    const dateCreated =
+      moment(document.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+    const lastEdited =
+      moment(document.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
+    const views = document.views;
 
     return (
       <div className="col m3">
         <div className="card hoverable small #bdbdbd grey lighten-1">
+          <div>
+            <span className="right activator" href="#">
+              <i className="medium material-icons right">
+                info_outline
+              </i>
+            </span>
+          </div>
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
@@ -85,6 +99,22 @@ class DisplayUserDocuments extends React.Component {
             >
               {content}
             </Modal>
+          </div>
+          <div className="card-reveal">
+            <span className="card-title grey-text text-darken-4">
+              <i className="material-icons right">
+                close
+              </i>
+            </span>
+            <p>
+              <span className="red-text">Created:</span> <br />
+              { dateCreated }
+            </p>
+            <p>
+              <span className="red-text">Last edited:</span> <br />
+              { lastEdited }
+            </p>
+            <p> <span className="red-text"> Views: </span> { views } </p>
           </div>
           <div className="card-action">
 

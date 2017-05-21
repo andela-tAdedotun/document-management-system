@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Modal, Input } from 'react-materialize';
+import moment from 'moment';
 import Prompt from '../common/Prompt';
 
 /**
@@ -66,12 +67,26 @@ class DisplayDocuments extends React.Component {
    * @return {type}  description
    */
   render() {
+    const document = this.props.document;
     const { title, content } = this.props.document;
+    const dateCreated =
+      moment(document.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+    const lastEdited =
+      moment(document.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
+    const views = document.views;
+
     const currentUser = this.props.currentState.authorization.user;
     if (currentUser.roleId === 1 || currentUser.roleId === 2) {
       return (
         <div className="col m3">
           <div className="card hoverable small #bdbdbd grey lighten-1">
+            <div>
+              <span className="right activator" href="#">
+                <i className="medium material-icons right">
+                  info_outline
+                </i>
+              </span>
+            </div>
             <div className="card-content black-grey-text">
               <span className="card-title">{title}</span>
               <div>
@@ -84,6 +99,22 @@ class DisplayDocuments extends React.Component {
               >
                 {content}
               </Modal>
+            </div>
+            <div className="card-reveal">
+              <span className="card-title grey-text text-darken-4">
+                <i className="material-icons right">
+                  close
+                </i>
+              </span>
+              <p>
+                <span className="red-text">Created:</span> <br />
+                { dateCreated }
+              </p>
+              <p>
+                <span className="red-text">Last edited:</span> <br />
+                { lastEdited }
+              </p>
+              <p> <span className="red-text">Views:</span> { views } </p>
             </div>
             <div className="card-action">
 
@@ -109,13 +140,13 @@ class DisplayDocuments extends React.Component {
                   </div>
                   <div>
                   Content: <br />
-                  <textarea
-                    id="textarea1" className="materialize-textarea"
-                    name="content"
-                    onChange={this.onChange}
-                    value={this.state.content}
-                    required
-                  />
+                    <textarea
+                      id="textarea1" className="materialize-textarea"
+                      name="content"
+                      onChange={this.onChange}
+                      value={this.state.content}
+                      required
+                    />
                     <br />
                   </div>
 
@@ -172,7 +203,14 @@ class DisplayDocuments extends React.Component {
     }
     return (
       <div className="col m3 cards-container">
-        <div className="card small #bdbdbd grey lighten-1">
+        <div className="card hoverable small #bdbdbd grey lighten-1">
+          <div>
+            <span className="right activator" href="#">
+              <i className="medium material-icons right">
+                info_outline
+              </i>
+            </span>
+          </div>
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
@@ -185,6 +223,22 @@ class DisplayDocuments extends React.Component {
             >
               {content}
             </Modal>
+          </div>
+          <div className="card-reveal">
+            <span className="card-title grey-text text-darken-4">
+              <i className="material-icons right">
+                close
+              </i>
+            </span>
+            <p>
+              <span className="red-text">Created:</span> <br />
+              { dateCreated }
+            </p>
+            <p>
+              <span className="red-text">Last edited:</span> <br />
+              { lastEdited }
+            </p>
+            <p> <span className="red-text">Views:</span> { views } </p>
           </div>
         </div>
       </div>
