@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Input, Row, Pagination } from 'react-materialize';
-import Navbar from '../common/Navbar';
 import logUserOut from '../../actions/LogoutActions';
 import { displayDocuments, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
@@ -126,7 +125,6 @@ class ExplorePage extends React.Component {
 
     return (
       <div id="documents">
-        <Navbar logUserOut={logUserOut} />
         <br />
         <Row className="right">
           <Input

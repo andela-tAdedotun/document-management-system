@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal, Pagination, Row, Input } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
-import Navbar from '../common/Navbar';
 import logUserOut from '../../actions/LogoutActions';
 import { displayUserDocuments, createDocument, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
@@ -124,7 +123,6 @@ class Homepage extends React.Component {
 
     return (
       <div id="documents">
-        <Navbar logUserOut={logUserOut} />
         <br />
         <Modal
           fixedFooter
