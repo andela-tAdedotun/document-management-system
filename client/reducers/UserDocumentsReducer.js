@@ -11,22 +11,15 @@ export default (state = [], action = {}) => {
     }
 
     case 'USER_HAS_NO_DOCUMENT': {
-      return [
-        ...state,
-        {
-          noDocument: action.errorMessage
-        }
-      ];
+      return action.errorMessage;
     }
 
     case 'DELETE_DOCUMENT': {
       const index =
-        findIndex(state[0].userDocuments, { id: action.documentId });
-      const stateCopy = [...state];
-      stateCopy[0].userDocuments.splice(index, 1);
-      return [
-        ...stateCopy
-      ];
+        findIndex(state.documents.rows, { id: action.documentId });
+      const stateCopy = Object.assign({}, state);
+      stateCopy.documents.rows.splice(index, 1);
+      return stateCopy;
     }
 
     case 'EDIT_DOCUMENT': {

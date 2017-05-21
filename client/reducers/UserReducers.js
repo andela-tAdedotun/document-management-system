@@ -3,12 +3,7 @@ import findIndex from 'lodash/findIndex';
 export default (state = [], action = {}) => {
   switch (action.type) {
     case 'GET_ALL_USERS': {
-      return [
-        ...state,
-        {
-          allUsers: action.allUsers
-        }
-      ];
+      return action.allUsers;
     }
 
     case 'ADMIN_UPDATE_USER': {
