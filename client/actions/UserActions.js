@@ -26,8 +26,9 @@ export const updateUser = (userId, userData, isAdmin) =>
     }
   });
 
-export const getUsers = () =>
-  dispatch => axios.get('/api/users').then((res) => {
+export const getUsers = (offset, limit) =>
+  dispatch => axios.get(`/api/users/?offset=${offset}&limit=${limit}`)
+  .then((res) => {
     dispatch({
       type: 'GET_ALL_USERS',
       allUsers: res.data

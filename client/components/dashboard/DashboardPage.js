@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tabs, Tab, Table, Modal, Row, Input } from 'react-materialize';
+import
+  { Tabs, Tab, Table, Modal, Row, Input, Pagination } from 'react-materialize';
 import logUserOut from '../../actions/LogoutActions';
-import Navbar from '../common/Navbar';
 import PersonalProfile from './PersonalProfile';
 import Users from './Users';
 import Roles from './Roles';
@@ -35,6 +35,7 @@ class DashboardPage extends React.Component {
       userRole: ''
     };
     this.onChange = this.onChange.bind(this);
+    this.onSelect = this.onSelect.bind(this);
     this.createUser = this.createUser.bind(this);
     this.createRole = this.createRole.bind(this);
   }
@@ -68,6 +69,17 @@ class DashboardPage extends React.Component {
   }
 
   /**
+   * onSelect - description
+   *
+   * @param  {type} pageNumber description
+   * @return {type}            description
+   */
+  onSelect(pageNumber) {
+    const offset = (pageNumber - 1) * 15;
+    this.props.getUsers(offset);
+  }
+
+  /**
    * createUser - description
    *
    * @param  {type} event description
@@ -98,13 +110,21 @@ class DashboardPage extends React.Component {
    * @return {type}  description
    */
   render() {
+    let paginationInfo;
+    let pageCount;
+    let currentPage;
+
     const { logUserOut, currentState, updateUser,
        getUsers, deleteUser, createUser, deleteRole } = this.props;
 
     let allUsers;
-    const usersInStore = this.props.currentState.usersInDatabase[0];
-    if (usersInStore !== undefined) {
-      const users = usersInStore.allUsers.users;
+    const usersInStore = this.props.currentState.usersInDatabase;
+    if (usersInStore.length !== 0) {
+      const users = usersInStore.users;
+      paginationInfo = usersInStore.paginationInfo;
+      pageCount = paginationInfo.pageCount;
+      currentPage = paginationInfo.currentPage;
+
       allUsers = users.map(eachUser =>
         <Users
           key={eachUser.id}
@@ -131,7 +151,6 @@ class DashboardPage extends React.Component {
     if (this.currentUser.roleId === 3) {
       return (
         <div>
-          <Navbar logUserOut={logUserOut} />
           <br />
           <PersonalProfile
             updateUser={updateUser}
@@ -143,7 +162,6 @@ class DashboardPage extends React.Component {
     } else if (this.currentUser.roleId === 1) {
       return (
         <div>
-          <Navbar logUserOut={logUserOut} />
           <br />
           <Tabs className="tabs-fixed-width">
 
@@ -225,6 +243,20 @@ class DashboardPage extends React.Component {
                     {allUsers}
                   </tbody>
                 </Table>
+
+                {
+                  allUsers
+                  ?
+                    <div className="center-align">
+                      <Pagination
+                        items={pageCount} activePage={currentPage}
+                        maxButtons={10}
+                        onSelect={this.onSelect}
+                      />
+                    </div>
+                  :
+                  ''
+                }
               </div>
             </Tab>
 
@@ -232,7 +264,6 @@ class DashboardPage extends React.Component {
               <br />
               <div className="container">
                 <Modal
-                  fixedFooter
                   trigger={
                     <a
                       className="btn-floating btn-large waves-effect
@@ -242,14 +273,15 @@ class DashboardPage extends React.Component {
                     </a>}
                 >
                   <form onSubmit={this.createRole}>
-                    <div>
-                      <htmlFor>Role</htmlFor>
+                    <div className="input-field">
                       <input
                         value={this.state.userRole}
                         onChange={this.onChange}
                         type="text"
+                        id="userRole"
                         name="userRole" required
                       />
+                      <label className="active" htmlFor="userRole">Role</label>
 
                       <button className="btn cyan" type="submit">Submit</button>
                     </div>
@@ -268,7 +300,6 @@ class DashboardPage extends React.Component {
     } else if (this.currentUser.roleId === 2) {
       return (
         <div>
-          <Navbar logUserOut={logUserOut} />
           <br />
           <Tabs className="tabs-fixed-width">
             <Tab title="Your Profile" active><PersonalProfile {...this.props} />
