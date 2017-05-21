@@ -22,11 +22,8 @@ class LandingPage extends React.Component {
         <br />
         <br />
         <br />
-        <br />
-        <br />
         <div className="container z-depth-4">
           <br />
-          <h5 className="center-align"> Your documents. In one place. </h5>
           <LoginForm userLogin={userLogin} />
         </div>
       </div>
