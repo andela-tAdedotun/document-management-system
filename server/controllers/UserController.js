@@ -138,6 +138,13 @@ export default {
           ]
         }
       };
+
+      queryOptions.include = [
+        {
+          model: User,
+          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+        }
+      ];
       /*
         Document access for regular users.
         Regular users can only access another user's documents if those
@@ -163,6 +170,13 @@ export default {
           ]
         }
       };
+
+      queryOptions.include = [
+        {
+          model: User,
+          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+        }
+      ];
     }
 
     return Document
