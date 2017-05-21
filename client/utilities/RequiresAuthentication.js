@@ -23,6 +23,7 @@ export default function (ComponentRequiresAuth) {
     componentWillMount() {
       if (!this.props.isAuthenticated) {
         browserHistory.push('/');
+        Materialize.toast('You need to be signed in to view this page.', 4000);
       }
     }
 
