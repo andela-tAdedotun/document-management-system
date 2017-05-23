@@ -29,7 +29,13 @@ export default {
             RoleId: req.body.roleId
           })
           .then((user) => {
-            const payload = { id: user.id, roleId: user.RoleId };
+            const payload = {
+              id: user.id,
+              roleId: user.RoleId,
+              name: user.name,
+              email: user.email,
+              password: user.password
+            };
             const token = jwt.sign(payload, config.secret);
             res.status(201).send({ token,
               user: {
@@ -59,12 +65,6 @@ export default {
     findQuery.offset = req.query.offset > 0 ? req.query.offset : 0;
     findQuery.attributes = { exclude: ['password'] };
 
-    if (req.user.roleId === 2) {
-      findQuery.where = {
-        RoleId: 3
-      };
-    }
-
     return User
       .findAndCountAll(findQuery)
       .then((users) => {
@@ -74,8 +74,7 @@ export default {
           paginationInfo,
           users: users.rows,
         });
-      })
-      .error(error => res.send(error));
+      });
   },
 
   /**
@@ -106,6 +105,7 @@ export default {
   findUserDocuments(req, res) {
     // Default value for a super admin. Can access all documents.
     const queryOptions = {};
+    queryOptions.where = { documentOwnerId: req.params.id };
     queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
@@ -182,13 +182,13 @@ export default {
     return Document
       .findAndCountAll(queryOptions)
       .then((documents) => {
-        if (!documents) {
+        if (documents.rows.length === 0) {
           return res.status(404).send('No documents yet.');
         }
         const paginationInfo = pagination(queryOptions.limit,
         queryOptions.offset, documents.count);
         res.status(200).send({
-          documents,
+          documents: documents.rows,
           paginationInfo
         });
       })
@@ -221,7 +221,12 @@ export default {
           }
         }
 
-        if (req.body.oldPassword) {
+        if (req.body.password) {
+          if (!req.body.oldPassword &&
+            (req.user.roleId !== 1 || req.user.roleId !== 2)) {
+            return res.status(403).send('You must provide old password');
+          }
+
           if (user.isValidPassword(req.body.oldPassword)) {
             delete req.body.oldPassword;
           } else {
@@ -230,16 +235,13 @@ export default {
               message: 'Incorrect old password. Try again.'
             });
           }
-        } else {
-          delete req.body.oldPassword;
         }
 
         return user
           .update(req.body, { fields: Object.keys(req.body) })
           .then(updatedUser => res.status(200).send(updatedUser))
-          .catch(error => res.status(400).send(error));
       })
-      .catch(() => res.status(401).send('You are not authorized.'));
+      .catch(() => res.status(400).send('You have sent a bad request'));
   },
 
   /**
@@ -258,8 +260,7 @@ export default {
 
         return user
           .destroy()
-          .then(() => res.status(200).send('User successfully deleted.'))
-          .catch(error => res.status(400).send(error));
+          .then(() => res.status(200).send('User successfully deleted.'));
       })
       .catch(error => res.status(400).send(error));
   },
@@ -272,7 +273,7 @@ export default {
   */
   logUserIn(req, res) {
     if (!req.body.email || !req.body.password) {
-      return res.send('Please input your email and password');
+      return res.status(400).send('Please input your email and password');
     }
 
     const userEmail = req.body.email.toLowerCase();
@@ -292,7 +293,7 @@ export default {
             password: user.password
           };
           const token = jwt.sign(payload, config.secret);
-          res.json({ message: 'Ok.', token });
+          res.status(200).json({ message: 'Ok.', token });
         } else {
           res.status(401).send('Incorrect password or email. Try again.');
         }
@@ -308,6 +309,6 @@ export default {
   */
   logUserOut(req, res) {
     req.logOut();
-    res.json({ redirectTo: '/' });
+    res.status(200).json({ redirectTo: '/' });
   }
 };
