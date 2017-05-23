@@ -93,16 +93,16 @@ class Homepage extends React.Component {
         currentPage = paginationInfo.currentPage;
       }
 
-      let userDocuments = this.props.userDocumentsInStore.documents.rows;
+      let userDocuments = this.props.userDocumentsInStore.documents;
 
-      if (userDocuments.length > 0) {
+      if (userDocuments !== undefined && userDocuments.length > 0) {
         if (this.state.access !== 'all') {
           userDocuments = this
             .filter(userDocuments, this.state.access);
         }
       }
 
-      if (userDocuments.length > 0) {
+      if (userDocuments !== undefined && userDocuments.length > 0) {
         allUserDocuments =
          userDocuments.map(document =>
            <div key={document.id}>
