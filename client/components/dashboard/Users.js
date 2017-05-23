@@ -96,7 +96,12 @@ class Users extends React.Component {
    * @return {type}  description
    */
   deleteUser() {
-    this.props.deleteUser(this.props.user.id);
+    this.props.deleteUser(this.props.user.id).then(() => {
+      Materialize.toast('User successfully deleted', 4000);
+    })
+    .catch((error) => {
+      Materialize.toast(error.message, 4000);
+    });
   }
   /**
    * render - description
