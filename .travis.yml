@@ -4,17 +4,19 @@ language: node_js
 
 node_js:
   - 6
-
-services:
-  - postgresql
-
+ 
+postgres:
+  adapter: postgresql
+  database: DMS_TEST
+  username: andeladeveloper
+ 
 before_script:
   - nvm install 6
   - npm install
   - npm install -g gulp
   - npm install -g sequelize-cli
   - sudo -u postgres createuser andeladeveloper
-  - psql -c 'create database DMS_TEST;' -U postgres
+  - psql -c 'create database DMS_TEST;' -U andeladeveloper
   - NODE_ENV=test npm run db:migrate
 
 script:
