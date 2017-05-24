@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm-run-all seed:test test:server reset:test",
     "start": "babel-node server.js",
+    "db:migrate": "sequelize db:migrate",
     "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
     "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
     "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha server/test/**/*.spec.js && gulp coveralls"
