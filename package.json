@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm-run-all seed:test test:server reset:test",
     "start": "babel-node server.js",
+    "db:migrate": "sequelize db:migrate",
     "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
     "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
     "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha server/test/**/*.spec.js && gulp coveralls"
@@ -42,6 +43,7 @@
     "node-sass": "^4.5.2",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
+    "pg": "^6.2.3",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
