@@ -14,7 +14,7 @@ before_script:
   - npm install -g gulp
   - npm install -g sequelize-cli
   - sudo -u postgres createuser andeladeveloper
-  - psql -c 'create database DMS_TEST;' -U postgres
+  - psql -c 'create database DMS_TEST;' -U andeladeveloper
   - NODE_ENV=test npm run db:migrate
 
 script:
