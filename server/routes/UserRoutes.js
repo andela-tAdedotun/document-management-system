@@ -7,13 +7,11 @@ const userRouter = express.Router();
 
 userRouter.route('/')
   .post(userController.createUser)
-  .get(passport.authenticate(),
-   authorization.isAdminOrSuperAdmin, userController.getUsers);
+  .get(passport.authenticate(), userController.getUsers);
 
 userRouter.route('/:id')
   .get(passport.authenticate(), userController.findUser)
-  .put(passport.authenticate(),
-      userController.updateUser)
+  .put(passport.authenticate(), userController.updateUser)
   .delete(passport.authenticate(),
     authorization.isSuperAdmin, userController.deleteUser);
 
