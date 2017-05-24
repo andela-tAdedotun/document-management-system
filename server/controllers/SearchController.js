@@ -11,7 +11,7 @@ export default {
   * @return {Array} - Search results
   */
   searchUsers(req, res) {
-    const searchQuery = req.query.search;
+    const searchQuery = req.query.q;
     const searchOptions = {
       where: {
         $or: [
@@ -30,8 +30,7 @@ export default {
     };
 
     return User.findAll(searchOptions)
-      .then(userMatches => res.status(200).send(userMatches))
-      .catch(error => res.send(error));
+      .then(userMatches => res.status(200).send(userMatches));
   },
 
   /**
@@ -41,7 +40,7 @@ export default {
   * @return {Array} - Search results
   */
   searchDocuments(req, res) {
-    const searchQuery = req.query.search;
+    const searchQuery = req.query.q;
     const searchOptions = {};
 
     // Default value for a super admin. Can access all documents.
@@ -152,7 +151,6 @@ export default {
     }
 
     Document.findAll(searchOptions)
-      .then(documentMatches => res.status(200).send(documentMatches))
-      .catch(error => res.send(error));
+      .then(documentMatches => res.status(200).send(documentMatches));
   }
 };

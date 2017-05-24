@@ -1,7 +1,11 @@
 /* eslint-disable no-console */
 import React from 'react';
 import { browserHistory } from 'react-router';
+import validate from '../../../shared/Validator';
 
+/**
+ *
+ */
 class SignupForm extends React.Component {
 
   /**
@@ -16,7 +20,8 @@ class SignupForm extends React.Component {
       name: '',
       email: '',
       password: '',
-      confirmPassword: ''
+      confirmPassword: '',
+      errors: {}
     };
 
     this.onChange = this.onChange.bind(this);
@@ -36,7 +41,6 @@ class SignupForm extends React.Component {
     });
   }
 
-
   /**
    * onSubmit - description
    *
@@ -45,13 +49,28 @@ class SignupForm extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    this.props.userSignup(this.state).then(() => {
-      this.props.addFlashMessage({
-        type: 'success',
-        text: 'You have successfully signed up.'
-      });
-      browserHistory.push('/documents');
-    });
+    if (this.isValid()) {
+      this.setState({ errors: {} });
+      this.props.userSignup(this.state).then(() => {
+        browserHistory.push('/documents');
+      })
+      .catch(error => Materialize.toast(error.message, 4000));
+    }
+  }
+
+  /**
+   * isValid - description
+   *
+   * @return {type}  description
+   */
+  isValid() {
+    const { errors, isValid } = validate(this.state);
+
+    if (!isValid) {
+      this.setState({ errors });
+    }
+
+    return isValid;
   }
 
   /**
@@ -60,48 +79,88 @@ class SignupForm extends React.Component {
    * @return {type}  description
    */
   render() {
+    const { errors } = this.state;
     return (
       <form onSubmit={this.onSubmit}>
-        <h1> Register for awesomeness! </h1>
+        <h3> In a bit... </h3>
 
         <div>
-          <htmlFor>Username</htmlFor>
-          <input
-            value={this.state.name}
-            onChange={this.onChange}
-            type="text"
-            name="name" required
-          />
+          <div className="input-field">
+            <input
+              value={this.state.name}
+              onChange={this.onChange}
+              id="name"
+              type="text"
+              name="name"
+              required
+            />
+            <label htmlFor="name">Username</label>
+          </div>
           <br />
           <br />
-          <htmlFor>Email</htmlFor>
-          <input
-            value={this.state.email}
-            onChange={this.onChange}
-            type="text"
-            name="email" required
-          />
+          <div className="input-field">
+            <input
+              value={this.state.email}
+              onChange={this.onChange}
+              className="validate"
+              type="email"
+              id="email"
+              name="email"
+              required
+            />
+            <label
+              htmlFor="email" data-error={errors.email ? errors.email : ''}
+            >
+              Email
+            </label>
+            {
+              errors.email &&
+              <span className="red-text">
+                {errors.email}
+              </span>
+            }
+          </div>
           <br />
           <br />
-          <htmlFor>Password</htmlFor>
-          <input
-            value={this.state.password}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Enter Password" name="password" required
-          />
+          <div className="input-field">
+            <input
+              value={this.state.password}
+              onChange={this.onChange}
+              type="password"
+              id="password"
+              name="password"
+              required
+            />
+            <label htmlFor="password">Password</label>
+            {
+              errors.password &&
+              <span className="red-text">
+                {errors.password}
+              </span>
+            }
+          </div>
           <br />
           <br />
-          <htmlFor>Re-enter Password</htmlFor>
-          <input
-            value={this.state.confirmPassword}
-            onChange={this.onChange}
-            type="password"
-            placeholder="Enter Password" name="confirmPassword" required
-          />
+          <div className="input-field">
+            <input
+              value={this.state.confirmPassword}
+              onChange={this.onChange}
+              id="re-password"
+              type="password"
+              name="confirmPassword"
+              required
+            />
+            <label htmlFor="re-password">Re-enter Password</label>
+            {
+              errors.confirmPassword &&
+              <span className="red-text">
+                {errors.confirmPassword}
+              </span>
+            }
+          </div>
           <br />
           <br />
-          <button type="submit">Oya Signup!</button>
+          <button className="btn cyan" type="submit">Signup</button>
         </div>
       </form>
     );
@@ -109,8 +168,7 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignup: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  userSignup: React.PropTypes.func.isRequired
 };
 
 export default SignupForm;

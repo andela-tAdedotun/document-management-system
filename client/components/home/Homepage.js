@@ -1,15 +1,31 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Modal, Pagination, Row, Input } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
-import Navbar from './Navbar';
 import logUserOut from '../../actions/LogoutActions';
-import { displayUserDocuments } from '../../actions/DocumentsActions';
+import { displayUserDocuments, createDocument, deleteDocument, editDocument }
+  from '../../actions/DocumentsActions';
 import DisplayUserDocuments from './DisplayUserDocuments';
 
 /**
  *
  */
 class Homepage extends React.Component {
+
+  /**
+   * constructor - description
+   *
+   * @param  {type} props description
+   * @return {type}       description
+   */
+  constructor(props) {
+    super(props);
+    this.state = {
+      access: 'all'
+    };
+    this.onSelect = this.onSelect.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
    /**
     * componentDidMount - description
     *
@@ -19,6 +35,43 @@ class Homepage extends React.Component {
     this.props.displayUserDocuments();
   }
 
+  /**
+   * onSelect - description
+   *
+   * @param  {type} pageNumber description
+   * @return {type}            description
+   */
+  onSelect(pageNumber) {
+    const offset = (pageNumber - 1) * 12;
+    this.props.displayUserDocuments(offset);
+  }
+
+  /**
+   * onChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  onChange(event) {
+    event.preventDefault();
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  /**
+   * filter - description
+   *
+   * @param  {type} documents description
+   * @param  {type} filterBy  description
+   * @return {type}           description
+   */
+  filter(documents, filterBy) {
+    return documents.filter(document =>
+      document.access === filterBy
+    );
+  }
+
 
   /**
    * render - description
@@ -26,32 +79,102 @@ class Homepage extends React.Component {
    * @return {type}  description
    */
   render() {
-    const { logUserOut } = this.props;
+    const { logUserOut, createDocument, deleteDocument, editDocument }
+      = this.props;
     let allUserDocuments;
-    if (this.props.userDocumentsInStore[0] !== undefined) {
-      const userDocuments = this.props.userDocumentsInStore[0].userDocuments;
-      if (userDocuments) {
+    let paginationInfo;
+    let pageCount;
+    let currentPage;
+
+    if (this.props.userDocumentsInStore.documents !== undefined) {
+      if (this.props.userDocumentsInStore.paginationInfo !== undefined) {
+        paginationInfo = this.props.userDocumentsInStore.paginationInfo;
+        pageCount = paginationInfo.pageCount;
+        currentPage = paginationInfo.currentPage;
+      }
+
+      let userDocuments = this.props.userDocumentsInStore.documents;
+
+      if (userDocuments !== undefined && userDocuments.length > 0) {
+        if (this.state.access !== 'all') {
+          userDocuments = this
+            .filter(userDocuments, this.state.access);
+        }
+      }
+
+      if (userDocuments !== undefined && userDocuments.length > 0) {
         allUserDocuments =
          userDocuments.map(document =>
-          <DisplayUserDocuments
-            key={document.id}
-            document={document}
-          />
+           <div key={document.id}>
+             <DisplayUserDocuments
+               deleteDocument={deleteDocument}
+               editDocument={editDocument}
+               documentId={document.id}
+               document={document}
+             />
+           </div>
         );
       } else {
-        const noDocumentMessage = this.props.userDocumentsInStore[0].noDocument;
-        allUserDocuments = noDocumentMessage;
+        allUserDocuments = (<div className="center-align">
+          There appears to be no document. Try something else.
+        </div>);
       }
     }
 
     return (
       <div id="documents">
-        <h3> Here are your documents! </h3>
-        <Navbar logUserOut={logUserOut} />
-        <div>
+        <br />
+        <Modal
+          fixedFooter
+          trigger={
+            <button
+              className="btn-floating btn-large
+              waves-effect waves-light cyan"
+            >
+              <i className="material-icons">add</i>
+            </button>
+          }
+          modalOptions={{
+            complete: () => $('#submit').prop('disabled', false)
+          }}
+        >
+          <DocumentEditor createDocument={createDocument} />
+        </Modal>
+
+        <Row className="right">
+          <Input
+            className="input-field"
+            type="select"
+            name="access"
+            label="Filter:"
+            onChange={this.onChange}
+          >
+            <option value="all">All</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+            <option value="role">Role</option>
+          </Input>
+        </Row>
+        <br />
+        <br />
+        <br />
+        <br />
+        <div className="row">
           {allUserDocuments}
         </div>
-        <DocumentEditor />
+        {
+          allUserDocuments
+          ?
+            <div className="center-align">
+              <Pagination
+                items={pageCount} activePage={currentPage}
+                maxButtons={10}
+                onSelect={this.onSelect}
+              />
+            </div>
+          :
+          ''
+        }
       </div>
     );
   }
@@ -60,13 +183,11 @@ class Homepage extends React.Component {
 Homepage.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
   displayUserDocuments: React.PropTypes.func.isRequired,
-  errorMessage: React.PropTypes.string,
-  userDocumentsInStore: React.PropTypes.array.isRequired
+  userDocumentsInStore: React.PropTypes.any.isRequired,
+  deleteDocument: React.PropTypes.func.isRequired,
+  createDocument: React.PropTypes.func.isRequired,
+  editDocument: React.PropTypes.func.isRequired
 };
-
-// Homepage.defaultProps = {
-//   errorMessage: this.props.errorMessage
-// };
 
 const mapStateToProps = (state) => {
   return {
@@ -75,4 +196,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps,
-   { logUserOut, displayUserDocuments })(Homepage);
+  { logUserOut,
+    displayUserDocuments,
+    createDocument,
+    deleteDocument,
+    editDocument })(Homepage);

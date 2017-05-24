@@ -1,7 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FlashMessagesList from './flash/FlashMessagesList';
+import { connect } from 'react-redux';
+import Navbar from './common/Navbar';
+import Footer from './common/Footer';
+import logUserOut from '../actions/LogoutActions';
 
+
+/**
+ *
+ */
 class App extends React.Component {
 
 
@@ -11,9 +18,10 @@ class App extends React.Component {
    * @return {type}  description
    */
   render() {
+    const { logUserOut } = this.props;
     return (
       <div className="parent-container">
-        <FlashMessagesList />
+        <Navbar logUserOut={logUserOut} />
         { this.props.children }
       </div>
     );
@@ -21,7 +29,8 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  children: PropTypes.object.isRequired
+  children: PropTypes.object.isRequired,
+  logUserOut: PropTypes.func.isRequired
 };
 
-export default App;
+export default connect(null, { logUserOut })(App);

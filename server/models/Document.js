@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
-    protected: {
+    isProtected: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },

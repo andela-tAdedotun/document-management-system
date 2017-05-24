@@ -4,8 +4,11 @@
   "description": "This repo contains an implementation of a full-stack document management system",
   "main": "server.js",
   "scripts": {
-    "test": "istanbul cover jasmine && gulp coveralls",
-    "start": "babel-node server.js"
+    "test": "npm-run-all seed:test test:server reset:test",
+    "start": "babel-node server.js",
+    "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
+    "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
+    "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha server/test/**/*.spec.js && gulp coveralls"
   },
   "repository": {
     "type": "git",
@@ -18,7 +21,7 @@
   },
   "homepage": "https://github.com/andela-tAdedotun/document-management-system#readme",
   "dependencies": {
-    "axios": "^0.16.1",
+    "axios": "^0.12.0",
     "babel-polyfill": "^6.8.0",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.17.1",
@@ -27,10 +30,14 @@
     "draft-js": "^0.10.0",
     "expect.js": "^0.3.1",
     "express": "^4.15.2",
+    "faker": "^4.1.0",
+    "fm-log": "^4.4.3",
     "jasmine": "^2.5.3",
     "jsonwebtoken": "^7.4.0",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
+    "material-ui": "^0.18.1",
+    "moment": "^2.18.1",
     "morgan": "^1.8.1",
     "node-sass": "^4.5.2",
     "passport": "^0.3.2",
@@ -38,6 +45,8 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-materialize": "^0.18.4",
+    "react-notify-toast": "^0.1.5",
     "react-redux": "^4.4.5",
     "react-router": "^2.4.0",
     "react-router-redux": "^4.0.4",
@@ -56,6 +65,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.8.0",
+    "babel-istanbul": "^0.12.2",
     "babel-loader": "^6.2.4",
     "babel-plugin-react-display-name": "^2.0.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
@@ -64,6 +74,7 @@
     "babel-preset-react-hmre": "^1.1.1",
     "babel-register": "^6.8.0",
     "browser-sync": "^2.18.8",
+    "chai": "^3.5.0",
     "colors": "^1.1.2",
     "compression": "^1.6.1",
     "coveralls": "^2.13.0",
@@ -79,6 +90,7 @@
     "eventsource-polyfill": "^0.9.6",
     "expect": "^1.19.0",
     "extract-text-webpack-plugin": "^2.1.0",
+    "faker": "^4.1.0",
     "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -100,6 +112,7 @@
     "redux-mock-store": "^1.0.2",
     "rimraf": "^2.5.2",
     "style-loader": "^0.13.1",
+    "supertest": "^3.0.0",
     "url-loader": "^0.5.7"
   }
 }

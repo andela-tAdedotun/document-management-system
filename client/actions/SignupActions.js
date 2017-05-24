@@ -14,7 +14,7 @@ const userSignup = (userData) => {
     setAuthorizationToken(token);
     dispatch(setCurrentUser(jwtDecode(token)));
   })
-  .catch(() => 'Invalid parameters');
+  .catch((res) => { throw new Error(res.data); });
 };
 
 export default userSignup;

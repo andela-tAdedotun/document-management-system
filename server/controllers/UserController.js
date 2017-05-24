@@ -29,7 +29,13 @@ export default {
             RoleId: req.body.roleId
           })
           .then((user) => {
-            const payload = { id: user.id, roleId: user.RoleId };
+            const payload = {
+              id: user.id,
+              roleId: user.RoleId,
+              name: user.name,
+              email: user.email,
+              password: user.password
+            };
             const token = jwt.sign(payload, config.secret);
             res.status(201).send({ token,
               user: {
@@ -37,11 +43,13 @@ export default {
                 name: user.name,
                 email: user.email,
                 RoleId: user.RoleId,
-                privacy: user.privacy
+                privacy: user.privacy,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
               },
             });
           })
-          .catch(error => res.send(error));
+          .catch(() => res.status(400).send('Invalid signup parameters.'));
       });
   },
 
@@ -66,8 +74,7 @@ export default {
           paginationInfo,
           users: users.rows,
         });
-      })
-      .error(error => res.send(error));
+      });
   },
 
   /**
@@ -97,7 +104,10 @@ export default {
   */
   findUserDocuments(req, res) {
     // Default value for a super admin. Can access all documents.
-    let where = {};
+    const queryOptions = {};
+    queryOptions.where = { documentOwnerId: req.params.id };
+    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
+    queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
     /*
       Document access for admins.
@@ -106,25 +116,35 @@ export default {
       to admins in addition to the admin's documents.
     */
     if (req.user.roleId === 2) {
-      where = {
-        $or: [
-          { access: 'public' },
-          { access: 'private',
-            $not: {
-              '$User.RoleId$': 1
+      queryOptions.where = {
+        documentOwnerId: req.params.id,
+        $and: {
+          $or: [
+            { access: 'public' },
+            { access: 'private',
+              $not: {
+                '$User.RoleId$': 1
+              },
+              $or: {
+                '$User.id$': req.user.id,
+                '$User.RoleId$': { $gt: 2 }
+              }
             },
-            $or: {
-              '$User.id$': req.user.id,
-              '$User.RoleId$': { $gt: 2 }
-            }
-          },
-          { access: 'role',
-            $not: {
-              '$User.RoleId$': 1
-            }
-          },
-        ]
+            { access: 'role',
+              $not: {
+                '$User.RoleId$': 1
+              }
+            },
+          ]
+        }
       };
+
+      queryOptions.include = [
+        {
+          model: User,
+          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+        }
+      ];
       /*
         Document access for regular users.
         Regular users can only access another user's documents if those
@@ -132,36 +152,45 @@ export default {
         documents
       */
     } else if (req.user.roleId > 2) {
-      where = {
-        $or: [
-          { access: 'public' },
-          { access: 'role',
-            $and: {
-              '$User.RoleId$': req.user.roleId
+      queryOptions.where = {
+        documentOwnerId: req.params.id,
+        $and: {
+          $or: [
+            { access: 'public' },
+            { access: 'role',
+              $and: {
+                '$User.RoleId$': req.user.roleId
+              }
+            },
+            { access: 'private',
+              $and: {
+                documentOwnerId: req.user.id
+              }
             }
-          },
-          { access: 'private',
-            $and: {
-              documentOwnerId: req.user.id
-            }
-          }
-        ]
+          ]
+        }
       };
+
+      queryOptions.include = [
+        {
+          model: User,
+          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+        }
+      ];
     }
 
-    return User
-      .findById(req.params.id, {
-        include: [{
-          model: Document,
-          where
-        }],
-      })
-      .then((userAndDocuments) => {
-        if (!userAndDocuments) {
+    return Document
+      .findAndCountAll(queryOptions)
+      .then((documents) => {
+        if (documents.rows.length === 0) {
           return res.status(404).send('No documents yet.');
         }
-
-        res.status(200).send(userAndDocuments);
+        const paginationInfo = pagination(queryOptions.limit,
+        queryOptions.offset, documents.count);
+        res.status(200).send({
+          documents: documents.rows,
+          paginationInfo
+        });
       })
       .catch(error => res.status(400).send(error));
   },
@@ -192,12 +221,27 @@ export default {
           }
         }
 
+        if (req.body.password) {
+          if (!req.body.oldPassword &&
+            (req.user.roleId !== 1 || req.user.roleId !== 2)) {
+            return res.status(403).send('You must provide old password');
+          }
+
+          if (user.isValidPassword(req.body.oldPassword)) {
+            delete req.body.oldPassword;
+          } else {
+            return res.status(403).send({
+              type: 'Invalid password',
+              message: 'Incorrect old password. Try again.'
+            });
+          }
+        }
+
         return user
           .update(req.body, { fields: Object.keys(req.body) })
           .then(updatedUser => res.status(200).send(updatedUser))
-          .catch(error => res.status(400).send(error));
       })
-      .catch(() => res.status(400).send('You are not authorized.'));
+      .catch(() => res.status(400).send('You have sent a bad request'));
   },
 
   /**
@@ -216,8 +260,7 @@ export default {
 
         return user
           .destroy()
-          .then(() => res.status(200).send('User successfully deleted.'))
-          .catch(error => res.status(400).send(error));
+          .then(() => res.status(200).send('User successfully deleted.'));
       })
       .catch(error => res.status(400).send(error));
   },
@@ -230,7 +273,7 @@ export default {
   */
   logUserIn(req, res) {
     if (!req.body.email || !req.body.password) {
-      return res.send('Please input your email and password');
+      return res.status(400).send('Please input your email and password');
     }
 
     const userEmail = req.body.email.toLowerCase();
@@ -238,13 +281,19 @@ export default {
     User.findOne({ where: { email: userEmail } })
       .then((user) => {
         if (!user) {
-          res.status(401).send('No such user exists. Try again.');
+          res.status(401).send('Incorrect password or email. Try again.');
         }
 
         if (user.isValidPassword(req.body.password)) {
-          const payload = { id: user.id, roleId: user.RoleId };
+          const payload = {
+            id: user.id,
+            roleId: user.RoleId,
+            name: user.name,
+            email: user.email,
+            password: user.password
+          };
           const token = jwt.sign(payload, config.secret);
-          res.json({ message: 'Ok.', token });
+          res.status(200).json({ message: 'Ok.', token });
         } else {
           res.status(401).send('Incorrect password or email. Try again.');
         }
@@ -260,6 +309,6 @@ export default {
   */
   logUserOut(req, res) {
     req.logOut();
-    res.json({ redirectTo: '/' });
+    res.status(200).json({ redirectTo: '/' });
   }
 };

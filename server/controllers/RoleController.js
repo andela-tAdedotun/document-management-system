@@ -10,12 +10,15 @@ export default {
   * @return {Promise} - Created role
   */
   createRole(req, res) {
+    if (!req.body.userRole) {
+      return res.status(400).send('Request should have userRole in body');
+    }
     return Role
       .create({
         userRole: req.body.userRole
       })
-      .then(res.send('Role successfully created.'))
-      .error(error => res.status(400).send(error));
+      .then(role => res.send(role))
+      .catch(error => res.status(400).send(error));
   },
 
   /**
@@ -28,10 +31,6 @@ export default {
     return Role
       .findAll()
       .then((userRoles) => {
-        if (!userRoles) {
-          return res.send('You have not defined any userRole');
-        }
-
         res.status(200).send(userRoles);
       });
   },
@@ -47,11 +46,14 @@ export default {
       .findById(req.params.id)
       .then((role) => {
         if (!role) {
-          res.send('No such role exists.');
+          res.status(404).send('No such role exists.');
+        }
+
+        if (role.id === 1) {
+          return res.status(403).send('You can\'t delete this role.');
         }
         return role.destroy()
-          .then(() => res.status(200).send('Role successfully deleted.'))
-          .catch(() => res.send('Could not delete role.'));
+          .then(() => res.status(200).send('Role successfully deleted.'));
       });
   }
 };

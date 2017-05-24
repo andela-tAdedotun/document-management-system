@@ -16,12 +16,12 @@ export default {
       .create({
         title: req.body.title,
         content: req.body.content,
-        protected: req.body.protected,
+        isProtected: req.body.isProtected,
         access: req.body.access,
         documentOwnerId: req.user.id
       })
       .then(document => res.status(201).send(document))
-      .catch(error => res.send(error));
+      .catch(error => res.status(400).send(error));
   },
 
   /**
@@ -32,7 +32,7 @@ export default {
   */
   getDocuments(req, res) {
     const queryOptions = {};
-    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 40;
+    queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
     /*
@@ -81,8 +81,7 @@ export default {
             paginationInfo,
             documents: documents.rows,
           });
-        })
-        .error(error => res.send(error));
+        });
     }
 
     /*
@@ -181,10 +180,6 @@ export default {
         .findOne(queryOptions)
         .then((document) => {
           document.increment('views');
-
-          if (Object.keys(document).length === 0) {
-            return res.send('No such document exists.');
-          }
           res.status(200).send(document);
         })
         .catch(() => res.status(400).send('Invalid parameters. Try again!'));
@@ -226,13 +221,9 @@ export default {
       .findOne(queryOptions)
       .then((document) => {
         document.increment('views');
-
-        if (!document) {
-          return res.send('No such document exists.');
-        }
         res.status(200).send(document);
       })
-      .catch(error => res.send(error));
+      .catch(error => res.status(400).send(error));
   },
 
   /**
@@ -295,7 +286,6 @@ export default {
         document
           .update(req.body, { fields: Object.keys(req.body) })
           .then(updatedDocument => res.status(200).send(updatedDocument))
-          .catch(error => res.send(error))
       )
       .catch(() => res.status(400).send('You do not have permission'));
   },
@@ -357,16 +347,16 @@ export default {
     return Document
       .findOne(queryOptions)
       .then((document) => {
-        if (document.protected) {
+        if (document.isProtected) {
           return res.status(403).send('This document is protected. ' +
            'Change this in the settings to delete it.');
         }
 
         return document
           .destroy()
-          .then(() => res.status(200).send('Document deleted.'))
-          .catch(() => res.status(400).send('Document could not be deleted'));
+          .then(() => res.status(200).send('Document deleted.'));
       })
-      .catch(() => res.send('An error occurred. Check the parameters.'));
+      .catch(() => res.status(400)
+      .send('An error occurred. Check the parameters.'));
   }
 };
