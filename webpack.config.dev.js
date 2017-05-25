@@ -1,60 +1,64 @@
-import path from 'path';
 import webpack from 'webpack';
+import path from 'path';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-  debug: true,
-  devtool: 'source-map',
-  noInfo: false,
-  target: 'web',
+  // debug: true,
+  devtool: 'cheap-module-eval-source-map',
+  // noInfo: false,
   entry: [
-    'webpack-hot-middleware/client',
-    path.join(__dirname, './client/index.js')],
+    'eventsource-polyfill',
+    'webpack-hot-middleware/client?reload=true',
+    './client/index'
+  ],
+  target: 'web',
   output: {
-    path: __dirname,
-    filename: 'bundle.js',
-    publicPath: '/'
+    path: `${__dirname}/client/dist`,
+    publicPath: '/',
+    filename: 'bundle.js'
   },
+  devServer: {
+    contentBase: './client'
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin(),
+    new ExtractTextPlugin({ // define where to save the file
+      filename: '[name].css',
+      allChunks: true,
+    }),
+  ],
   module: {
     loaders: [
       {
-        test: /\.(js|jsx)$/,
-        loaders: ['babel-loader'],
-        exclude: [
-          /node_modules/,
-          /server/
-        ]
-      },
-     { test: /(\.css)$/, loaders: ['style-loader', 'css-loader'] },
-      {
-        test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader']
+        test: /\.js$/,
+        include: [
+          path.join(__dirname, 'client'),
+          path.join(__dirname, 'shared')
+        ],
+        loaders: ['babel-loader']
       },
       {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader'
+        test: /(\.css)$/,
+        loaders: ['style', 'css']
       },
       {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url?limit=10000&mimetype=application/font-woff'
+        test: /\.(sass|scss)$/,
+        loader: ExtractTextPlugin
+        .extract(['css-loader', 'sass-loader'])
       },
-      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
-      {
-        test: /\.(jpg|png|svg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 25000,
-        }
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
+      { test: /\.(woff|woff2)$/, loader: 'url?prefix=font/&limit=4000' },
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url?limit=10000&mimetype=application/octet-stream' },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url?limit=10000&mimetype=image/svg+xml'
       },
       {
         test: /\.json$/,
         loader: 'json-loader'
-      },
+      }
     ]
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  ],
-  resolve: {
-    extensions: ['.js', '.jsx']
   },
   node: {
     net: 'empty',
