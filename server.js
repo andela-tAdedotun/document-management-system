@@ -11,11 +11,12 @@ import searchRouter from './server/routes/SearchRoutes';
 import roleRouter from './server/routes/RoleRoutes';
 import config from './webpack.config.dev';
 import passport from './server/middlewares/Authentication';
+import db from './server/models';
 
 const compiler = webpack(config);
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,9 +37,10 @@ app.get('*', (req, res) => {
   res.sendFile(`${__dirname}/client/index.html`);
 });
 
-// app.use(express.static('./client/index.html'));
-app.listen(port, () => {
-  console.log(`running server on port ${port}`);
+db.sequelize.sync().done(() => {
+  app.listen(port, () => {
+    console.log(`running server on port ${port}`);
+  });
 });
 
 export default app;
