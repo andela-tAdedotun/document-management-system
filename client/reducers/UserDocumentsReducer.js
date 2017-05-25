@@ -16,17 +16,17 @@ export default (state = [], action = {}) => {
 
     case 'DELETE_DOCUMENT': {
       const index =
-        findIndex(state.documents.rows, { id: action.documentId });
+        findIndex(state.documents, { id: action.documentId });
       const stateCopy = Object.assign({}, state);
-      stateCopy.documents.rows.splice(index, 1);
+      stateCopy.documents.splice(index, 1);
       return stateCopy;
     }
 
     case 'EDIT_DOCUMENT': {
       const index =
-        findIndex(state[0].userDocuments, { id: action.documentId });
-      const stateCopy = [...state];
-      stateCopy[0].userDocuments[index] = action.updatedDocument;
+        findIndex(state.documents, { id: action.documentId });
+      const stateCopy = Object.assign({}, state);
+      stateCopy.documents[index] = action.updatedDocument;
       return stateCopy;
     }
 
