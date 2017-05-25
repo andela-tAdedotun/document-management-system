@@ -4,7 +4,6 @@ import webpack from 'webpack';
 export default {
   debug: true,
   devtool: 'source-map',
-  noInfo: false,
   target: 'web',
   entry: [
     'webpack-hot-middleware/client',
