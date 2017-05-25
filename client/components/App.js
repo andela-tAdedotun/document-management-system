@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Navbar from './common/Navbar';
-import Footer from './common/Footer';
 import logUserOut from '../actions/LogoutActions';
 
 
