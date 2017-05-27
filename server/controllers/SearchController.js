@@ -1,4 +1,5 @@
 import models from '../models/';
+import pagination from '../helpers/PaginationHelper';
 
 const User = models.User;
 const Document = models.Document;
@@ -28,9 +29,61 @@ export default {
         ]
       }
     };
+    searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
+    searchOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
-    return User.findAll(searchOptions)
-      .then(userMatches => res.status(200).send(userMatches));
+    return User.findAndCountAll(searchOptions)
+      .then((userMatches) => {
+        const paginationInfo = pagination(searchOptions.limit,
+        searchOptions.offset, userMatches.count);
+        res.status(200).send({
+          users: userMatches.rows,
+          paginationInfo
+        });
+      });
+  },
+
+
+  /**
+   * searhOwnDocuments - description
+   *
+   * @param  {type} req description
+   * @param  {type} res description
+   * @return {type}     description
+   */
+  searchOwnDocuments(req, res) {
+    const searchQuery = req.query.q;
+    const searchOptions = {};
+    searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
+    searchOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
+
+    searchOptions.where = {
+      $or: [
+        {
+          title: {
+            $iLike: `%${searchQuery}%`,
+          }
+        },
+        {
+          content: {
+            $iLike: `%${searchQuery}%`,
+          }
+        }
+      ],
+      $and: {
+        documentOwnerId: req.user.id
+      }
+    };
+
+    return Document.findAndCountAll(searchOptions)
+      .then((documentMatches) => {
+        const paginationInfo = pagination(searchOptions.limit,
+        searchOptions.offset, documentMatches.count);
+        res.status(200).send({
+          documents: documentMatches.rows,
+          paginationInfo
+        });
+      });
   },
 
   /**
@@ -42,6 +95,8 @@ export default {
   searchDocuments(req, res) {
     const searchQuery = req.query.q;
     const searchOptions = {};
+    searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
+    searchOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
     // Default value for a super admin. Can access all documents.
     searchOptions.where = {
@@ -150,7 +205,14 @@ export default {
       ];
     }
 
-    Document.findAll(searchOptions)
-      .then(documentMatches => res.status(200).send(documentMatches));
+    return Document.findAndCountAll(searchOptions)
+      .then((documentMatches) => {
+        const paginationInfo = pagination(searchOptions.limit,
+        searchOptions.offset, documentMatches.count);
+        res.status(200).send({
+          documents: documentMatches.rows,
+          paginationInfo
+        });
+      });
   }
 };
