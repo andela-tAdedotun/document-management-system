@@ -12,7 +12,7 @@ import alreadyAuthenticated from './utilities/AlreadyAuthenticated';
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={alreadyAuthenticated(LandingPage)} />
-    <Route path="signup" component={SignupPage} />
+    <Route path="signup" component={alreadyAuthenticated(SignupPage)} />
     <Route path="documents" component={requiresAuthentication(Homepage)} />
     <Route path="explore" component={requiresAuthentication(ExplorePage)} />
     <Route path="dashboard" component={requiresAuthentication(DashboardPage)} />
