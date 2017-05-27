@@ -239,7 +239,7 @@ export default {
 
         return user
           .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedUser => res.status(200).send(updatedUser))
+          .then(updatedUser => res.status(200).send(updatedUser));
       })
       .catch(() => res.status(400).send('You have sent a bad request'));
   },
@@ -256,6 +256,11 @@ export default {
       .then((user) => {
         if (!user) {
           return res.status(404).send('User not found');
+        }
+
+        if (user.RoleId === 1) {
+          return res.status(403).send('This app needs a super admin. ' +
+          'You cannot perform this operation.');
         }
 
         return user
