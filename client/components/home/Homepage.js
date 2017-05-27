@@ -5,6 +5,7 @@ import DocumentEditor from './DocumentEditor';
 import logUserOut from '../../actions/LogoutActions';
 import { displayUserDocuments, createDocument, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
+import displaySearchResults from '../../actions/SearchActions';
 import DisplayUserDocuments from './DisplayUserDocuments';
 
 /**
@@ -42,8 +43,15 @@ class Homepage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const offset = (pageNumber - 1) * 12;
-    this.props.displayUserDocuments(offset);
+    const searchStatus = this.props.currentState.searchParams;
+    if (searchStatus.isSearch) {
+      const offset = (pageNumber - 1) * 12;
+      this.props
+        .displaySearchResults(searchStatus.searchQuery, 'documents', offset);
+    } else {
+      const offset = (pageNumber - 1) * 12;
+      this.props.displayUserDocuments(offset);
+    }
   }
 
   /**
@@ -85,15 +93,18 @@ class Homepage extends React.Component {
     let paginationInfo;
     let pageCount;
     let currentPage;
+    const userDocumentsInStore = this.props
+      .currentState.displayUserDocuments;
+    const searchStatus = this.props.currentState.searchParams;
 
-    if (this.props.userDocumentsInStore.documents !== undefined) {
-      if (this.props.userDocumentsInStore.paginationInfo !== undefined) {
-        paginationInfo = this.props.userDocumentsInStore.paginationInfo;
+    if (userDocumentsInStore.documents !== undefined) {
+      if (userDocumentsInStore.paginationInfo !== undefined) {
+        paginationInfo = userDocumentsInStore.paginationInfo;
         pageCount = paginationInfo.pageCount;
         currentPage = paginationInfo.currentPage;
       }
 
-      let userDocuments = this.props.userDocumentsInStore.documents;
+      let userDocuments = userDocumentsInStore.documents;
 
       if (userDocuments !== undefined && userDocuments.length > 0) {
         if (this.state.access !== 'all') {
@@ -128,6 +139,7 @@ class Homepage extends React.Component {
           fixedFooter
           trigger={
             <button
+              id="addDocument"
               className="btn-floating btn-large
               waves-effect waves-light cyan"
             >
@@ -160,10 +172,17 @@ class Homepage extends React.Component {
         <br />
         <br />
         <div className="row">
+          {
+            searchStatus.isSearch
+            ?
+              <h5 className="searchResult"> Search results: </h5>
+            :
+            ''
+          }
           {allUserDocuments}
         </div>
         {
-          allUserDocuments
+          pageCount
           ?
             <div className="center-align">
               <Pagination
@@ -183,15 +202,16 @@ class Homepage extends React.Component {
 Homepage.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
   displayUserDocuments: React.PropTypes.func.isRequired,
-  userDocumentsInStore: React.PropTypes.any.isRequired,
+  currentState: React.PropTypes.object.isRequired,
   deleteDocument: React.PropTypes.func.isRequired,
   createDocument: React.PropTypes.func.isRequired,
+  displaySearchResults: React.PropTypes.func.isRequired,
   editDocument: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-    userDocumentsInStore: state.displayUserDocuments
+    currentState: state
   };
 };
 
@@ -200,4 +220,6 @@ export default connect(mapStateToProps,
     displayUserDocuments,
     createDocument,
     deleteDocument,
-    editDocument })(Homepage);
+    editDocument,
+    displaySearchResults
+  })(Homepage);
