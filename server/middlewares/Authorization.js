@@ -1,6 +1,3 @@
-// const jwtDecode = require('jsonwebtoken');
-// const config = require('../config/config.js');
-
 export default {
   isSuperAdmin: (req, res, next) => {
     if (req.user.roleId === 1) {
