@@ -22,7 +22,7 @@ class LandingPage extends React.Component {
         <br />
         <br />
         <br />
-        <div className="container z-depth-4">
+        <div className="container">
           <br />
           <LoginForm userLogin={userLogin} />
         </div>
