@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Modal, Pagination, Row, Input } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
-import logUserOut from '../../actions/LogoutActions';
 import { displayUserDocuments, createDocument, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
 import displaySearchResults from '../../actions/SearchActions';
@@ -12,6 +11,19 @@ import DisplayUserDocuments from './DisplayUserDocuments';
  *
  */
 class Homepage extends React.Component {
+
+  /**
+   * filter - description
+   *
+   * @param  {type} documents description
+   * @param  {type} filterBy  description
+   * @return {type}           description
+   */
+  static filter(documents, filterBy) {
+    return documents.filter(document =>
+      document.access === filterBy
+    );
+  }
 
   /**
    * constructor - description
@@ -68,26 +80,12 @@ class Homepage extends React.Component {
   }
 
   /**
-   * filter - description
-   *
-   * @param  {type} documents description
-   * @param  {type} filterBy  description
-   * @return {type}           description
-   */
-  filter(documents, filterBy) {
-    return documents.filter(document =>
-      document.access === filterBy
-    );
-  }
-
-
-  /**
    * render - description
    *
    * @return {type}  description
    */
   render() {
-    const { logUserOut, createDocument, deleteDocument, editDocument }
+    const { documentCreate, documentDelete, documentEdit }
       = this.props;
     let allUserDocuments;
     let paginationInfo;
@@ -108,7 +106,7 @@ class Homepage extends React.Component {
 
       if (userDocuments !== undefined && userDocuments.length > 0) {
         if (this.state.access !== 'all') {
-          userDocuments = this
+          userDocuments = Homepage
             .filter(userDocuments, this.state.access);
         }
       }
@@ -118,8 +116,8 @@ class Homepage extends React.Component {
          userDocuments.map(document =>
            <div key={document.id}>
              <DisplayUserDocuments
-               deleteDocument={deleteDocument}
-               editDocument={editDocument}
+               deleteDocument={documentDelete}
+               editDocument={documentEdit}
                documentId={document.id}
                document={document}
              />
@@ -150,7 +148,7 @@ class Homepage extends React.Component {
             complete: () => $('#submit').prop('disabled', false)
           }}
         >
-          <DocumentEditor createDocument={createDocument} />
+          <DocumentEditor createDocument={documentCreate} />
         </Modal>
 
         <Row className="right">
@@ -200,26 +198,31 @@ class Homepage extends React.Component {
 }
 
 Homepage.propTypes = {
-  logUserOut: React.PropTypes.func.isRequired,
   displayUserDocuments: React.PropTypes.func.isRequired,
   currentState: React.PropTypes.object.isRequired,
-  deleteDocument: React.PropTypes.func.isRequired,
-  createDocument: React.PropTypes.func.isRequired,
+  documentDelete: React.PropTypes.func.isRequired,
+  documentCreate: React.PropTypes.func.isRequired,
   displaySearchResults: React.PropTypes.func.isRequired,
-  editDocument: React.PropTypes.func.isRequired
+  documentEdit: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
+
+/**
+ * mapStateToProps - maps state to props
+ *
+ * @param  {type} state object representing current state
+ * @return {type}       object representing current state
+ */
+function mapStateToProps(state) {
   return {
     currentState: state
   };
-};
+}
 
 export default connect(mapStateToProps,
-  { logUserOut,
-    displayUserDocuments,
-    createDocument,
-    deleteDocument,
-    editDocument,
+  { displayUserDocuments,
+    documentCreate: createDocument,
+    documentDelete: deleteDocument,
+    documentEdit: editDocument,
     displaySearchResults
   })(Homepage);

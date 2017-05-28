@@ -62,7 +62,6 @@ class ExplorePage extends React.Component {
     });
   }
 
-
   /**
    * onSelect - description
    *
@@ -88,7 +87,7 @@ class ExplorePage extends React.Component {
    * @return {type}  description
    */
   render() {
-    const { logUserOut, deleteDocument, editDocument, currentState }
+    const { documentDelete, documentEdit, currentState }
       = this.props;
     let allDocuments;
     let paginationInfo;
@@ -119,8 +118,8 @@ class ExplorePage extends React.Component {
          documentsUserCanSee.map(document =>
            <DisplayDocuments
              key={document.id}
-             deleteDocument={deleteDocument}
-             editDocument={editDocument}
+             deleteDocument={documentDelete}
+             editDocument={documentEdit}
              document={document}
              currentState={currentState}
            />
@@ -183,22 +182,30 @@ class ExplorePage extends React.Component {
 }
 
 ExplorePage.propTypes = {
-  logUserOut: React.PropTypes.func.isRequired,
   displayDocuments: React.PropTypes.func.isRequired,
+  documentDelete: React.PropTypes.func.isRequired,
+  documentEdit: React.PropTypes.func.isRequired,
   displaySearchResults: React.PropTypes.func.isRequired,
   currentState: React.PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
+
+/**
+ * mapStateToProps - maps state to props
+ *
+ * @param  {type} state description
+ * @return {type} state
+ */
+function mapStateToProps(state) {
   return {
     currentState: state
   };
-};
+}
 
 export default connect(mapStateToProps,
   { logUserOut,
     displayDocuments,
-    editDocument,
-    deleteDocument,
+    documentEdit: editDocument,
+    documentDelete: deleteDocument,
     displaySearchResults
   })(ExplorePage);

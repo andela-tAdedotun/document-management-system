@@ -1,16 +1,12 @@
-/* eslint-disable no-shadow */
-
 import React from 'react';
 import { connect } from 'react-redux';
 import
   { Tabs, Tab, Table, Modal, Row, Input, Pagination } from 'react-materialize';
-import logUserOut from '../../actions/LogoutActions';
 import PersonalProfile from './PersonalProfile';
 import Users from './Users';
 import Roles from './Roles';
 import { updateUser, getUsers, deleteUser, createUser }
   from '../../actions/UserActions';
-import displaySearchResults from '../../actions/SearchActions';
 import { getRoles, createRole, deleteRole } from '../../actions/RoleActions';
 
 
@@ -76,15 +72,8 @@ class DashboardPage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const searchStatus = this.props.currentState.searchParams;
-    if (searchStatus.isSearch) {
-      const offset = (pageNumber - 1) * 15;
-      this.props
-        .displaySearchResults(searchStatus.searchQuery, 'dashboard', offset);
-    } else {
-      const offset = (pageNumber - 1) * 15;
-      this.props.getUsers(offset);
-    }
+    const offset = (pageNumber - 1) * 15;
+    this.props.getUsers(offset);
   }
 
   /**
@@ -122,8 +111,7 @@ class DashboardPage extends React.Component {
     let pageCount;
     let currentPage;
 
-    const { logUserOut, currentState, updateUser,
-       getUsers, deleteUser, createUser, deleteRole } = this.props;
+    const { currentState, userUpdate } = this.props;
 
     let allUsers;
     const usersInStore = this.props.currentState.usersInDatabase;
@@ -136,6 +124,7 @@ class DashboardPage extends React.Component {
       allUsers = users.map(eachUser =>
         <Users
           key={eachUser.id}
+          updateUser={userUpdate}
           {...this.props}
           roleId={this.currentUser.roleId}
           user={eachUser}
@@ -161,9 +150,8 @@ class DashboardPage extends React.Component {
         <div>
           <br />
           <PersonalProfile
-            updateUser={updateUser}
+            updateUser={userUpdate}
             currentState={currentState}
-            logUserOut={logUserOut}
           />
         </div>
       );
@@ -173,7 +161,8 @@ class DashboardPage extends React.Component {
           <br />
           <Tabs className="tabs-fixed-width">
 
-            <Tab title="Your Profile" active><PersonalProfile {...this.props} />
+            <Tab title="Your Profile" active>
+              <PersonalProfile {...this.props} updateUser={userUpdate} />
             </Tab>
             <Tab title="Users">
               <br />
@@ -253,7 +242,7 @@ class DashboardPage extends React.Component {
                 </Table>
 
                 {
-                  pageCount
+                  allUsers
                   ?
                     <div className="center-align">
                       <Pagination
@@ -338,14 +327,10 @@ class DashboardPage extends React.Component {
 DashboardPage.propTypes = {
   currentState: React.PropTypes.object.isRequired,
   getUsers: React.PropTypes.func.isRequired,
-  updateUser: React.PropTypes.func.isRequired,
-  deleteUser: React.PropTypes.func.isRequired,
+  userUpdate: React.PropTypes.func.isRequired,
   createUser: React.PropTypes.func.isRequired,
   getRoles: React.PropTypes.func.isRequired,
-  displaySearchResults: React.PropTypes.func.isRequired,
-  logUserOut: React.PropTypes.func.isRequired,
-  createRole: React.PropTypes.func.isRequired,
-  deleteRole: React.PropTypes.func.isRequired
+  createRole: React.PropTypes.func.isRequired
 };
 
 
@@ -364,13 +349,11 @@ function mapStateToProps(state) {
 export default
 connect(mapStateToProps,
   {
-    logUserOut,
-    updateUser,
+    userUpdate: updateUser,
     getUsers,
     deleteUser,
     createUser,
     getRoles,
     createRole,
-    deleteRole,
-    displaySearchResults
+    deleteRole
   })(DashboardPage);

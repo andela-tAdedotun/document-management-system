@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react';
 import { browserHistory } from 'react-router';
 import validate from '../../../shared/Validator';

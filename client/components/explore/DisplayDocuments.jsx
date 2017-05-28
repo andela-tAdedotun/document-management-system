@@ -2,7 +2,6 @@ import React from 'react';
 import { Row, Modal, Input } from 'react-materialize';
 import moment from 'moment';
 import Prompt from '../common/Prompt';
-import '../../index.scss';
 
 /**
  *
@@ -54,7 +53,7 @@ class DisplayDocuments extends React.Component {
   }
 
   /**
-   * editDocument - description
+   * deleteDocument - description
    *
    * @return {type}  description
    */

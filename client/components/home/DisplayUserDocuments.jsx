@@ -79,10 +79,10 @@ class DisplayUserDocuments extends React.Component {
     const views = document.views;
 
     return (
-      <div className="col s12 m3">
+      <div className="col m3">
         <div className="card hoverable small #bdbdbd grey lighten-1">
           <div>
-            <span className="right activator info-button" href="#">
+            <span className="right activator" href="#">
               <i className="medium material-icons right">
                 info_outline
               </i>

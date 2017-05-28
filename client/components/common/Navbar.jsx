@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, browserHistory } from 'react-router';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import displaySearchResults from '../../actions/SearchActions';
 
@@ -131,10 +131,18 @@ NavigationBar.propTypes = {
   displaySearchResults: React.PropTypes.func.isRequired
 };
 
-const mapStateToProps = (state) => {
+
+/**
+ * mapStateToProps - maps state to props
+ *
+ * @param  {type} state
+ * @return {type} state
+ */
+function mapStateToProps(state) {
   return {
     currentState: state
   };
-};
+}
 
-export default connect(mapStateToProps, { displaySearchResults })(NavigationBar);
+export default
+  connect(mapStateToProps, { displaySearchResults })(NavigationBar);
