@@ -44,7 +44,7 @@ export default (sequelize, DataTypes) => {
 
         User.belongsTo(models.Role, {
           foreignKey: 'RoleId',
-          onDelete: 'CASCADE'
+          onDelete: 'SET NULL'
         });
       },
     },
