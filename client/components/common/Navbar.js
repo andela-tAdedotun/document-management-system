@@ -99,8 +99,13 @@ class NavigationBar extends React.Component {
                   <li> <Link to="dashboard"> Dashboard </Link> </li>
                   <li> <Link to="explore"> Explore </Link> </li>
                   <li>
-                    <a href="/logout" className="red" onClick={this.onClick}>
-                      Log Out!
+                    <a
+                      href="/logout"
+                      className="red"
+                      id="logout"
+                      onClick={this.onClick}
+                    >
+                      Log Out
                     </a>
                   </li>
                 </ul>
@@ -108,7 +113,9 @@ class NavigationBar extends React.Component {
             :
 
               <ul id="nav-mobile" className="right">
-                <li> <Link to="signup" className="red"> Signup </Link> </li>
+                <li>
+                  <Link to="signup" id="signup" className="red"> Signup </Link>
+                </li>
               </ul>
           }
         </div>
