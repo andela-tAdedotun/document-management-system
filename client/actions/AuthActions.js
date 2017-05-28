@@ -1,6 +1,8 @@
+import types from './types';
+
 const setCurrentUser = (user) => {
   return {
-    type: 'SET_CURRENT_USER',
+    type: types.SET_CURRENT_USER,
     user
   };
 };

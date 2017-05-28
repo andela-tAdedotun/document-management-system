@@ -1,12 +1,13 @@
 import findIndex from 'lodash/findIndex';
+import types from '../actions/types';
 
 export default (state = [], action = {}) => {
   switch (action.type) {
-    case 'GET_ALL_USERS': {
+    case types.GET_ALL_USERS: {
       return action.allUsers;
     }
 
-    case 'ADMIN_UPDATE_USER': {
+    case types.ADMIN_UPDATE_USER: {
       const index =
         findIndex(state.users, { id: action.userId });
       const stateCopy = Object.assign({}, state);
@@ -14,7 +15,7 @@ export default (state = [], action = {}) => {
       return stateCopy;
     }
 
-    case 'DELETE_USER': {
+    case types.DELETE_USER: {
       const index =
         findIndex(state.users, { id: action.userId });
       const stateCopy = Object.assign({}, state);
@@ -22,7 +23,7 @@ export default (state = [], action = {}) => {
       return stateCopy;
     }
 
-    case 'CREATE_NEW_USER': {
+    case types.CREATE_NEW_USER: {
       const stateCopy = Object.assign({}, state);
       stateCopy.users.push(action.createdUser);
       return stateCopy;
