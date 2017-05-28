@@ -82,7 +82,7 @@ class DisplayUserDocuments extends React.Component {
       <div className="col m3">
         <div className="card hoverable small #bdbdbd grey lighten-1">
           <div>
-            <span className="right activator" href="#">
+            <span className="right activator info-button" href="#">
               <i className="medium material-icons right">
                 info_outline
               </i>
