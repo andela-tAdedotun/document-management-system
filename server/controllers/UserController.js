@@ -74,7 +74,8 @@ export default {
           paginationInfo,
           users: users.rows,
         });
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**
@@ -239,7 +240,8 @@ export default {
 
         return user
           .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedUser => res.status(200).send(updatedUser));
+          .then(updatedUser => res.status(200).send(updatedUser))
+          .catch(error => res.status(400).send(error.message));
       })
       .catch(() => res.status(400).send('You have sent a bad request'));
   },
@@ -265,7 +267,8 @@ export default {
 
         return user
           .destroy()
-          .then(() => res.status(200).send('User successfully deleted.'));
+          .then(() => res.status(200).send('User successfully deleted.'))
+          .catch(error => res.status(400).send(error.message));
       })
       .catch(error => res.status(400).send(error));
   },

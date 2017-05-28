@@ -21,7 +21,7 @@ export default {
         documentOwnerId: req.user.id
       })
       .then(document => res.status(201).send(document))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**
@@ -81,7 +81,8 @@ export default {
             paginationInfo,
             documents: documents.rows,
           });
-        });
+        })
+        .catch(error => res.status(400).send(error.message));
     }
 
     /*
@@ -120,7 +121,8 @@ export default {
         queryOptions.offset, documents.count);
         res.status(200).send({ paginationInfo,
           documents: documents.rows });
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**
@@ -223,7 +225,7 @@ export default {
         document.increment('views');
         res.status(200).send(document);
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**

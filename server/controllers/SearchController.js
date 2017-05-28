@@ -40,7 +40,8 @@ export default {
           users: userMatches.rows,
           paginationInfo
         });
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   },
 
 
@@ -83,7 +84,8 @@ export default {
           documents: documentMatches.rows,
           paginationInfo
         });
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**
@@ -213,6 +215,7 @@ export default {
           documents: documentMatches.rows,
           paginationInfo
         });
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   }
 };
