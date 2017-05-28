@@ -3,9 +3,7 @@ import path from 'path';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 export default {
-  // debug: true,
   devtool: 'cheap-module-eval-source-map',
-  // noInfo: false,
   entry: [
     'eventsource-polyfill',
     'webpack-hot-middleware/client?reload=true',
@@ -43,6 +41,11 @@ export default {
         loaders: ['style', 'css']
       },
       {
+        test: [/\.jsx$/],
+        include: path.join(__dirname, 'client'),
+        loaders: ['react-hot-loader', 'babel-loader']
+      },
+      {
         test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader']
       },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file' },
@@ -61,5 +64,8 @@ export default {
   node: {
     net: 'empty',
     dns: 'empty'
+  },
+  resolve: {
+    extensions: ['.jsx', '.js']
   }
 };
