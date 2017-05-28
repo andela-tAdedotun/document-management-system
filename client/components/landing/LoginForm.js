@@ -34,8 +34,8 @@ class LoginForm extends React.Component {
     this.props.userLogin(this.state).then(() => {
       browserHistory.push('/documents');
     })
-    .catch(() => {
-
+    .catch((error) => {
+      Materialize.toast(error.message, 4000);
     });
   }
 
@@ -60,6 +60,7 @@ class LoginForm extends React.Component {
       <div className="input-field col s12">
         <form onSubmit={this.onSubmit}>
           <div>
+            <span>Email</span>
             <div className="input-field">
               <input
                 className="validate"
@@ -69,10 +70,10 @@ class LoginForm extends React.Component {
                 id="email"
                 name="email" required
               />
-              <label className="active" htmlFor="email">Email</label>
             </div>
             <br />
             <br />
+            <span>Password</span>
             <div className="input-field">
               <input
                 value={this.state.password}
@@ -82,7 +83,6 @@ class LoginForm extends React.Component {
                 name="password"
                 required
               />
-              <label className="active" htmlFor="password">Password</label>
             </div>
             <br />
             <br />
