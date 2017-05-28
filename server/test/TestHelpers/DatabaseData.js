@@ -86,6 +86,30 @@ const SpecHelper = {
     password: faker.internet.password()
   },
 
+  userHasUpperCaseEmail: {
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    email: faker.internet.email().toUpperCase(),
+    password: faker.internet.password()
+  },
+
+  tooShortPasswordUser: {
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    email: faker.internet.email().toUpperCase(),
+    password: 12345
+  },
+
+  tooLongPasswordUser: {
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    email: faker.internet.email().toUpperCase(),
+    password: 12345678910111213
+  },
+
+  invalidEmailUser: {
+    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    email: 'hello@test',
+    password: 123456
+  },
+
   validUser2: {
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     email: faker.internet.email(),
@@ -105,6 +129,16 @@ const SpecHelper = {
 
   invalidUser3: {
     email: 'ajagbe@xyz.com'
+  },
+
+  noNameUser: {
+    email: faker.internet.email(),
+    password: faker.internet.password()
+  },
+
+  noPasswordUser: {
+    email: faker.internet.email(),
+    name: faker.name.firstName()
   },
 
   testDocument: {
@@ -188,6 +222,38 @@ const SpecHelper = {
     access: 'role',
     documentOwnerId: 7
   },
+
+  noTitleDocument: {
+    content: 'We are the world',
+    access: 'public',
+    documentOwnerId: 1
+  },
+
+  noContentDocument: {
+    title: 'Hello world!',
+    access: 'private',
+    documentOwnerId: 2
+  },
+
+  noAccessDocument: {
+    title: 'Hello world!',
+    content: 'We are the world',
+    documentOwnerId: 2
+  },
+
+  noOwnerDocument: {
+    title: 'Hello world!',
+    content: 'We are the world',
+    access: 'role',
+    documentOwnerId: 100
+  },
+
+  validDocument: {
+    title: faker.lorem.word(),
+    content: faker.lorem.paragraph(),
+    access: 'public',
+    documentOwnerId: 5
+  }
 };
 
 export default SpecHelper;
