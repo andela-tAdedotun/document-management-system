@@ -6,6 +6,7 @@
   "scripts": {
     "test": "npm-run-all seed:test test:server reset:test",
     "start": "babel-node server.js",
+    "e2e": "nightwatch",
     "db:migrate": "sequelize db:migrate",
     "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
     "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
@@ -106,6 +107,7 @@
     "request": "^2.81.0",
     "rimraf": "^2.5.2",
     "sass-loader": "^6.0.3",
+    "selenium-webdriver": "^3.4.0",
     "sequelize": "^3.30.4",
     "shortid": "^2.2.8",
     "style-loader": "^0.13.1",
@@ -116,5 +118,9 @@
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^2.4.5",
     "webpack-hot-middleware": "^2.10.0"
+  },
+  "devDependencies": {
+    "nightwatch": "^0.9.15",
+    "selenium-standalone": "^6.4.1"
   }
 }
