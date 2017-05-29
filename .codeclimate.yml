@@ -1,8 +1,16 @@
 exclude_paths:
-- "**/tests/"
-- "**/test/"
-- "docs/"
-- "coverage/"
-- "reports/"
-- "node_modules/"
-- "**/spec/"
+  - "**/tests/"
+  - "**/test/"
+  - "docs/"
+  - "coverage/"
+  - "reports/"
+  - "node_modules/"
+  - "**/spec/"
+
+engines:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        javascript:
+          mass_threshold: 60
