@@ -3,8 +3,8 @@ import { browserHistory } from 'react-router';
 import setAuthorizationToken from '../utilities/SetAuthorizationToken';
 import types from './types';
 
-const logUserOut = () => {
-  return (dispatch) => {
+const logUserOut = () =>
+  (dispatch) => {
     localStorage.removeItem('jwtToken');
     setAuthorizationToken(false);
     dispatch({
@@ -14,6 +14,6 @@ const logUserOut = () => {
       browserHistory.push('/');
     });
   };
-};
+
 
 export default logUserOut;

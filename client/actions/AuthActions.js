@@ -1,10 +1,10 @@
 import types from './types';
 
 /**
- * setCurrentUser - description
+ * setCurrentUser - puts details of current user in state
  *
- * @param  {type} user description
- * @return {type}      description
+ * @param  {type} user object representing user
+ * @return {type}      pure object
  */
 function setCurrentUser(user) {
   return {

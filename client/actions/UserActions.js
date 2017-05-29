@@ -1,6 +1,8 @@
 import axios from 'axios';
 import setCurrentUser from './AuthActions';
 import types from './types';
+import { buildDispatchWithGet, buildDispatchWithPost, dispatchAction }
+  from '../utilities/dispatchHelper';
 
 export const updateUser = (userId, userData, isAdmin) =>
   dispatch => axios.put(`/api/users/${userId}`, userData)
@@ -12,11 +14,13 @@ export const updateUser = (userId, userData, isAdmin) =>
     currentUserDetails.roleId = res.data.RoleId;
     if (isAdmin) {
       delete res.data.password;
-      dispatch({
-        type: types.ADMIN_UPDATE_USER,
-        updatedUser: res.data,
-        userId
-      });
+      dispatchAction(dispatch,
+        {
+          type: types.ADMIN_UPDATE_USER,
+          updatedUser: res.data,
+          userId
+        }
+      );
     } else {
       dispatch(setCurrentUser(currentUserDetails));
     }
@@ -30,29 +34,24 @@ export const updateUser = (userId, userData, isAdmin) =>
   });
 
 export const getUsers = (offset, limit) =>
-  dispatch => axios.get(`/api/users/?offset=${offset}&limit=${limit}`)
-  .then((res) => {
-    dispatch({
-      type: types.GET_ALL_USERS,
-      allUsers: res.data
-    });
-  });
+  dispatch =>
+    buildDispatchWithGet(dispatch,
+      `/api/users/?offset=${offset}&limit=${limit}`,
+      types.GET_ALL_USERS, 'allUsers');
 
 export const deleteUser = userId =>
   dispatch => axios.delete(`/api/users/${userId}`).then(() => {
-    dispatch({
-      type: types.DELETE_USER,
-      userId
-    });
+    dispatchAction(dispatch,
+      {
+        type: types.DELETE_USER,
+        userId
+      });
   })
   .catch((res) => {
     throw new Error(res.data);
   });
 
 export const createUser = userData =>
-  dispatch => axios.post('/api/users', userData).then((res) => {
-    dispatch({
-      type: types.CREATE_NEW_USER,
-      createdUser: res.data.user
-    });
-  });
+  dispatch =>
+    buildDispatchWithPost(dispatch, '/api/users', userData,
+    types.CREATE_NEW_USER, 'createdUser', 'user');

@@ -1,26 +1,27 @@
 import axios from 'axios';
 import types from './types';
+import { dispatchAction, buildDispatchWithPost, buildDispatchWithGet }
+  from '../utilities/dispatchHelper';
 
 export const getRoles = () =>
-  dispatch => axios.get('/api/roles').then((res) => {
-    dispatch({
-      type: types.GET_ALL_ROLES,
-      roles: res.data
-    });
-  });
+  dispatch =>
+    buildDispatchWithGet(
+        dispatch, '/api/roles/',
+        types.GET_ALL_ROLES,
+        'roles'
+      );
 
 export const createRole = roleData =>
-  dispatch => axios.post('/api/roles', roleData).then((res) => {
-    dispatch({
-      type: types.CREATE_NEW_ROLE,
-      createdRole: res.data
-    });
-  });
+  dispatch =>
+    buildDispatchWithPost(dispatch, '/api/roles', roleData,
+    types.CREATE_NEW_ROLE, 'createdRole');
 
 export const deleteRole = roleId =>
   dispatch => axios.delete(`/api/roles/${roleId}`).then(() => {
-    dispatch({
-      type: types.DELETE_ROLE,
-      roleId
-    });
+    dispatchAction(dispatch,
+      {
+        type: types.DELETE_ROLE,
+        roleId
+      }
+    );
   });
