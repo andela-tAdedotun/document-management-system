@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
@@ -9,7 +10,6 @@ import { browserHistory } from 'react-router';
  * @return {type}                       description
  */
 export default function (ComponentRequiresAuth) {
-
   /**
    *
    */
@@ -40,7 +40,7 @@ export default function (ComponentRequiresAuth) {
   }
 
   RequiresAuthentication.propTypes = {
-    isAuthenticated: React.PropTypes.bool.isRequired
+    isAuthenticated: PropTypes.bool.isRequired
   };
 
 
