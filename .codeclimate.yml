@@ -1,0 +1,8 @@
+exclude_paths:
+- "**/tests/"
+- "**/test/"
+- "docs/"
+- "coverage/"
+- "reports/"
+- "node_modules/"
+- "**/spec/"
