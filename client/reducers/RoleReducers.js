@@ -1,7 +1,7 @@
 import findIndex from 'lodash/findIndex';
 import types from '../actions/types';
 
-export default (state = [], action = {}) => {
+export default (state = {}, action = {}) => {
   switch (action.type) {
     case types.GET_ALL_ROLES: {
       return [

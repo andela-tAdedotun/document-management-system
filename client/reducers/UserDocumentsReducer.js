@@ -1,33 +1,39 @@
 import findIndex from 'lodash/findIndex';
 import types from '../actions/types';
 
-export default (state = [], action = {}) => {
+export default (state = {}, action = {}) => {
   switch (action.type) {
     case types.CREATE_NEW_DOCUMENT: {
-      return action.userDocuments;
+      const stateCopy = Object.assign({}, state);
+      stateCopy.displayUserDocuments.documents.unshift(action.createdDocument);
+      return stateCopy;
     }
 
     case types.DISPLAY_USER_DOCUMENTS: {
-      return action.documents;
+      return { ...state, displayUserDocuments: action.documents };
     }
 
     case types.USER_HAS_NO_DOCUMENT: {
-      return action.errorMessage;
+      return { ...state, displayUserDocuments: action.errorMessage };
     }
 
     case types.DELETE_DOCUMENT: {
       const index =
-        findIndex(state.documents, { id: action.documentId });
+        findIndex(
+          state.displayUserDocuments.documents, { id: action.documentId }
+         );
       const stateCopy = Object.assign({}, state);
-      stateCopy.documents.splice(index, 1);
+      stateCopy.displayUserDocuments.documents.splice(index, 1);
       return stateCopy;
     }
 
     case types.EDIT_DOCUMENT: {
       const index =
-        findIndex(state.documents, { id: action.documentId });
+        findIndex(
+          state.displayUserDocuments.documents, { id: action.documentId }
+        );
       const stateCopy = Object.assign({}, state);
-      stateCopy.documents[index] = action.updatedDocument;
+      stateCopy.displayUserDocuments.documents[index] = action.updatedDocument;
       return stateCopy;
     }
 
