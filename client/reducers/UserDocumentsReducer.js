@@ -3,6 +3,7 @@ import findIndex from 'lodash/findIndex';
 export default (state = [], action = {}) => {
   switch (action.type) {
     case 'CREATE_NEW_DOCUMENT': {
+      console.log(action.userDocuments)
       return action.userDocuments;
     }
 
