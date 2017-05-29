@@ -2,6 +2,7 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { displayUserDocuments, displayDocuments } from './DocumentsActions';
 import { getUsers } from './UserActions';
+import types from './types';
 
 const displaySearchResults = (searchQuery, location, offset) => {
   const userToken = localStorage.getItem('jwtToken');
@@ -9,7 +10,7 @@ const displaySearchResults = (searchQuery, location, offset) => {
   const userId = userData.id;
   return (dispatch) => {
     dispatch({
-      type: 'IS_SEARCH',
+      type: types.IS_SEARCH,
       searchPayload: {
         isSearch: true,
         searchQuery
@@ -20,7 +21,7 @@ const displaySearchResults = (searchQuery, location, offset) => {
         .then((res) => {
           if (searchQuery) {
             dispatch({
-              type: 'DISPLAY_USER_DOCUMENTS',
+              type: types.DISPLAY_USER_DOCUMENTS,
               documents: res.data
             });
           } else {
@@ -32,7 +33,7 @@ const displaySearchResults = (searchQuery, location, offset) => {
         .then((res) => {
           if (searchQuery) {
             dispatch({
-              type: 'DISPLAY_DOCUMENTS',
+              type: types.DISPLAY_DOCUMENTS,
               documents: res.data
             });
           } else {
@@ -44,7 +45,7 @@ const displaySearchResults = (searchQuery, location, offset) => {
         .then((res) => {
           if (searchQuery) {
             dispatch({
-              type: 'GET_ALL_USERS',
+              type: types.GET_ALL_USERS,
               allUsers: res.data
             });
           } else {

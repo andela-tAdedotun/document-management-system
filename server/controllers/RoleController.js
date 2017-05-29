@@ -32,11 +32,12 @@ export default {
       .findAll()
       .then((userRoles) => {
         res.status(200).send(userRoles);
-      });
+      })
+      .catch(error => res.status(400).send(error.message));
   },
 
   /**
-  * @desc - Creates a new user in the database
+  * @desc - Creates a new role in the database
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - -
@@ -53,7 +54,8 @@ export default {
           return res.status(403).send('You can\'t delete this role.');
         }
         return role.destroy()
-          .then(() => res.status(200).send('Role successfully deleted.'));
+          .then(() => res.status(200).send('Role successfully deleted.'))
+          .catch(error => res.status(400).send(error.message));
       });
   }
 };

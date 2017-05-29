@@ -1,6 +1,4 @@
 import axios from 'axios';
-// import jwt from 'jsonwebtoken';
-// import validator from 'validator';
 import jwtDecode from 'jwt-decode';
 import setAuthorizationToken from '../utilities/SetAuthorizationToken';
 import setCurrentUser from './AuthActions';
@@ -13,7 +11,7 @@ const userLogin = userData =>
     dispatch(setCurrentUser(jwtDecode(token)));
   })
   .catch((res) => {
-    Materialize.toast(res.data, 4000);
+    throw new Error(res.data);
   });
 
 export default userLogin;

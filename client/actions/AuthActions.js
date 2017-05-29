@@ -1,8 +1,16 @@
-const setCurrentUser = (user) => {
+import types from './types';
+
+/**
+ * setCurrentUser - description
+ *
+ * @param  {type} user description
+ * @return {type}      description
+ */
+function setCurrentUser(user) {
   return {
-    type: 'SET_CURRENT_USER',
+    type: types.SET_CURRENT_USER,
     user
   };
-};
+}
 
 export default setCurrentUser;

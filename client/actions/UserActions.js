@@ -1,5 +1,6 @@
 import axios from 'axios';
 import setCurrentUser from './AuthActions';
+import types from './types';
 
 export const updateUser = (userId, userData, isAdmin) =>
   dispatch => axios.put(`/api/users/${userId}`, userData)
@@ -12,7 +13,7 @@ export const updateUser = (userId, userData, isAdmin) =>
     if (isAdmin) {
       delete res.data.password;
       dispatch({
-        type: 'ADMIN_UPDATE_USER',
+        type: types.ADMIN_UPDATE_USER,
         updatedUser: res.data,
         userId
       });
@@ -32,7 +33,7 @@ export const getUsers = (offset, limit) =>
   dispatch => axios.get(`/api/users/?offset=${offset}&limit=${limit}`)
   .then((res) => {
     dispatch({
-      type: 'GET_ALL_USERS',
+      type: types.GET_ALL_USERS,
       allUsers: res.data
     });
   });
@@ -40,7 +41,7 @@ export const getUsers = (offset, limit) =>
 export const deleteUser = userId =>
   dispatch => axios.delete(`/api/users/${userId}`).then(() => {
     dispatch({
-      type: 'DELETE_USER',
+      type: types.DELETE_USER,
       userId
     });
   })
@@ -51,7 +52,7 @@ export const deleteUser = userId =>
 export const createUser = userData =>
   dispatch => axios.post('/api/users', userData).then((res) => {
     dispatch({
-      type: 'CREATE_NEW_USER',
+      type: types.CREATE_NEW_USER,
       createdUser: res.data.user
     });
   });

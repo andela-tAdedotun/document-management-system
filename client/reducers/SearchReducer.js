@@ -1,8 +1,8 @@
-// import findIndex from 'lodash/findIndex';
+import types from '../actions/types';
 
 export default (state = [], action = {}) => {
   switch (action.type) {
-    case 'IS_SEARCH': {
+    case types.IS_SEARCH: {
       return action.searchPayload;
     }
 

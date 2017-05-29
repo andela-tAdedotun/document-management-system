@@ -25,9 +25,16 @@ span.info-button:hover {
 ::-webkit-input-placeholder {
   color: #4f5b66;
 }
+
 #parent-container{
   height: 90%;
 }
+
+#add-document-modal, #edit-document-modal {
+  width: 90%;
+  min-height: 90%;
+}
+
 #searchbar {
   margin-right: 40px;
   width: 300px;

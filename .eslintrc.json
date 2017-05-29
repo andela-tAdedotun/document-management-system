@@ -14,7 +14,8 @@
     "localStorage": false,
     "document": false,
     "$": false,
-    "Materialize": false
+    "Materialize": false,
+    "window": false
     },
     "rules": {
     "max-len": ["error", 80, 4],

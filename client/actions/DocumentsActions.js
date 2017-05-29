@@ -1,5 +1,6 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
+import types from './types';
 
 export const displayUserDocuments = (offset, limit) => {
   const userToken = localStorage.getItem('jwtToken');
@@ -7,7 +8,7 @@ export const displayUserDocuments = (offset, limit) => {
   const userId = userData.id;
   return (dispatch) => {
     dispatch({
-      type: 'IS_SEARCH',
+      type: types.IS_SEARCH,
       searchPayload: {
         isSearch: false,
         searchQuery: ''
@@ -18,12 +19,12 @@ export const displayUserDocuments = (offset, limit) => {
     .then((res) => {
       const userDocuments = res.data;
       dispatch({
-        type: 'DISPLAY_USER_DOCUMENTS',
+        type: types.DISPLAY_USER_DOCUMENTS,
         documents: userDocuments
       });
     }).catch(() => {
       dispatch({
-        type: 'USER_HAS_NO_DOCUMENT',
+        type: types.USER_HAS_NO_DOCUMENT,
         errorMessage: 'You have not created any document. Go ahead and ' +
         'create one. It\'s super easy'
       });
@@ -34,7 +35,7 @@ export const displayUserDocuments = (offset, limit) => {
 export const displayDocuments = (offset, limit) =>
   (dispatch) => {
     dispatch({
-      type: 'IS_SEARCH',
+      type: types.IS_SEARCH,
       searchPayload: {
         isSearch: false,
         searchQuery: ''
@@ -44,7 +45,7 @@ export const displayDocuments = (offset, limit) =>
       .then((res) => {
         const documents = res.data;
         dispatch({
-          type: 'DISPLAY_DOCUMENTS',
+          type: types.DISPLAY_DOCUMENTS,
           documents
         });
       });
@@ -58,7 +59,7 @@ export const createDocument = documentData =>
     axios.get(`/api/users/${userId}/documents`).then((res) => {
       const userDocuments = res.data;
       dispatch({
-        type: 'CREATE_NEW_DOCUMENT',
+        type: types.CREATE_NEW_DOCUMENT,
         userDocuments
       });
     });
@@ -68,12 +69,12 @@ export const deleteDocument = (documentId, isAdmin) =>
   dispatch => axios.delete(`/api/documents/${documentId}`).then(() => {
     if (isAdmin) {
       dispatch({
-        type: 'ADMIN_DELETE_DOCUMENT',
+        type: types.ADMIN_DELETE_DOCUMENT,
         documentId
       });
     } else {
       dispatch({
-        type: 'DELETE_DOCUMENT',
+        type: types.DELETE_DOCUMENT,
         documentId
       });
     }
@@ -87,13 +88,13 @@ export const editDocument = (documentId, documentData, isAdmin) =>
       const updatedDocument = res.data;
       if (isAdmin) {
         dispatch({
-          type: 'ADMIN_EDIT_DOCUMENT',
+          type: types.ADMIN_EDIT_DOCUMENT,
           updatedDocument,
           documentId
         });
       } else {
         dispatch({
-          type: 'EDIT_DOCUMENT',
+          type: types.EDIT_DOCUMENT,
           updatedDocument,
           documentId
         });
