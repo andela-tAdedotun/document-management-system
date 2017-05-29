@@ -5,32 +5,50 @@ export const displayUserDocuments = (offset, limit) => {
   const userToken = localStorage.getItem('jwtToken');
   const userData = jwtDecode(userToken);
   const userId = userData.id;
-  return dispatch => axios
-  .get(`/api/users/${userId}/documents/?offset=${offset}&limit=${limit}`)
-  .then((res) => {
-    const userDocuments = res.data;
+  return (dispatch) => {
     dispatch({
-      type: 'DISPLAY_USER_DOCUMENTS',
-      userDocuments
+      type: 'IS_SEARCH',
+      searchPayload: {
+        isSearch: false,
+        searchQuery: ''
+      }
     });
-  }).catch(() => {
-    dispatch({
-      type: 'USER_HAS_NO_DOCUMENT',
-      errorMessage: `You have not created any document. Go ahead and create one.
-      It's super easy`
+    axios
+    .get(`/api/users/${userId}/documents/?offset=${offset}&limit=${limit}`)
+    .then((res) => {
+      const userDocuments = res.data;
+      dispatch({
+        type: 'DISPLAY_USER_DOCUMENTS',
+        documents: userDocuments
+      });
+    }).catch(() => {
+      dispatch({
+        type: 'USER_HAS_NO_DOCUMENT',
+        errorMessage: 'You have not created any document. Go ahead and ' +
+        'create one. It\'s super easy'
+      });
     });
-  });
+  };
 };
 
 export const displayDocuments = (offset, limit) =>
-  dispatch => axios.get(`/api/documents/?offset=${offset}&limit=${limit}`)
-    .then((res) => {
-      const documents = res.data;
-      dispatch({
-        type: 'DISPLAY_DOCUMENTS',
-        documents
-      });
+  (dispatch) => {
+    dispatch({
+      type: 'IS_SEARCH',
+      searchPayload: {
+        isSearch: false,
+        searchQuery: ''
+      }
     });
+    axios.get(`/api/documents/?offset=${offset}&limit=${limit}`)
+      .then((res) => {
+        const documents = res.data;
+        dispatch({
+          type: 'DISPLAY_DOCUMENTS',
+          documents
+        });
+      });
+  };
 
 export const createDocument = documentData =>
   dispatch => axios.post('api/documents', documentData).then(() => {

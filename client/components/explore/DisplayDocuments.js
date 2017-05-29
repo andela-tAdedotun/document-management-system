@@ -2,6 +2,7 @@ import React from 'react';
 import { Row, Modal, Input } from 'react-materialize';
 import moment from 'moment';
 import Prompt from '../common/Prompt';
+import '../../index.scss';
 
 /**
  *
@@ -81,7 +82,7 @@ class DisplayDocuments extends React.Component {
         <div className="col m3">
           <div className="card hoverable small #bdbdbd grey lighten-1">
             <div>
-              <span className="right activator" href="#">
+              <span className="right activator info-button" href="#">
                 <i className="medium material-icons right">
                   info_outline
                 </i>
@@ -205,7 +206,7 @@ class DisplayDocuments extends React.Component {
       <div className="col m3 cards-container">
         <div className="card hoverable small #bdbdbd grey lighten-1">
           <div>
-            <span className="right activator" href="#">
+            <span className="right activator info-button" href="#">
               <i className="medium material-icons right">
                 info_outline
               </i>

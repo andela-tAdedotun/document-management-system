@@ -1,6 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
+import displaySearchResults from '../../actions/SearchActions';
 
 /**
  *
@@ -16,9 +17,27 @@ class NavigationBar extends React.Component {
    */
   constructor(props) {
     super(props);
+    this.state = {
+      searchQuery: ''
+    };
     this.onClick = this.logOut.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
+
+  /**
+   * onChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  onChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+    this.props
+      .displaySearchResults(event.target.value, this.props.location);
+  }
 
   /**
    * logOut - description
@@ -37,7 +56,17 @@ class NavigationBar extends React.Component {
    * @return {type}  description
    */
   render() {
-    const authorization = this.props.authorization;
+    let placeholder;
+    const location = this.props.location;
+    const authorization = this.props.currentState.authorization;
+    if (location.match(/dashboard/)) {
+      placeholder = 'Search users...';
+    } else if (location.match(/documents/)) {
+      placeholder = 'Search your documents...';
+    } else if (location.match(/explore/)) {
+      placeholder = 'Search all documents...';
+    }
+
     return (
       <nav>
         <div className="nav-wrapper">
@@ -48,17 +77,34 @@ class NavigationBar extends React.Component {
             authorization.isAuthenticated
 
             ?
-
-              <ul id="nav-mobile" className="right">
-                <li> <Link to="dashboard"> Dashboard </Link> </li>
-                <li> <Link to="explore"> Explore </Link> </li>
-                <li>
-                  <a href="/logout" className="red" onClick={this.onClick}>
-                    Log Out!
-                  </a>
-                </li>
-              </ul>
-
+              <div>
+                <ul id="nav-mobile" className="right">
+                  <li>
+                    <span id="search-icon">
+                      <i className="small material-icons">search</i>
+                    </span>
+                  </li>
+                  <li>
+                    <form onSubmit={this.onSubmit}>
+                      <input
+                        name="searchQuery"
+                        id="searchbar"
+                        value={this.props.currentState.searchParams.searchQuery}
+                        placeholder={placeholder}
+                        className="validate"
+                        onChange={this.onChange}
+                      />
+                    </form>
+                  </li>
+                  <li> <Link to="dashboard"> Dashboard </Link> </li>
+                  <li> <Link to="explore"> Explore </Link> </li>
+                  <li>
+                    <a href="/logout" className="red" onClick={this.onClick}>
+                      Log Out!
+                    </a>
+                  </li>
+                </ul>
+              </div>
             :
 
               <ul id="nav-mobile" className="right">
@@ -73,13 +119,15 @@ class NavigationBar extends React.Component {
 
 NavigationBar.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
-  authorization: React.PropTypes.object.isRequired,
+  currentState: React.PropTypes.object.isRequired,
+  location: React.PropTypes.string.isRequired,
+  displaySearchResults: React.PropTypes.func.isRequired
 };
 
 const mapStateToProps = (state) => {
   return {
-    authorization: state.authorization
+    currentState: state
   };
 };
 
-export default connect(mapStateToProps, {})(NavigationBar);
+export default connect(mapStateToProps, { displaySearchResults })(NavigationBar);

@@ -4,12 +4,26 @@ import { Input, Row, Pagination } from 'react-materialize';
 import logUserOut from '../../actions/LogoutActions';
 import { displayDocuments, deleteDocument, editDocument }
   from '../../actions/DocumentsActions';
+import displaySearchResults from '../../actions/SearchActions';
 import DisplayDocuments from './DisplayDocuments';
 
 /**
  *
  */
 class ExplorePage extends React.Component {
+
+  /**
+   * filter - description
+   *
+   * @param  {type} documents description
+   * @param  {type} filterBy  description
+   * @return {type}           description
+   */
+  static filter(documents, filterBy) {
+    return documents.filter(document =>
+      document.access === filterBy
+    );
+  }
 
   /**
    * constructor - description
@@ -56,23 +70,17 @@ class ExplorePage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const offset = (pageNumber - 1) * 12;
-    this.props.displayDocuments(offset);
+    const searchStatus = this.props.currentState.searchParams;
+    if (searchStatus.isSearch) {
+      const offset = (pageNumber - 1) * 12;
+      this.props
+        .displaySearchResults(searchStatus.searchQuery, 'explore', offset);
+    } else {
+      const offset = (pageNumber - 1) * 12;
+      this.props.displayDocuments(offset);
+    }
   }
 
-
-  /**
-   * filter - description
-   *
-   * @param  {type} documents description
-   * @param  {type} filterBy  description
-   * @return {type}           description
-   */
-  filter(documents, filterBy) {
-    return documents.filter(document =>
-      document.access === filterBy
-    );
-  }
 
   /**
    * render - description
@@ -86,6 +94,7 @@ class ExplorePage extends React.Component {
     let paginationInfo;
     let pageCount;
     let currentPage;
+    const searchStatus = this.props.currentState.searchParams;
 
     if (Object.keys(this.props.currentState.displayDocuments).length !== 0) {
       let documentsUserCanSee =
@@ -101,7 +110,7 @@ class ExplorePage extends React.Component {
 
       if (documentsUserCanSee.length > 0) {
         if (this.state.access !== 'all') {
-          documentsUserCanSee = this
+          documentsUserCanSee = ExplorePage
             .filter(documentsUserCanSee, this.state.access);
         }
       }
@@ -146,10 +155,17 @@ class ExplorePage extends React.Component {
         <br />
         <br />
         <div className="row">
+          {
+            searchStatus.isSearch
+            ?
+              <h5 className="searchResult"> Search results: </h5>
+            :
+            ''
+          }
           {allDocuments}
         </div>
         {
-          allDocuments
+          pageCount
           ?
             <div className="center-align">
               <Pagination
@@ -169,6 +185,7 @@ class ExplorePage extends React.Component {
 ExplorePage.propTypes = {
   logUserOut: React.PropTypes.func.isRequired,
   displayDocuments: React.PropTypes.func.isRequired,
+  displaySearchResults: React.PropTypes.func.isRequired,
   currentState: React.PropTypes.object.isRequired
 };
 
@@ -179,4 +196,9 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps,
-   { logUserOut, displayDocuments, editDocument, deleteDocument })(ExplorePage);
+  { logUserOut,
+    displayDocuments,
+    editDocument,
+    deleteDocument,
+    displaySearchResults
+  })(ExplorePage);

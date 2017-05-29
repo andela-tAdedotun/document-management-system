@@ -40,17 +40,17 @@ describe('The search API', function () {
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(2);
+        expect(res.body.users.length).to.equal(2);
         request.get('/api/search/users?q=taiwo')
         .set({ Authorization: adminToken })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.length).to.equal(2);
+          expect(res.body.users.length).to.equal(2);
           request.get('/api/search/users?q=taiwo')
           .set({ Authorization: regularUserToken })
           .end((err, res) => {
             expect(res.status).to.equal(200);
-            expect(res.body.length).to.equal(2);
+            expect(res.body.users.length).to.equal(2);
             done();
           });
         });
@@ -65,12 +65,12 @@ describe('The search API', function () {
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(3);
+        expect(res.body.documents.length).to.equal(3);
         request.get('/api/search/documents?q=computing')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.length).to.equal(2);
+          expect(res.body.documents.length).to.equal(2);
           done();
         });
       });
@@ -83,12 +83,12 @@ describe('The search API', function () {
       .set({ Authorization: adminToken })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(0);
+        expect(res.body.documents.length).to.equal(0);
         request.get('/api/search/documents?q=baby')
         .set({ Authorization: adminToken })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.length).to.equal(0);
+          expect(res.body.documents.length).to.equal(0);
           done();
         });
       });
@@ -100,12 +100,12 @@ describe('The search API', function () {
       .set({ Authorization: regularUserToken })
       .end((err, res) => {
         expect(res.status).to.equal(200);
-        expect(res.body.length).to.equal(1);
+        expect(res.body.documents.length).to.equal(1);
         request.get('/api/search/documents?q=baby')
         .set({ Authorization: regularUserToken })
         .end((err, res) => {
           expect(res.status).to.equal(200);
-          expect(res.body.length).to.equal(0);
+          expect(res.body.documents.length).to.equal(0);
           done();
         });
       });

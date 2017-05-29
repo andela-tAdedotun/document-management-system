@@ -4,13 +4,15 @@ import displayDocuments from './reducers/DocumentsReducer';
 import displayUserDocuments from './reducers/UserDocumentsReducer';
 import usersInDatabase from './reducers/UserReducers';
 import roles from './reducers/RoleReducers';
+import searchParams from './reducers/SearchReducer';
 
 const appReducer = combineReducers({
   authorization,
   displayUserDocuments,
   displayDocuments,
   usersInDatabase,
-  roles
+  roles,
+  searchParams
 });
 
 const rootReducer = (state, action) => {

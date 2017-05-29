@@ -10,6 +10,7 @@ import Users from './Users';
 import Roles from './Roles';
 import { updateUser, getUsers, deleteUser, createUser }
   from '../../actions/UserActions';
+import displaySearchResults from '../../actions/SearchActions';
 import { getRoles, createRole, deleteRole } from '../../actions/RoleActions';
 
 
@@ -75,8 +76,15 @@ class DashboardPage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const offset = (pageNumber - 1) * 15;
-    this.props.getUsers(offset);
+    const searchStatus = this.props.currentState.searchParams;
+    if (searchStatus.isSearch) {
+      const offset = (pageNumber - 1) * 15;
+      this.props
+        .displaySearchResults(searchStatus.searchQuery, 'dashboard', offset);
+    } else {
+      const offset = (pageNumber - 1) * 15;
+      this.props.getUsers(offset);
+    }
   }
 
   /**
@@ -245,7 +253,7 @@ class DashboardPage extends React.Component {
                 </Table>
 
                 {
-                  allUsers
+                  pageCount
                   ?
                     <div className="center-align">
                       <Pagination
@@ -334,6 +342,7 @@ DashboardPage.propTypes = {
   deleteUser: React.PropTypes.func.isRequired,
   createUser: React.PropTypes.func.isRequired,
   getRoles: React.PropTypes.func.isRequired,
+  displaySearchResults: React.PropTypes.func.isRequired,
   logUserOut: React.PropTypes.func.isRequired,
   createRole: React.PropTypes.func.isRequired,
   deleteRole: React.PropTypes.func.isRequired
@@ -362,5 +371,6 @@ connect(mapStateToProps,
     createUser,
     getRoles,
     createRole,
-    deleteRole
+    deleteRole,
+    displaySearchResults
   })(DashboardPage);

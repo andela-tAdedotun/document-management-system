@@ -8,7 +8,7 @@ export default (state = [], action = {}) => {
     }
 
     case 'DISPLAY_USER_DOCUMENTS': {
-      return action.userDocuments;
+      return action.documents;
     }
 
     case 'USER_HAS_NO_DOCUMENT': {

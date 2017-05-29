@@ -10,6 +10,7 @@ import rootReducer from './RootReducer';
 import routes from './Routes';
 import setAuthorizationToken from './utilities/SetAuthorizationToken';
 import setCurrentUser from './actions/AuthActions';
+import './index.scss';
 
 const store = createStore(
   rootReducer,
