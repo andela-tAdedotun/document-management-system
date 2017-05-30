@@ -1,6 +1,10 @@
 import types from '../actions/types';
 
-export default (state = {}, action = {}) => {
+const initialState = {
+  searchParams: {}
+};
+
+export default (state = initialState, action = {}) => {
   switch (action.type) {
     case types.IS_SEARCH: {
       return { ...state, searchParams: action.searchPayload };
