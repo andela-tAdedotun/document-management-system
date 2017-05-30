@@ -1,7 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Row, Input } from 'react-materialize';
 import Prompt from '../common/Prompt';
-import validate from '../../../shared/Validator';
 
 /**
  * export default - description
@@ -57,37 +57,14 @@ class Users extends React.Component {
    */
   onSubmit(event) {
     event.preventDefault();
-    if (this.isValid()) {
-      this.setState({ errors: {} });
-      const stateCopy = Object.assign({}, this.state);
-      Object.keys(stateCopy).forEach((eachField) => {
-        if (!stateCopy[eachField]) {
-          delete stateCopy[eachField];
-        }
-      });
-      this.props
-      .updateUser(this.props.user.id, stateCopy, true).then(() => {
-        Materialize.toast('User details successfully updated', 4000);
-      })
-      .catch(() =>
-        Materialize.toast('An error occurred.', 4000)
-      );
-    }
-  }
-
-  /**
-   * isValid - description
-   *
-   * @return {type}  description
-   */
-  isValid() {
-    const { errors, isValid } = validate(this.state);
-
-    if (!isValid) {
-      this.setState({ errors });
-    }
-
-    return isValid;
+    const stateCopy = Object.assign({}, this.state);
+    this.props
+    .updateUser(this.props.user.id, stateCopy, true).then(() => {
+      Materialize.toast('User details successfully updated', 4000);
+    })
+    .catch(() =>
+      Materialize.toast('An error occurred.', 4000)
+    );
   }
 
   /**
@@ -110,7 +87,6 @@ class Users extends React.Component {
    */
   render() {
     const user = this.props.user;
-    const { errors } = this.state;
     return (
       <tr>
         <td> {user.name} </td>
@@ -118,7 +94,6 @@ class Users extends React.Component {
         <td> {this.roles[user.RoleId]} </td>
         <td>
           <Modal
-            fixedFooter
             trigger={
               <a
                 className="btn-floating
@@ -129,71 +104,7 @@ class Users extends React.Component {
           }
           >
             <form onSubmit={this.onSubmit}>
-              <div className="input-field">
-                <input
-                  value={this.state.name}
-                  onChange={this.onChange}
-                  type="text"
-                  id="name"
-                  name="name"
-                />
-                <label htmlFor="name" className="active">Username</label>
-                <br />
-                <br />
-                <div className="input-field">
-                  <input
-                    value={this.state.email}
-                    onChange={this.onChange}
-                    type="text"
-                    id="email"
-                    name="email"
-                  />
-                  <label className="active" htmlFor="email">Email</label>
-                  {
-                    errors.email &&
-                    <span className="red-text">
-                      {errors.email}
-                    </span>
-                  }
-                </div>
-                <br />
-                <br />
-                <div className="input-field">
-                  <input
-                    value={this.state.password}
-                    onChange={this.onChange}
-                    type="password"
-                    id="password"
-                    name="password"
-                  />
-                  <label htmlFor="password">Password</label>
-                  {
-                    errors.password &&
-                    <span className="red-text">
-                      {errors.password}
-                    </span>
-                  }
-                </div>
-                <br />
-                <br />
-                <div className="input-field">
-                  <input
-                    value={this.state.confirmPassword}
-                    onChange={this.onChange}
-                    type="password"
-                    id="re-password"
-                    name="confirmPassword"
-                  />
-                  <label htmlFor="re-password">Re-enter Password</label>
-                  {
-                    errors.confirmPassword &&
-                    <span className="red-text">
-                      {errors.confirmPassword}
-                    </span>
-                  }
-                </div>
-                <br />
-                <br />
+              <div>
                 <div>
                   <Row>
                     <Input
@@ -240,10 +151,10 @@ class Users extends React.Component {
 }
 
 Users.propTypes = {
-  user: React.PropTypes.object.isRequired,
-  updateUser: React.PropTypes.func.isRequired,
-  deleteUser: React.PropTypes.func.isRequired,
-  roleId: React.PropTypes.number.isRequired
+  user: PropTypes.object.isRequired,
+  updateUser: PropTypes.func.isRequired,
+  deleteUser: PropTypes.func.isRequired,
+  roleId: PropTypes.number.isRequired
 };
 
 export default Users;

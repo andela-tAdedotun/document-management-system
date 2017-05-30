@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Row, Modal, Input } from 'react-materialize';
 import Prompt from '../common/Prompt';
@@ -37,7 +38,6 @@ class DisplayUserDocuments extends React.Component {
       [event.target.name]: event.target.value
     });
   }
-
 
   /**
    * onSubmit - description
@@ -204,9 +204,9 @@ class DisplayUserDocuments extends React.Component {
 }
 
 DisplayUserDocuments.propTypes = {
-  document: React.PropTypes.object.isRequired,
-  deleteDocument: React.PropTypes.func.isRequired,
-  editDocument: React.PropTypes.func.isRequired
+  document: PropTypes.object.isRequired,
+  deleteDocument: PropTypes.func.isRequired,
+  editDocument: PropTypes.func.isRequired
 };
 
 export default DisplayUserDocuments;

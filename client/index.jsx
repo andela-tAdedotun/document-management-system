@@ -5,11 +5,12 @@ import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import jwt from 'jsonwebtoken';
+import jwtDecode from 'jwt-decode';
 import rootReducer from './RootReducer';
 import routes from './Routes';
 import setAuthorizationToken from './utilities/SetAuthorizationToken';
 import setCurrentUser from './actions/AuthActions';
+import { userProfile } from './actions/UserActions';
 import './index.scss';
 
 const store = createStore(
@@ -22,7 +23,8 @@ const store = createStore(
 
 if (localStorage.jwtToken) {
   setAuthorizationToken(localStorage.jwtToken);
-  store.dispatch(setCurrentUser(jwt.decode(localStorage.jwtToken)));
+  store.dispatch(userProfile());
+  store.dispatch(setCurrentUser(jwtDecode(localStorage.jwtToken)));
 }
 
 render(

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
 
@@ -118,9 +119,12 @@ class PersonalProfile extends React.Component {
                         type="text"
                         name="name" required
                       />
-                      <br />
-                      <br />
-                      <button className="btn cyan" type="submit">Update</button>
+                      <button
+                        className="btn cyan modal-close"
+                        type="submit"
+                      >
+                        Update
+                      </button>
                     </div>
                   </form>
                 </Modal>
@@ -153,9 +157,12 @@ class PersonalProfile extends React.Component {
                           {errors.email}
                         </span>
                       }
-                      <br />
-                      <br />
-                      <button className="btn cyan" type="submit">Update</button>
+                      <button
+                        className="btn  modal-close cyan"
+                        type="submit"
+                      >
+                        Update
+                      </button>
                     </div>
                   </form>
                 </Modal>
@@ -193,8 +200,6 @@ class PersonalProfile extends React.Component {
                           </span>
                         }
                       </div>
-                      <br />
-                      <br />
                       <div className="input-field">
                         <input
                           value={this.state.password}
@@ -217,8 +222,6 @@ class PersonalProfile extends React.Component {
                           </span>
                         }
                       </div>
-                      <br />
-                      <br />
                       <div className="input-field">
                         <input
                           value={this.state.confirmPassword}
@@ -238,8 +241,6 @@ class PersonalProfile extends React.Component {
                           </span>
                         }
                       </div>
-                      <br />
-                      <br />
                       <button className="btn cyan" type="submit">Update</button>
                     </div>
                   </form>
@@ -255,8 +256,8 @@ class PersonalProfile extends React.Component {
 }
 
 PersonalProfile.propTypes = {
-  currentState: React.PropTypes.object.isRequired,
-  updateUser: React.PropTypes.func.isRequired
+  currentState: PropTypes.object.isRequired,
+  updateUser: PropTypes.func.isRequired
 };
 
 export default PersonalProfile;

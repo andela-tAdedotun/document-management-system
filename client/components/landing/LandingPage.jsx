@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
 import userLogin from '../../actions/LoginActions';
@@ -6,11 +7,6 @@ import userLogin from '../../actions/LoginActions';
 const LandingPage = ({ login }) =>
     (
       <div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
         <div className="container">
           <br />
           <LoginForm userLogin={login} />
@@ -20,7 +16,7 @@ const LandingPage = ({ login }) =>
 
 
 LandingPage.propTypes = {
-  login: React.PropTypes.func.isRequired
+  login: PropTypes.func.isRequired
 };
 
 export default connect(null, { login: userLogin })(LandingPage);

@@ -15,6 +15,9 @@ export default (
     <Route path="signup" component={alreadyAuthenticated(SignupPage)} />
     <Route path="documents" component={requiresAuthentication(Homepage)} />
     <Route path="explore" component={requiresAuthentication(ExplorePage)} />
-    <Route path="dashboard" component={requiresAuthentication(DashboardPage)} />
+    <Route
+      path="dashboard"
+      component={requiresAuthentication(DashboardPage)}
+    />
   </Route>
 );

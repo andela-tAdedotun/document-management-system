@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 /**
  *
@@ -95,7 +96,7 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  userLogin: React.PropTypes.func.isRequired
+  userLogin: PropTypes.func.isRequired
 };
 
 export default LoginForm;

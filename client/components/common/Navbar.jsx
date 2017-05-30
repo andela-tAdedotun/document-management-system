@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import displaySearchResults from '../../actions/SearchActions';
@@ -7,8 +8,6 @@ import displaySearchResults from '../../actions/SearchActions';
  *
  */
 class NavigationBar extends React.Component {
-
-
   /**
    * constructor - description
    *
@@ -40,10 +39,10 @@ class NavigationBar extends React.Component {
   }
 
   /**
-   * logOut - description
+   * logOut - logs a user out
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {type} event
+   * @return {type}       none
    */
   logOut(event) {
     event.preventDefault();
@@ -51,20 +50,31 @@ class NavigationBar extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
    * @return {type}  description
    */
   render() {
     let placeholder;
     const location = this.props.location;
-    const authorization = this.props.currentState.authorization;
+    const currentState = this.props.currentState;
+    const authorization = currentState.authorization;
+    const searchQuery = currentState.searchParams.searchParams.searchQuery;
+    let showNavBar;
     if (location.match(/dashboard/)) {
       placeholder = 'Search users...';
+      if (currentState.authorization.user.roleId !== 1 &&
+       currentState.authorization.user.roleId !== 2) {
+        showNavBar = false;
+      } else {
+        showNavBar = true;
+      }
     } else if (location.match(/documents/)) {
       placeholder = 'Search your documents...';
+      showNavBar = true;
     } else if (location.match(/explore/)) {
       placeholder = 'Search all documents...';
+      showNavBar = true;
     }
 
     return (
@@ -75,27 +85,34 @@ class NavigationBar extends React.Component {
           </ul>
           {
             authorization.isAuthenticated
-
             ?
               <div>
                 <ul id="nav-mobile" className="right">
-                  <li>
-                    <span id="search-icon">
-                      <i className="small material-icons">search</i>
-                    </span>
-                  </li>
-                  <li>
-                    <form onSubmit={this.onSubmit}>
-                      <input
-                        name="searchQuery"
-                        id="searchbar"
-                        value={this.props.currentState.searchParams.searchQuery}
-                        placeholder={placeholder}
-                        className="validate"
-                        onChange={this.onChange}
-                      />
-                    </form>
-                  </li>
+                  {
+                    showNavBar
+                    ?
+                      <span>
+                        <li>
+                          <span id="search-icon">
+                            <i className="small material-icons">search</i>
+                          </span>
+                        </li>
+                        <li>
+                          <form onSubmit={this.onSubmit}>
+                            <input
+                              name="searchQuery"
+                              id="searchbar"
+                              value={searchQuery || ''}
+                              placeholder={placeholder}
+                              className="validate"
+                              onChange={this.onChange}
+                            />
+                          </form>
+                        </li>
+                      </span>
+                    :
+                    ''
+                  }
                   <li> <Link to="dashboard"> Dashboard </Link> </li>
                   <li> <Link to="explore"> Explore </Link> </li>
                   <li>
@@ -111,7 +128,6 @@ class NavigationBar extends React.Component {
                 </ul>
               </div>
             :
-
               <ul id="nav-mobile" className="right">
                 <li>
                   <Link to="signup" id="signup" className="red"> Signup </Link>
@@ -125,10 +141,10 @@ class NavigationBar extends React.Component {
 }
 
 NavigationBar.propTypes = {
-  logUserOut: React.PropTypes.func.isRequired,
-  currentState: React.PropTypes.object.isRequired,
-  location: React.PropTypes.string.isRequired,
-  displaySearchResults: React.PropTypes.func.isRequired
+  logUserOut: PropTypes.func.isRequired,
+  currentState: PropTypes.object.isRequired,
+  location: PropTypes.string.isRequired,
+  displaySearchResults: PropTypes.func.isRequired
 };
 
 

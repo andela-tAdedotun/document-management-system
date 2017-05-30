@@ -12,7 +12,7 @@ const App = ({ logout, children, location }) =>
           logUserOut={logout}
           location={location.pathname}
         />
-        { children }
+        {children}
         <Footer />
       </div>
     );

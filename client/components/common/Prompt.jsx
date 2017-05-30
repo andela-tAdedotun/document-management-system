@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-materialize';
 
 const Prompt = ({ trigger, onClickFunction }) =>
@@ -23,8 +24,8 @@ const Prompt = ({ trigger, onClickFunction }) =>
   );
 
 Prompt.propTypes = {
-  trigger: React.PropTypes.object.isRequired,
-  onClickFunction: React.PropTypes.func.isRequired
+  trigger: PropTypes.object.isRequired,
+  onClickFunction: PropTypes.func.isRequired
 };
 
 export default Prompt;

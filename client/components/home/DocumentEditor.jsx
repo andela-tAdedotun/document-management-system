@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Input } from 'react-materialize';
 
 /**
@@ -112,7 +113,7 @@ class DocumentEditor extends React.Component {
               label="Protected"
               onChange={this.onChange}
             >
-              <option value="">Choose</option>
+              <option value="false">Choose</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </Input>
@@ -126,7 +127,7 @@ class DocumentEditor extends React.Component {
 }
 
 DocumentEditor.propTypes = {
-  createDocument: React.PropTypes.func.isRequired
+  createDocument: PropTypes.func.isRequired
 };
 
 export default DocumentEditor;

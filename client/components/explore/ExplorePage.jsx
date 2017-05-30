@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Row, Pagination } from 'react-materialize';
 import logUserOut from '../../actions/LogoutActions';
@@ -69,7 +70,7 @@ class ExplorePage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const searchStatus = this.props.currentState.searchParams;
+    const searchStatus = this.props.currentState.searchParams.searchParams;
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
@@ -93,16 +94,20 @@ class ExplorePage extends React.Component {
     let paginationInfo;
     let pageCount;
     let currentPage;
-    const searchStatus = this.props.currentState.searchParams;
+    let showPrivate;
+    const searchStatus = this.props.currentState.searchParams.searchParams;
+    const documentsInStore =
+      this.props.currentState.displayDocuments.displayDocuments;
+    const currentUser = this.props.currentState.authorization.user;
+    if (currentUser.roleId === 1 || currentUser.roleId === 1) {
+      showPrivate = true;
+    }
 
-    if (Object.keys(this.props.currentState.displayDocuments).length !== 0) {
-      let documentsUserCanSee =
-        this.props.currentState.displayDocuments.documents;
+    if (documentsInStore) {
+      let documentsUserCanSee = documentsInStore.documents;
 
-      if (this.props.currentState.displayDocuments
-      .paginationInfo !== undefined) {
-        paginationInfo = this.props.currentState.displayDocuments
-        .paginationInfo;
+      if (documentsInStore.paginationInfo) {
+        paginationInfo = documentsInStore.paginationInfo;
         pageCount = paginationInfo.pageCount;
         currentPage = paginationInfo.currentPage;
       }
@@ -134,28 +139,31 @@ class ExplorePage extends React.Component {
     return (
       <div id="documents">
         <br />
-        <Row className="right">
-          <Input
-            className="input-field"
-            type="select"
-            name="access"
-            label="Filter:"
-            onChange={this.onChange}
-          >
-            <option value="all">All</option>
-            <option value="public">Public</option>
-            <option value="role">Role</option>
-          </Input>
-        </Row>
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+        <div id="explore-top">
+          <Row className="right">
+            <Input
+              className="input-field"
+              type="select"
+              name="access"
+              label="Filter:"
+              onChange={this.onChange}
+            >
+              <option value="all">All</option>
+              <option value="public">Public</option>
+              <option value="role">Role</option>
+              {
+                showPrivate
+                ?
+                  <option value="private">Private</option>
+                :
+                  <option />
+              }
+            </Input>
+          </Row>
+        </div>
         <div className="row">
           {
-            searchStatus.isSearch
+            searchStatus && searchStatus.isSearch
             ?
               <h5 className="searchResult"> Search results: </h5>
             :
@@ -182,11 +190,11 @@ class ExplorePage extends React.Component {
 }
 
 ExplorePage.propTypes = {
-  displayDocuments: React.PropTypes.func.isRequired,
-  documentDelete: React.PropTypes.func.isRequired,
-  documentEdit: React.PropTypes.func.isRequired,
-  displaySearchResults: React.PropTypes.func.isRequired,
-  currentState: React.PropTypes.object.isRequired
+  displayDocuments: PropTypes.func.isRequired,
+  documentDelete: PropTypes.func.isRequired,
+  documentEdit: PropTypes.func.isRequired,
+  displaySearchResults: PropTypes.func.isRequired,
+  currentState: PropTypes.object.isRequired
 };
 
 

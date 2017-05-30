@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Pagination, Row, Input } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
@@ -55,7 +56,7 @@ class Homepage extends React.Component {
    * @return {type}            description
    */
   onSelect(pageNumber) {
-    const searchStatus = this.props.currentState.searchParams;
+    const searchStatus = this.props.currentState.searchParams.searchParams;
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
@@ -92,11 +93,11 @@ class Homepage extends React.Component {
     let pageCount;
     let currentPage;
     const userDocumentsInStore = this.props
-      .currentState.displayUserDocuments;
-    const searchStatus = this.props.currentState.searchParams;
+      .currentState.displayUserDocuments.displayUserDocuments;
+    const searchStatus = this.props.currentState.searchParams.searchParams;
 
-    if (userDocumentsInStore.documents !== undefined) {
-      if (userDocumentsInStore.paginationInfo !== undefined) {
+    if (userDocumentsInStore) {
+      if (userDocumentsInStore.paginationInfo) {
         paginationInfo = userDocumentsInStore.paginationInfo;
         pageCount = paginationInfo.pageCount;
         currentPage = paginationInfo.currentPage;
@@ -104,14 +105,14 @@ class Homepage extends React.Component {
 
       let userDocuments = userDocumentsInStore.documents;
 
-      if (userDocuments !== undefined && userDocuments.length > 0) {
+      if (userDocuments && userDocuments.length > 0) {
         if (this.state.access !== 'all') {
           userDocuments = Homepage
             .filter(userDocuments, this.state.access);
         }
       }
 
-      if (userDocuments !== undefined && userDocuments.length > 0) {
+      if (userDocuments && userDocuments.length > 0) {
         allUserDocuments =
          userDocuments.map(document =>
            <div key={document.id}>
@@ -133,45 +134,43 @@ class Homepage extends React.Component {
     return (
       <div id="documents">
         <br />
-        <Modal
-          fixedFooter
-          trigger={
-            <button
-              id="addDocument"
-              className="btn-floating btn-large
-              waves-effect waves-light cyan"
-            >
-              <i className="material-icons">add</i>
-            </button>
-          }
-          modalOptions={{
-            complete: () => $('#submit').prop('disabled', false)
-          }}
-        >
-          <DocumentEditor createDocument={documentCreate} />
-        </Modal>
-
-        <Row className="right">
-          <Input
-            className="input-field"
-            type="select"
-            name="access"
-            label="Filter:"
-            onChange={this.onChange}
+        <div id="homepage-top">
+          <Modal
+            fixedFooter
+            trigger={
+              <button
+                id="addDocument"
+                className="btn-floating btn-large
+                waves-effect waves-light cyan"
+              >
+                <i className="material-icons">add</i>
+              </button>
+            }
+            modalOptions={{
+              complete: () => $('#submit').prop('disabled', false)
+            }}
           >
-            <option value="all">All</option>
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-            <option value="role">Role</option>
-          </Input>
-        </Row>
-        <br />
-        <br />
-        <br />
-        <br />
+            <DocumentEditor createDocument={documentCreate} />
+          </Modal>
+
+          <Row className="right">
+            <Input
+              className="input-field"
+              type="select"
+              name="access"
+              label="Filter:"
+              onChange={this.onChange}
+            >
+              <option value="all">All</option>
+              <option value="public">Public</option>
+              <option value="private">Private</option>
+              <option value="role">Role</option>
+            </Input>
+          </Row>
+        </div>
         <div className="row">
           {
-            searchStatus.isSearch
+            searchStatus && searchStatus.isSearch
             ?
               <h5 className="searchResult"> Search results: </h5>
             :
@@ -198,12 +197,12 @@ class Homepage extends React.Component {
 }
 
 Homepage.propTypes = {
-  displayUserDocuments: React.PropTypes.func.isRequired,
-  currentState: React.PropTypes.object.isRequired,
-  documentDelete: React.PropTypes.func.isRequired,
-  documentCreate: React.PropTypes.func.isRequired,
-  displaySearchResults: React.PropTypes.func.isRequired,
-  documentEdit: React.PropTypes.func.isRequired
+  displayUserDocuments: PropTypes.func.isRequired,
+  currentState: PropTypes.object.isRequired,
+  documentDelete: PropTypes.func.isRequired,
+  documentCreate: PropTypes.func.isRequired,
+  displaySearchResults: PropTypes.func.isRequired,
+  documentEdit: PropTypes.func.isRequired
 };
 
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Prompt from '../common/Prompt';
 
 /**
@@ -69,27 +70,8 @@ class Roles extends React.Component {
                 <i className="material-icons red">delete</i>
               </button>
             }
-
             onClickFunction={this.onClick}
           />
-        </td>
-        <td>
-          {''}
-        </td>
-        <td>
-          {''}
-        </td>
-        <td>
-          {''}
-        </td>
-        <td>
-          {''}
-        </td>
-        <td>
-          {''}
-        </td>
-        <td>
-          {''}
         </td>
       </tr>
     );
@@ -97,8 +79,8 @@ class Roles extends React.Component {
 }
 
 Roles.propTypes = {
-  role: React.PropTypes.object.isRequired,
-  deleteRole: React.PropTypes.func.isRequired
+  role: PropTypes.object.isRequired,
+  deleteRole: PropTypes.func.isRequired
 };
 
 export default Roles;

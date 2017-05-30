@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Row, Modal, Input } from 'react-materialize';
 import moment from 'moment';
 import Prompt from '../common/Prompt';
@@ -74,135 +75,22 @@ class DisplayDocuments extends React.Component {
     const lastEdited =
       moment(document.updatedAt).format('MMMM Do YYYY, h:mm:ss a');
     const views = document.views;
-
+    let showButtonActions = true;
     const currentUser = this.props.currentState.authorization.user;
-    if (currentUser.roleId === 1 || currentUser.roleId === 2) {
-      return (
-        <div className="col m3">
-          <div className="card hoverable small #bdbdbd grey lighten-1">
-            <div>
-              <span className="right activator info-button" href="#">
-                <i className="medium material-icons right">
-                  info_outline
-                </i>
-              </span>
-            </div>
-            <div className="card-content black-grey-text">
-              <span className="card-title">{title}</span>
-              <div>
-                {content.slice(0, 150)}{content.length > 150 ? '...' : ''}
-              </div>
-              <br />
-              <Modal
-                header={title}
-                trigger={<a href=""> Read More </a>}
-              >
-                {content}
-              </Modal>
-            </div>
-            <div className="card-reveal">
-              <span className="card-title grey-text text-darken-4">
-                <i className="material-icons right">
-                  close
-                </i>
-              </span>
-              <p>
-                <span className="red-text">Created:</span> <br />
-                { dateCreated }
-              </p>
-              <p>
-                <span className="red-text">Last edited:</span> <br />
-                { lastEdited }
-              </p>
-              <p> <span className="red-text">Views:</span> { views } </p>
-            </div>
-            <div className="card-action">
 
-              <Modal
-                fixedFooter
-                trigger={
-                  <a className="btn-floating btn-large cyan">
-                    <i className="large material-icons">mode_edit</i>
-                  </a>
-                }
-              >
-
-                <form onSubmit={this.onSubmit}>
-                  <div>
-                    Title: <br />
-                    <input
-                      name="title"
-                      value={this.state.title}
-                      type="text"
-                      onChange={this.onChange}
-                      required
-                    />
-                  </div>
-                  <div>
-                  Content: <br />
-                    <textarea
-                      id="textarea1" className="materialize-textarea"
-                      name="content"
-                      onChange={this.onChange}
-                      value={this.state.content}
-                      required
-                    />
-                    <br />
-                  </div>
-
-                  <div>
-                    <Row>
-                      <Input
-                        s={12}
-                        type="select"
-                        name="access"
-                        label="Who Can Access"
-                        onChange={this.onChange}
-                      >
-                        <option value="public">Public</option>
-                        <option value="private">Private</option>
-                        <option value="role">Role</option>
-                      </Input>
-                    </Row>
-                  </div>
-
-                  <div>
-                    <Row>
-                      <Input
-                        s={12}
-                        type="select"
-                        name="isProtected"
-                        label="Protected"
-                        onChange={this.onChange}
-                      >
-                        <option value="">Choose</option>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                      </Input>
-                    </Row>
-                  </div>
-                  <br />
-                  <button type="submit" className="cyan btn"> Submit </button>
-                </form>
-              </Modal>
-              <Prompt
-                trigger={
-                  <button
-                    className="btn-floating
-                    btn-large waves-effect waves-light cyan right"
-                  >
-                    <i className="material-icons red">delete</i>
-                  </button>
-                }
-                onClickFunction={this.deleteDocument}
-              />
-            </div>
-          </div>
-        </div>
-      );
+    if (currentUser.roleId === 3) {
+      showButtonActions = false;
+    } else if (currentUser.roleId === 2) {
+      if (document.User.RoleId === 1) {
+        showButtonActions = false;
+      } else if (document.User.RoleId === 2
+        && document.documentOwnerId !== currentUser.id) {
+        showButtonActions = false;
+      }
     }
+
     return (
-      <div className="col m3 cards-container">
+      <div className="col m3">
         <div className="card hoverable small #bdbdbd grey lighten-1">
           <div>
             <span className="right activator info-button" href="#">
@@ -240,17 +128,144 @@ class DisplayDocuments extends React.Component {
             </p>
             <p> <span className="red-text">Views:</span> { views } </p>
           </div>
+          {
+            showButtonActions
+            ?
+              <div className="card-action">
+                <Modal
+                  fixedFooter
+                  trigger={
+                    <a className="btn-floating btn-large cyan">
+                      <i className="large material-icons">mode_edit</i>
+                    </a>
+                  }
+                >
+                  <form onSubmit={this.onSubmit}>
+                    <div>
+                      Title: <br />
+                      <input
+                        name="title"
+                        value={this.state.title}
+                        type="text"
+                        onChange={this.onChange}
+                        required
+                      />
+                    </div>
+                    <div>
+                    Content: <br />
+                      <textarea
+                        id="textarea1" className="materialize-textarea"
+                        name="content"
+                        onChange={this.onChange}
+                        value={this.state.content}
+                        required
+                      />
+                      <br />
+                    </div>
+
+                    <div>
+                      <Row>
+                        <Input
+                          s={12}
+                          type="select"
+                          name="access"
+                          label="Who Can Access"
+                          onChange={this.onChange}
+                        >
+                          <option value="public">Public</option>
+                          <option value="private">Private</option>
+                          <option value="role">Role</option>
+                        </Input>
+                      </Row>
+                    </div>
+
+                    <div>
+                      <Row>
+                        <Input
+                          s={12}
+                          type="select"
+                          name="isProtected"
+                          label="Protected"
+                          onChange={this.onChange}
+                        >
+                          <option value="">Choose</option>
+                          <option value="true">Yes</option>
+                          <option value="false">No</option>
+                        </Input>
+                      </Row>
+                    </div>
+                    <br />
+                    <button type="submit" className="cyan btn"> Submit </button>
+                  </form>
+                </Modal>
+                <Prompt
+                  trigger={
+                    <button
+                      className="btn-floating
+                      btn-large waves-effect waves-light cyan right"
+                    >
+                      <i className="material-icons red">delete</i>
+                    </button>
+                  }
+                  onClickFunction={this.deleteDocument}
+                />
+              </div>
+            :
+            ''
+          }
         </div>
       </div>
     );
+    // return (
+    //   <div className="col m3 cards-container">
+    //     <div className="card hoverable small #bdbdbd grey lighten-1">
+    //       <div>
+    //         <span className="right activator info-button" href="#">
+    //           <i className="medium material-icons right">
+    //             info_outline
+    //           </i>
+    //         </span>
+    //       </div>
+    //       <div className="card-content black-grey-text">
+    //         <span className="card-title">{title}</span>
+    //         <div>
+    //           {content.slice(0, 150)}{content.length > 150 ? '...' : ''}
+    //         </div>
+    //         <br />
+    //         <Modal
+    //           header={title}
+    //           trigger={<a href=""> Read More </a>}
+    //         >
+    //           {content}
+    //         </Modal>
+    //       </div>
+    //       <div className="card-reveal">
+    //         <span className="card-title grey-text text-darken-4">
+    //           <i className="material-icons right">
+    //             close
+    //           </i>
+    //         </span>
+    //         <p>
+    //           <span className="red-text">Created:</span> <br />
+    //           { dateCreated }
+    //         </p>
+    //         <p>
+    //           <span className="red-text">Last edited:</span> <br />
+    //           { lastEdited }
+    //         </p>
+    //         <p> <span className="red-text">Views:</span> { views } </p>
+    //       </div>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 
 DisplayDocuments.propTypes = {
-  document: React.PropTypes.object.isRequired,
-  currentState: React.PropTypes.object.isRequired,
-  editDocument: React.PropTypes.func.isRequired,
-  deleteDocument: React.PropTypes.func.isRequired
+  document: PropTypes.object.isRequired,
+  currentState: PropTypes.object.isRequired,
+  editDocument: PropTypes.func.isRequired,
+  deleteDocument: PropTypes.func.isRequired
 };
 
 export default DisplayDocuments;

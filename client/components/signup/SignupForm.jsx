@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { browserHistory } from 'react-router';
 import validate from '../../../shared/Validator';
 
@@ -167,7 +168,7 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignup: React.PropTypes.func.isRequired
+  userSignup: PropTypes.func.isRequired
 };
 
 export default SignupForm;
