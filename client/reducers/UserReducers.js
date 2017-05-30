@@ -16,23 +16,23 @@ export default (state = initialState, action = {}) => {
 
     case types.ADMIN_UPDATE_USER: {
       const index =
-        findIndex(state.users, { id: action.userId });
+        findIndex(state.usersInDatabase.users, { id: action.userId });
       const stateCopy = Object.assign({}, state);
-      stateCopy.users[index] = action.updatedUser;
+      stateCopy.usersInDatabase.users[index] = action.updatedUser;
       return stateCopy;
     }
 
     case types.DELETE_USER: {
       const index =
-        findIndex(state.users, { id: action.userId });
+        findIndex(state.usersInDatabase.users, { id: action.userId });
       const stateCopy = Object.assign({}, state);
-      stateCopy.users.splice(index, 1);
+      stateCopy.usersInDatabase.users.splice(index, 1);
       return stateCopy;
     }
 
     case types.CREATE_NEW_USER: {
       const stateCopy = Object.assign({}, state);
-      stateCopy.users.unshift(action.createdUser);
+      stateCopy.usersInDatabase.users.unshift(action.createdUser);
       return stateCopy;
     }
 
