@@ -4,12 +4,21 @@ import { dispatchAction, buildDispatchWithPost, buildDispatchWithGet }
   from '../utilities/dispatchHelper';
 
 export const getRoles = () =>
-  dispatch =>
+  (dispatch) => {
+    dispatchAction(dispatch, {
+      type: types.IS_SEARCH,
+      searchPayload: {
+        isSearch: false,
+        searchQuery: ''
+      }
+    });
+
     buildDispatchWithGet(
         dispatch, '/api/roles/',
         types.GET_ALL_ROLES,
         'roles'
       );
+  };
 
 export const createRole = roleData =>
   dispatch =>
