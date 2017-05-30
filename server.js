@@ -28,6 +28,16 @@ app.use(WebpackDevMiddleware(compiler, {
 }));
 app.use(WebpackHotMiddleware(compiler));
 
+// remove trailing slash from url paths
+app.use((req, res, next) => {
+  if (req.path.length > 1 && /\/$/.test(req.path)) {
+    const query = req.url.slice(req.path.length);
+    res.redirect(301, req.path.slice(0, -1) + query);
+  } else {
+    next();
+  }
+});
+
 app.use('/api/users', userRouter);
 app.use('/api/documents/', documentRouter);
 app.use('/api/search', searchRouter);
