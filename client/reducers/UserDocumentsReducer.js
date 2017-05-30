@@ -10,16 +10,17 @@ export default (state = {}, action = {}) => {
     }
 
     case types.DISPLAY_USER_DOCUMENTS: {
-      return { ...state, displayUserDocuments: action.documents };
+      return Object.assign({}, state,
+        { displayUserDocuments: action.documents });
     }
 
     case types.USER_HAS_NO_DOCUMENT: {
-      return { ...state,
-        displayUserDocuments: {
+      return Object.assign({}, state,
+        { displayUserDocuments: {
           documents: [],
           paginationInfo: {}
         }
-      };
+        });
     }
 
     case types.DELETE_DOCUMENT: {

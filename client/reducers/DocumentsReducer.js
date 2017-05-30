@@ -4,7 +4,7 @@ import types from '../actions/types';
 export default (state = {}, action = {}) => {
   switch (action.type) {
     case types.DISPLAY_DOCUMENTS: {
-      return { ...state, displayDocuments: action.documents };
+      return Object.assign({}, state, { displayDocuments: action.documents });
     }
 
     case types.ADMIN_DELETE_DOCUMENT: {

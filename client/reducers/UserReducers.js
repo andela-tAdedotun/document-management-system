@@ -11,7 +11,7 @@ const initialState = {
 export default (state = initialState, action = {}) => {
   switch (action.type) {
     case types.GET_ALL_USERS: {
-      return { ...state, usersInDatabase: action.allUsers };
+      return Object.assign({}, state, { usersInDatabase: action.allUsers });
     }
 
     case types.ADMIN_UPDATE_USER: {
