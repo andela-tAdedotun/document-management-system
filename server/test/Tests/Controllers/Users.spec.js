@@ -13,7 +13,7 @@ const validUser = databaseData.validUser;
 const validUser2 = databaseData.validUser2;
 
 describe('The User API', function () {
-  this.timeout(15000);
+  this.timeout(4000);
   let superAdminToken;
   let adminToken;
   let regularUserToken;

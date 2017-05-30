@@ -12,7 +12,7 @@ const testDocument = databaseData.testDocument;
 const invalidDocument = databaseData.invalidDocument;
 
 describe('The Document API', function () {
-  this.timeout(15000);
+  this.timeout(4000);
   let superAdminToken;
   let adminToken;
   let regularUserToken;
