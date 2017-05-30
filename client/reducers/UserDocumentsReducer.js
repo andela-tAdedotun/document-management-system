@@ -14,7 +14,12 @@ export default (state = {}, action = {}) => {
     }
 
     case types.USER_HAS_NO_DOCUMENT: {
-      return { ...state, displayUserDocuments: action.errorMessage };
+      return { ...state,
+        displayUserDocuments: {
+          documents: [],
+          paginationInfo: {}
+        }
+      };
     }
 
     case types.DELETE_DOCUMENT: {
