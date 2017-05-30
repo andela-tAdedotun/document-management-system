@@ -10,7 +10,7 @@ const adminUser = databaseData.adminUser;
 const regularUser = databaseData.regularUser;
 
 describe('The search API', function () {
-  this.timeout(15000);
+  this.timeout(4000);
   let superAdminToken;
   let adminToken;
   let regularUserToken;

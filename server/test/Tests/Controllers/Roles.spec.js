@@ -11,7 +11,7 @@ const regularUser = databaseData.regularUser;
 const testRole = databaseData.testRole;
 
 describe('The Role API', function () {
-  this.timeout(15000);
+  this.timeout(4000);
   let superAdminToken;
   let adminToken;
   let regularUserToken;
