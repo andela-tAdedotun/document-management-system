@@ -10,7 +10,6 @@ import rootReducer from './RootReducer';
 import routes from './Routes';
 import setAuthorizationToken from './utilities/SetAuthorizationToken';
 import setCurrentUser from './actions/AuthActions';
-import { userProfile } from './actions/UserActions';
 import './index.scss';
 
 const store = createStore(
@@ -23,7 +22,6 @@ const store = createStore(
 
 if (localStorage.jwtToken) {
   setAuthorizationToken(localStorage.jwtToken);
-  store.dispatch(userProfile());
   store.dispatch(setCurrentUser(jwtDecode(localStorage.jwtToken)));
 }
 
