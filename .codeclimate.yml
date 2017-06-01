@@ -7,6 +7,14 @@ exclude_paths:
   - "node_modules/"
   - "**/spec/"
 
+ratings:
+   paths:
+   - "client/**/*.jsx"
+   - "client/**/*.js"
+   - "server/**/*.jsx"
+   - "server/**/*.js"
+   - "shared/**/*.js"
+
 engines:
   duplication:
     enabled: true
