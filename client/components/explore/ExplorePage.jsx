@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Row, Pagination } from 'react-materialize';
-import logUserOut from '../../actions/LogoutActions';
+import logUserOut from '../../actions/LogoutAction';
 import { displayDocuments, deleteDocument, editDocument }
-  from '../../actions/DocumentsActions';
+  from '../../actions/DocumentActions';
 import displaySearchResults from '../../actions/SearchActions';
 import DisplayDocuments from './DisplayDocuments';
 
@@ -37,7 +37,7 @@ class ExplorePage extends React.Component {
     this.state = {
       access: 'all'
     };
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
 
@@ -47,20 +47,7 @@ class ExplorePage extends React.Component {
    * @return {type}  description
    */
   componentDidMount() {
-    this.props.displayDocuments();
-  }
-
-  /**
-   * onChange - description
-   *
-   * @param  {type} event description
-   * @return {type}       description
-   */
-  onChange(event) {
-    event.preventDefault();
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+    this.props.displayDocuments({ isHomepage: false });
   }
 
   /**
@@ -77,8 +64,21 @@ class ExplorePage extends React.Component {
         .displaySearchResults(searchStatus.searchQuery, 'explore', offset);
     } else {
       const offset = (pageNumber - 1) * 12;
-      this.props.displayDocuments(offset);
+      this.props.displayDocuments({ offset, isHomepage: false });
     }
+  }
+
+  /**
+   * handleChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
 
@@ -97,7 +97,7 @@ class ExplorePage extends React.Component {
     let showPrivate;
     const searchStatus = this.props.currentState.searchParams.searchParams;
     const documentsInStore =
-      this.props.currentState.displayDocuments.displayDocuments;
+      this.props.currentState.allDocuments.documents;
     const currentUser = this.props.currentState.authorization.user;
     if (currentUser.roleId === 1 || currentUser.roleId === 1) {
       showPrivate = true;
@@ -146,7 +146,7 @@ class ExplorePage extends React.Component {
               type="select"
               name="access"
               label="Filter:"
-              onChange={this.onChange}
+              onChange={this.handleChange}
             >
               <option value="all">All</option>
               <option value="public">Public</option>
@@ -165,7 +165,10 @@ class ExplorePage extends React.Component {
           {
             searchStatus && searchStatus.isSearch
             ?
-              <h5 className="searchResult"> Search results: </h5>
+              <h5 className="searchResult">
+                Search results ({`${documentsInStore.paginationInfo.pageSize} of
+                   ${documentsInStore.paginationInfo.totalCount}`}):
+              </h5>
             :
             ''
           }
