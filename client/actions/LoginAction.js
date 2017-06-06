@@ -1,9 +1,9 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import setAuthorizationToken from '../utilities/SetAuthorizationToken';
-import setCurrentUser from './AuthActions';
+import setCurrentUser from './SetCurrentUser';
 
-const userLogin = userData =>
+const LoginAction = userData =>
   dispatch => axios.post('/api/users/login', userData).then((res) => {
     const token = res.data.token;
     localStorage.setItem('jwtToken', token);
@@ -14,4 +14,4 @@ const userLogin = userData =>
     throw new Error(res.data);
   });
 
-export default userLogin;
+export default LoginAction;

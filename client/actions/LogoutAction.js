@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { browserHistory } from 'react-router';
 import setAuthorizationToken from '../utilities/SetAuthorizationToken';
-import types from './types';
+import types from './Types';
 
-const logUserOut = () =>
+const LogoutAction = () =>
   (dispatch) => {
     localStorage.removeItem('jwtToken');
     setAuthorizationToken(false);
@@ -16,4 +16,4 @@ const logUserOut = () =>
   };
 
 
-export default logUserOut;
+export default LogoutAction;

@@ -1,4 +1,4 @@
-import types from './types';
+import types from './Types';
 
 /**
  * setCurrentUser - puts details of current user in state
@@ -6,11 +6,11 @@ import types from './types';
  * @param  {type} user object representing user
  * @return {type}      pure object
  */
-function setCurrentUser(user) {
+function SetCurrentUser(user) {
   return {
     type: types.SET_CURRENT_USER,
     user
   };
 }
 
-export default setCurrentUser;
+export default SetCurrentUser;
