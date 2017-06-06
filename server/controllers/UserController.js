@@ -227,7 +227,8 @@ export default {
     return User
       .findById(req.params.id)
       .then((user) => {
-        User.findOne({ where: { email: req.body.email } })
+        if (req.body.email !== user.email) {
+          User.findOne({ where: { email: req.body.email } })
           .then((existingUser) => {
             if (existingUser) {
               return res.status(403).json({
@@ -235,6 +236,7 @@ export default {
               });
             }
           });
+        }
 
         if (!user) {
           return res.status(404).json({
@@ -343,7 +345,7 @@ export default {
     User.findOne({ where: { email: userEmail } })
       .then((user) => {
         if (!user) {
-          res.status(401).json({
+          return res.status(401).json({
             message: 'Incorrect password or email. Try again.'
           });
         }
@@ -363,9 +365,12 @@ export default {
           });
         }
       })
-      .catch(error => res.status(400).json({
-        message: error.message
-      }));
+      .catch((error) => {
+        console.log('it got here? no way, nigga!', error)
+        res.status(400).json({
+          message: error.message
+        });
+      });
   },
 
   /**

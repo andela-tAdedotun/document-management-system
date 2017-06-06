@@ -103,6 +103,12 @@ export default {
     const searchOptions = {};
     searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     searchOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
+    searchOptions.include = [
+      {
+        model: User,
+        attributes: { exclude: ['password', 'privacy'] }
+      }
+    ];
 
     // Default value for a super admin. Can access all documents.
     searchOptions.where = {

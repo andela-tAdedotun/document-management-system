@@ -240,6 +240,12 @@ export default {
   */
   updateDocument(req, res) {
     const queryOptions = {};
+    queryOptions.include = [
+      {
+        model: User,
+        attributes: { exclude: ['password', 'privacy'] }
+      }
+    ];
 
     /*
       Document access for super admins and admins.

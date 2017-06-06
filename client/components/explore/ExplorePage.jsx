@@ -72,7 +72,11 @@ class ExplorePage extends React.Component {
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
-        .displaySearchResults(searchStatus.searchQuery, 'explore', offset);
+        .displaySearchResults({
+          searchQuery: searchStatus.searchQuery,
+          location: 'explore',
+          offset
+        });
     } else {
       const offset = (pageNumber - 1) * 12;
       this.props.displayDocuments({ offset, isHomepage: false });

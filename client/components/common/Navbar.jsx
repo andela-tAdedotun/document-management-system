@@ -44,7 +44,8 @@ class NavBar extends React.Component {
       [event.target.name]: event.target.value
     });
     this.props
-      .displaySearchResults(event.target.value, this.props.location);
+      .displaySearchResults({ searchQuery: event.target.value,
+        location: this.props.location });
   }
 
   /**

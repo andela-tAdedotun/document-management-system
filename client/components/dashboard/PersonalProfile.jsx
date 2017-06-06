@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
-import Prompt from '../common/Prompt';
 
 /**
  * export default - description
@@ -23,7 +22,6 @@ class PersonalProfile extends React.Component {
     this.state = {
       name: this.props.currentState.authorization.user.name,
       email: this.props.currentState.authorization.user.email,
-      roleId: this.props.currentState.authorization.user.roleId,
       password: '',
       oldPassword: '',
       confirmPassword: '',
@@ -69,7 +67,7 @@ class PersonalProfile extends React.Component {
         Materialize.toast('Account details updated.', 4000);
       })
       .catch((error) => {
-        this.setState({ errors: { oldPassword: error.message } });
+        Materialize.toast(error.data.message, 4000);
       });
     }
   }
@@ -143,6 +141,10 @@ class PersonalProfile extends React.Component {
                   }
                 >
                   <form onSubmit={this.handleSubmit}>
+                    <span className="red-text">
+                      You will be logged out and required to login
+                       with your new email if you change it.
+                    </span>
                     <div className="input-field">
                       <input
                         value={this.state.email}
@@ -158,17 +160,12 @@ class PersonalProfile extends React.Component {
                           {errors.email}
                         </span>
                       }
-                      <Prompt
-                        trigger={
-                          <button
-                            className="btn modal-close cyan"
-                            type="submit"
-                          >
-                          Update
-                        </button>}
-
-                        onClickFunction={this.handleSubmit}
-                      />
+                      <button
+                        className="btn modal-close cyan"
+                        type="submit"
+                      >
+                        Update
+                      </button>
                     </div>
                   </form>
                 </Modal>

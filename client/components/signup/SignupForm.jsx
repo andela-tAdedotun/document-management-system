@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import validate from '../../../shared/Validator';
 
 /**
@@ -28,7 +27,6 @@ class SignupForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
   /**
    * handleChange - description
    *
@@ -51,10 +49,7 @@ class SignupForm extends React.Component {
     event.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {} });
-      this.props.userSignup(this.state).then(() => {
-        browserHistory.push('/documents');
-      })
-      .catch(error => Materialize.toast(error.message, 4000));
+      this.props.userSignup(this.state);
     }
   }
 
@@ -156,6 +151,12 @@ class SignupForm extends React.Component {
               </span>
             }
           </div>
+          <span className="red-text">
+            { this.props.authorization.signUpError
+              ? this.props.authorization.signUpError
+              : ''
+            }
+          </span>
           <br />
           <br />
           <button className="btn cyan" type="submit">Signup</button>
@@ -166,7 +167,8 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignup: PropTypes.func.isRequired
+  userSignup: PropTypes.func.isRequired,
+  authorization: PropTypes.object.isRequired
 };
 
 export default SignupForm;

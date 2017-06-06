@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-materialize';
 
-const Prompt = ({ trigger, onClickFunction }) =>
+const Prompt = ({ trigger, onClickFunction, headerMessage }) =>
   (
     <Modal
       actions={[
@@ -16,7 +16,7 @@ const Prompt = ({ trigger, onClickFunction }) =>
         YES
         </Button>
       ]}
-      header="Are you sure?"
+      header={headerMessage}
       trigger={
         trigger
       }
@@ -25,7 +25,12 @@ const Prompt = ({ trigger, onClickFunction }) =>
 
 Prompt.propTypes = {
   trigger: PropTypes.object.isRequired,
-  onClickFunction: PropTypes.func.isRequired
+  onClickFunction: PropTypes.func.isRequired,
+  headerMessage: PropTypes.string
+};
+
+Prompt.defaultProps = {
+  headerMessage: 'Are you sure?'
 };
 
 export default Prompt;

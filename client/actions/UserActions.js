@@ -24,13 +24,6 @@ export const updateUser = (userDetails, userData, isAdmin) =>
     } else {
       dispatch(setCurrentUser(res.data));
     }
-  })
-  .catch((res) => {
-    if (!isAdmin) {
-      if (res.data.type && res.data.type === 'Invalid password') {
-        throw new Error(res.data.message);
-      }
-    }
   });
 
 export const getUsers = (offset, limit) =>
@@ -46,9 +39,6 @@ export const deleteUser = userId =>
         type: types.DELETE_USER,
         userId
       });
-  })
-  .catch((res) => {
-    throw new Error(res.data);
   });
 
 export const createUser = userData =>

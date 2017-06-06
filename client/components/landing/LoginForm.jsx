@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 /**
  *
  */
@@ -32,12 +31,7 @@ class LoginForm extends React.Component {
    */
   handleSubmit(event) {
     event.preventDefault();
-    this.props.userLogin(this.state).then(() => {
-      browserHistory.push('/documents');
-    })
-    .catch((error) => {
-      Materialize.toast(error.message, 4000);
-    });
+    this.props.userLogin(this.state);
   }
 
 
@@ -85,6 +79,12 @@ class LoginForm extends React.Component {
                 required
               />
             </div>
+            <span className="red-text">
+              { this.props.authorization.loginError
+                ? this.props.authorization.loginError
+                : ''
+              }
+            </span>
             <br />
             <br />
             <button className="btn cyan" type="submit">Enter</button>
@@ -96,7 +96,8 @@ class LoginForm extends React.Component {
 }
 
 LoginForm.propTypes = {
-  userLogin: PropTypes.func.isRequired
+  userLogin: PropTypes.func.isRequired,
+  authorization: PropTypes.object.isRequired
 };
 
 export default LoginForm;

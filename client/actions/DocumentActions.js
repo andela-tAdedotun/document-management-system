@@ -56,7 +56,7 @@ export const deleteDocument = documentId =>
     dispatchAction(
       dispatch,
       {
-        type: types.DOCUMENT_PROTECTED,
+        type: types.DOCUMENT_ERROR,
         message: res.data.message
       }
     );

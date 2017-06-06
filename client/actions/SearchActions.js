@@ -1,5 +1,4 @@
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
 import { displayDocuments } from './DocumentActions';
 import { getUsers } from './UserActions';
 import types from './Types';
@@ -31,11 +30,8 @@ function buildSearchResults(dispatch, apiEndpoint, searchQuery, actionType,
       });
 }
 
-const displaySearchResults = (searchQuery, location, offset) => {
-  const userToken = localStorage.getItem('jwtToken');
-  const userData = jwtDecode(userToken);
-  const userId = userData.id;
-  return (dispatch) => {
+const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
+  (dispatch) => {
     dispatch({
       type: types.IS_SEARCH,
       searchPayload: {
@@ -60,7 +56,5 @@ const displaySearchResults = (searchQuery, location, offset) => {
           getUsers());
     }
   };
-};
-
 
 export default displaySearchResults;

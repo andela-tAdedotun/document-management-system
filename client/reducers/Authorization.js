@@ -14,6 +14,14 @@ export default (state = initialState, action = {}) => {
         user: action.user
       };
     }
+
+    case types.LOGIN_FAILURE: {
+      return Object.assign({}, state, { loginError: action.message });
+    }
+
+    case types.SIGNUP_FAILURE: {
+      return Object.assign({}, state, { signUpError: action.message });
+    }
     default: return state;
   }
 };

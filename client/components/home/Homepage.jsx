@@ -70,7 +70,11 @@ class Homepage extends React.Component {
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
-        .displaySearchResults(searchStatus.searchQuery, 'documents', offset);
+        .displaySearchResults({
+          searchQuery: searchStatus.searchQuery,
+          location: 'documents',
+          offset
+        });
     } else {
       const offset = (pageNumber - 1) * 12;
       this.props.displayDocuments({ offset, isHomepage: true });

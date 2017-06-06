@@ -196,13 +196,21 @@ class DisplayUserDocuments extends React.Component {
               <button className="btn red modal-close close-modal">Close</button>
             </Modal>
             <Prompt
-              trigger={<button
-                className="btn-floating
+              trigger={
+                <button
+                  className="btn-floating
                   btn-large waves-effect waves-light cyan right"
-              >
-                <i className="material-icons red">delete</i>
-              </button>}
-
+                  disabled={document.isProtected ? 'disabled' : ''}
+                >
+                  <i
+                    className={document.isProtected
+                      ? 'grey material-icons'
+                      : 'red material-icons'}
+                  >
+                      delete
+                  </i>
+                </button>
+              }
               onClickFunction={this.deleteDocument}
             />
           </div>
