@@ -1,8 +1,7 @@
 # document-management-system
 [![Build Status](https://travis-ci.org/andela-tAdedotun/document-management-system.svg?branch=development)](https://travis-ci.org/andela-tAdedotun/document-management-system)
 [![Coverage Status](https://coveralls.io/repos/github/andela-tAdedotun/document-management-system/badge.svg?branch=development)](https://coveralls.io/github/andela-tAdedotun/document-management-system?branch=development)
-
-[Production App](https://taiwo-dms.herokuapp.com/)
+[![Code Climate](https://codeclimate.com/github/andela-tAdedotun/document-management-system/badges/gpa.svg)](https://codeclimate.com/github/andela-tAdedotun/document-management-system)
 
 The Document Management System API contains several API end points that allow users to create, edit, retrieve and delete documents. In addition, it
 contains API end points that allow the management of users i.e. create, edit, retrieve, delete users. Users can also have roles assigned to them with.
@@ -86,7 +85,7 @@ To create a new user, make a **POST** request to `/users`
     "name": "Taiwo",
     "email": "taiwo.adedotun@gmail.com",
     "privacy": "public",
-    "RoleId": 2,
+    "roleId": 2,
     "updatedAt": "2017-04-03T12:19:45.740Z",
     "createdAt": "2017-04-03T12:19:45.740Z"
   }
@@ -116,7 +115,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:23:36.614Z",
     "updatedAt": "2017-05-28T01:23:36.614Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 19,
@@ -125,7 +124,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:26:21.992Z",
     "updatedAt": "2017-05-28T01:26:21.992Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 20,
@@ -134,7 +133,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:28:17.185Z",
     "updatedAt": "2017-05-28T01:28:17.185Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 21,
@@ -143,7 +142,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:31:14.617Z",
     "updatedAt": "2017-05-28T01:31:14.617Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 22,
@@ -152,7 +151,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:32:24.079Z",
     "updatedAt": "2017-05-28T01:32:24.079Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 23,
@@ -161,7 +160,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:36:09.119Z",
     "updatedAt": "2017-05-28T01:36:09.119Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 24,
@@ -170,7 +169,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:38:08.849Z",
     "updatedAt": "2017-05-28T01:38:08.849Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 25,
@@ -179,7 +178,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:42:02.241Z",
     "updatedAt": "2017-05-28T01:42:02.241Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 26,
@@ -188,7 +187,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:48:43.767Z",
     "updatedAt": "2017-05-28T01:48:43.767Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 27,
@@ -197,7 +196,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T01:56:17.010Z",
     "updatedAt": "2017-05-28T01:56:17.010Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 28,
@@ -206,7 +205,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T02:00:05.454Z",
     "updatedAt": "2017-05-28T02:00:05.454Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 29,
@@ -215,7 +214,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T08:56:31.538Z",
     "updatedAt": "2017-05-28T08:56:31.538Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 30,
@@ -224,7 +223,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T09:03:18.953Z",
     "updatedAt": "2017-05-28T09:03:18.953Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 31,
@@ -233,7 +232,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T09:06:32.206Z",
     "updatedAt": "2017-05-28T09:06:32.206Z",
-    "RoleId": 3
+    "roleId": 3
   },
   {
     "id": 32,
@@ -242,7 +241,7 @@ Fetches all users' details,
     "privacy": "public",
     "createdAt": "2017-05-28T09:07:44.566Z",
     "updatedAt": "2017-05-28T09:07:44.566Z",
-    "RoleId": 3
+    "roleId": 3
   }
 ]
 }
@@ -262,7 +261,7 @@ Fetches all users' details,
   "privacy": "public",
   "createdAt": "2017-05-20T14:01:51.891Z",
   "updatedAt": "2017-05-28T19:13:20.281Z",
-  "RoleId": 1
+  "roleId": 1
 }
 ```
 ## Update user
@@ -271,7 +270,7 @@ Fetches all users' details,
   - Requires `Authorization` header to be set
 ```
 {
-  "RoleId": 2
+  "roleId": 2
 }
 ```
 #### Response
@@ -283,7 +282,7 @@ Fetches all users' details,
   "privacy": "public",
   "createdAt": "2017-05-20T14:01:51.891Z",
   "updatedAt": "2017-05-28T19:13:20.281Z",
-  "RoleId": 2
+  "roleId": 2
 }
 ```
 
@@ -497,7 +496,7 @@ DOCUMENTS
     "content": "The Home of magic",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 1,
+    "roleId": 1,
     "createdAt": "2017-04-21T11:29:49.031Z",
     "updatedAt": "2017-04-21T11:29:49.031Z"
   },
@@ -507,7 +506,7 @@ DOCUMENTS
     "content": "Technical leadership program",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 2,
+    "roleId": 2,
     "createdAt": "2017-04-21T05:36:09.373Z",
     "updatedAt": "2017-04-21T05:49:32.626Z"
   },
@@ -517,7 +516,7 @@ DOCUMENTS
     "content": "Agile development is an important practice in SD",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 2,
+    "roleId": 2,
     "createdAt": "2017-04-21T05:34:15.168Z",
     "updatedAt": "2017-04-21T05:34:15.168Z"
   },
@@ -527,7 +526,7 @@ DOCUMENTS
     "content": "Web development with tags and styles",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 2,
+    "roleId": 2,
     "createdAt": "2017-04-21T05:33:01.265Z",
     "updatedAt": "2017-04-21T05:33:01.265Z"
   },
@@ -537,7 +536,7 @@ DOCUMENTS
     "content": "sourvenier gives motivation",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 2,
+    "roleId": 2,
     "createdAt": "2017-04-21T05:31:16.778Z",
     "updatedAt": "2017-04-21T05:31:16.778Z"
   }
@@ -557,7 +556,7 @@ DOCUMENTS
     "content": "enim ex velit",
     "access": "public",
     "ownerId": 3,
-    "RoleId": 2,
+    "roleId": 2,
     "createdAt": "2017-04-21T05:31:16.778Z",
     "updatedAt": "2017-04-21T05:31:16.778Z"
 }
@@ -614,7 +613,7 @@ Search
       "privacy": "public",
       "createdAt": "2017-05-20T14:03:32.158Z",
       "updatedAt": "2017-05-22T10:14:25.666Z",
-      "RoleId": 3
+      "roleId": 3
     },
     {
       "id": 8,
@@ -623,7 +622,7 @@ Search
       "privacy": "public",
       "createdAt": "2017-05-23T11:15:47.052Z",
       "updatedAt": "2017-05-23T11:15:47.052Z",
-      "RoleId": 3
+      "roleId": 3
     },
     {
       "id": 1,
@@ -632,7 +631,7 @@ Search
       "privacy": "public",
       "createdAt": "2017-05-20T14:01:51.891Z",
       "updatedAt": "2017-05-28T19:13:20.281Z",
-      "RoleId": 1
+      "roleId": 1
     }
   ],
   "paginationInfo": {
@@ -694,6 +693,18 @@ Search
   }
 }
 ```
+
+### Contribute
+1. Fork this repository
+2. Clone it to your local machine
+3. Create a branch for the feature you want to implement
+4. Push your changes to your repository
+5. Submit a pull request
+
+### Limitations:
+1. There is currently no support for markdown. Look out for future releases.
+2. You cannot view other people's documents by clicking on their profile names.
+
 
 Issue Tracker:
 
