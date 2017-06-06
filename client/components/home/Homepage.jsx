@@ -51,6 +51,15 @@ class Homepage extends React.Component {
   }
 
   /**
+   * componentWillUnmount - description
+   *
+   * @return {type}  description
+   */
+  componentWillUnmount() {
+    this.props.currentState.allDocuments = {};
+  }
+
+  /**
    * onSelect - description
    *
    * @param  {type} pageNumber description
