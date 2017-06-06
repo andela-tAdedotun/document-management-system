@@ -60,7 +60,6 @@ export const deleteDocument = documentId =>
         message: res.data.message
       }
     );
-    // throw new Error(res.data.message);
   });
 
 export const editDocument = (documentId, documentData) =>

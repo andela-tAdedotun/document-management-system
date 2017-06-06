@@ -1,28 +1,28 @@
 import axios from 'axios';
-import setCurrentUser from './AuthActions';
-import types from './types';
+import setCurrentUser from './SetCurrentUser';
+import types from './Types';
 import { buildDispatchWithGet, buildDispatchWithPost, dispatchAction }
-  from '../utilities/dispatchHelper';
+  from '../utilities/DispatchHelper';
+import logUserOut from './LogoutAction';
 
-export const updateUser = (userId, userData, isAdmin) =>
-  dispatch => axios.put(`/api/users/${userId}`, userData)
+export const updateUser = (userDetails, userData, isAdmin) =>
+  dispatch => axios.put(`/api/users/${userDetails.id}`, userData)
   .then((res) => {
-    const currentUserDetails = {};
-    currentUserDetails.name = res.data.name;
-    currentUserDetails.email = res.data.email;
-    currentUserDetails.id = res.data.id;
-    currentUserDetails.roleId = res.data.RoleId;
+    if (res.data.email !== userDetails.email) {
+      return dispatch(logUserOut());
+    }
+
     if (isAdmin) {
       delete res.data.password;
       dispatchAction(dispatch,
         {
           type: types.ADMIN_UPDATE_USER,
           updatedUser: res.data,
-          userId
+          userId: userDetails.id
         }
       );
     } else {
-      dispatch(setCurrentUser(currentUserDetails));
+      dispatch(setCurrentUser(res.data));
     }
   })
   .catch((res) => {
@@ -53,5 +53,5 @@ export const deleteUser = userId =>
 
 export const createUser = userData =>
   dispatch =>
-    buildDispatchWithPost(dispatch, '/api/users', userData,
+    buildDispatchWithPost(dispatch, '/api/users/create', userData,
     types.CREATE_NEW_USER, 'createdUser', 'user');

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LoginForm from './LoginForm';
-import userLogin from '../../actions/LoginActions';
+import userLogin from '../../actions/LoginAction';
 
 const LandingPage = ({ login }) =>
     (

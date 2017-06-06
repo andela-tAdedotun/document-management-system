@@ -42,7 +42,7 @@ describe('The User API', function () {
       request.post('/api/users')
         .send(adminUser)
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          expect(res.status).to.equal(400);
           done();
         });
     });

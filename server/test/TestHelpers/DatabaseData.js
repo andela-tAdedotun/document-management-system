@@ -21,63 +21,63 @@ const SpecHelper = {
     name: 'Taiwo Adedotun',
     email: 'taiwo.adedotun@andela.com',
     password: '123456',
-    RoleId: 1
+    roleId: 1
   },
 
   adminUser: {
     name: 'Kehinde Adedotun',
     email: 'kehinde.adedotun@xyz.com',
     password: '123456',
-    RoleId: 2
+    roleId: 2
   },
 
   regularUser: {
     name: 'Taiwo XYZ',
     email: 'taiwo@xyz.com',
     password: '123456',
-    RoleId: 3
+    roleId: 3
   },
 
   adminUser2: {
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     email: faker.internet.email(),
     password: faker.internet.password(),
-    RoleId: 2
+    roleId: 2
   },
 
   regularUser2: {
     name: 'Alao Akala',
     email: 'alao@akala.com',
     password: 'alaoakala',
-    RoleId: 3
+    roleId: 3
   },
 
   superAdminUser2: {
     name: 'Sola Adigun',
     email: 'sola@adigun.com',
     password: 'adigun',
-    RoleId: 1
+    roleId: 1
   },
 
   regularUser3: {
     name: 'Adeshola Barbie',
     email: 'adeshola@test.com',
     password: 'adeshola',
-    RoleId: 3
+    roleId: 3
   },
 
   adminUser3: {
     name: 'Cindy Barbie',
     email: 'cindy@test.com',
     password: 'cindy',
-    RoleId: 2
+    roleId: 2
   },
 
   regularUser4: {
     name: 'Sophiat Ayomide',
     email: 'sophiat@test.com',
     password: 'sophiat',
-    RoleId: 3
+    roleId: 3
   },
 
   validUser: {

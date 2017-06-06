@@ -1,10 +1,13 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import models from '../models/';
 import pagination from '../helpers/PaginationHelper';
-import config from '../config/config';
 
 const User = models.User;
 const Document = models.Document;
+
+dotenv.config();
+const secret = process.env.SECRET;
 
 export default {
   /**
@@ -17,7 +20,15 @@ export default {
     User.findOne({ where: { email: req.body.email } })
       .then((existingUser) => {
         if (existingUser) {
-          return res.status(403).send('Email already exists. Use another.');
+          return res.status(400).json({
+            message: 'Email already exists. Use another.'
+          });
+        }
+
+        if ((!req.user || req.user.roleId !== 1) && req.body.roleId) {
+          return res.status(403).json({
+            message: 'You are not allowed to do post role id.'
+          });
         }
 
         return User
@@ -26,30 +37,28 @@ export default {
             password: req.body.password,
             email: req.body.email,
             privacy: req.body.privacy,
-            RoleId: req.body.roleId
+            roleId: req.body.roleId
           })
           .then((user) => {
             const payload = {
               id: user.id,
-              roleId: user.RoleId,
+              roleId: user.roleId,
               name: user.name,
-              email: user.email,
-              password: user.password
+              email: user.email
             };
-            const token = jwt.sign(payload, config.secret);
-            res.status(201).send({ token,
+            const token = jwt.sign(payload, secret);
+            res.status(201).json({ token,
               user: {
                 id: user.id,
                 name: user.name,
                 email: user.email,
-                RoleId: user.RoleId,
-                privacy: user.privacy,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
+                roleId: user.roleId
               },
             });
           })
-          .catch(() => res.status(400).send('Invalid signup parameters.'));
+          .catch(() => res.status(400).json({
+            message: 'Invalid signup parameters.'
+          }));
       });
   },
 
@@ -64,18 +73,21 @@ export default {
     findQuery.limit = req.query.limit > 0 ? req.query.limit : 15;
     findQuery.offset = req.query.offset > 0 ? req.query.offset : 0;
     findQuery.attributes = { exclude: ['password'] };
+    findQuery.order = [['roleId']];
 
     return User
       .findAndCountAll(findQuery)
       .then((users) => {
         const paginationInfo = pagination(findQuery.limit,
         findQuery.offset, users.count);
-        res.status(200).send({
+        res.status(200).json({
           paginationInfo,
           users: users.rows,
         });
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -89,12 +101,19 @@ export default {
       .findById(req.params.id)
       .then((user) => {
         if (!user) {
-          return res.status(404).send('User not found');
+          return res.status(404).json({
+            message: 'User not found'
+          });
         }
 
-        res.status(200).send(user);
+        res.status(200).json({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          roleId: user.roleId,
+        });
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).json(error));
   },
 
   /**
@@ -124,16 +143,16 @@ export default {
             { access: 'public' },
             { access: 'private',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               },
               $or: {
                 '$User.id$': req.user.id,
-                '$User.RoleId$': { $gt: 2 }
+                '$User.roleId$': { $gt: 2 }
               }
             },
             { access: 'role',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               }
             },
           ]
@@ -143,7 +162,7 @@ export default {
       queryOptions.include = [
         {
           model: User,
-          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+          attributes: { exclude: ['password', 'privacy', 'roleId'] }
         }
       ];
       /*
@@ -160,7 +179,7 @@ export default {
             { access: 'public' },
             { access: 'role',
               $and: {
-                '$User.RoleId$': req.user.roleId
+                '$User.roleId$': req.user.roleId
               }
             },
             { access: 'private',
@@ -175,7 +194,7 @@ export default {
       queryOptions.include = [
         {
           model: User,
-          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+          attributes: { exclude: ['password', 'privacy', 'roleId'] }
         }
       ];
     }
@@ -184,16 +203,18 @@ export default {
       .findAndCountAll(queryOptions)
       .then((documents) => {
         if (documents.rows.length === 0) {
-          return res.status(404).send('No documents yet.');
+          return res.status(404).json({
+            message: 'No documents yet.'
+          });
         }
         const paginationInfo = pagination(queryOptions.limit,
         queryOptions.offset, documents.count);
-        res.status(200).send({
+        res.status(200).json({
           documents: documents.rows,
           paginationInfo
         });
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).json(error));
   },
 
   /**
@@ -206,32 +227,46 @@ export default {
     return User
       .findById(req.params.id)
       .then((user) => {
+        User.findOne({ where: { email: req.body.email } })
+          .then((existingUser) => {
+            if (existingUser) {
+              return res.status(403).json({
+                message: 'Email already exists. Use another.'
+              });
+            }
+          });
+
         if (!user) {
-          return res.status(404).send('User not found.');
+          return res.status(404).json({
+            message: 'User not found.'
+          });
         }
 
-        if (req.user.roleId !== 1 && user.RoleId === 1) {
-          return res.status(403).send('You are not authorized to do that.');
-        } else if (req.user.roleId === 2) {
-          if (user.RoleId === 2 && user.id !== req.user.id) {
-            return res.status(403).send('You are not authorized to do that.');
-          }
-        } else if (req.user.roleId === 3) {
-          if (req.user.id !== user.id) {
-            return res.status(403).send('You are not authorized to do that.');
+        if (req.user.roleId !== 1 && req.body.roleId) {
+          return res.status(403).json({
+            message: 'You are not authorized to do that.'
+          });
+        }
+
+        if (req.user.roleId !== 1) {
+          if (user.id !== req.user.id) {
+            return res.status(403).json({
+              message: 'You are not authorized to do that.'
+            });
           }
         }
 
         if (req.body.password) {
-          if (!req.body.oldPassword &&
-            (req.user.roleId !== 1 || req.user.roleId !== 2)) {
-            return res.status(403).send('You must provide old password');
+          if (!req.body.oldPassword) {
+            return res.status(403).json({
+              message: 'You must provide old password'
+            });
           }
 
           if (user.isValidPassword(req.body.oldPassword)) {
             delete req.body.oldPassword;
           } else {
-            return res.status(403).send({
+            return res.status(403).json({
               type: 'Invalid password',
               message: 'Incorrect old password. Try again.'
             });
@@ -240,10 +275,19 @@ export default {
 
         return user
           .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedUser => res.status(200).send(updatedUser))
-          .catch(error => res.status(400).send(error.message));
+          .then(updatedUser => res.status(200).json({
+            id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            roleId: updatedUser.roleId,
+          }))
+          .catch(error => res.status(400).json({
+            message: error.message
+          }));
       })
-      .catch(() => res.status(400).send('You have sent a bad request'));
+      .catch(() => res.status(400).json({
+        message: 'You have sent a bad request'
+      }));
   },
 
   /**
@@ -257,20 +301,28 @@ export default {
       .findById(req.params.id)
       .then((user) => {
         if (!user) {
-          return res.status(404).send('User not found');
+          return res.status(404).json({
+            message: 'User not found'
+          });
         }
 
-        if (user.RoleId === 1) {
-          return res.status(403).send('This app needs a super admin. ' +
-          'You cannot perform this operation.');
+        if (user.roleId === 1) {
+          return res.status(403).json({
+            message: 'This app needs a super admin. ' +
+            'You cannot perform this operation.'
+          });
         }
 
         return user
           .destroy()
-          .then(() => res.status(200).send('User successfully deleted.'))
-          .catch(error => res.status(400).send(error.message));
+          .then(() => res.status(200).json({
+            message: 'User successfully deleted.'
+          }))
+          .catch(error => res.status(400).json({
+            message: error.message
+          }));
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).json(error));
   },
 
   /**
@@ -281,7 +333,9 @@ export default {
   */
   logUserIn(req, res) {
     if (!req.body.email || !req.body.password) {
-      return res.status(400).send('Please input your email and password');
+      return res.status(400).json({
+        message: 'Please input your email and password'
+      });
     }
 
     const userEmail = req.body.email.toLowerCase();
@@ -289,24 +343,29 @@ export default {
     User.findOne({ where: { email: userEmail } })
       .then((user) => {
         if (!user) {
-          res.status(401).send('Incorrect password or email. Try again.');
+          res.status(401).json({
+            message: 'Incorrect password or email. Try again.'
+          });
         }
 
         if (user.isValidPassword(req.body.password)) {
           const payload = {
             id: user.id,
-            roleId: user.RoleId,
+            roleId: user.roleId,
             name: user.name,
-            email: user.email,
-            password: user.password
+            email: user.email
           };
-          const token = jwt.sign(payload, config.secret);
+          const token = jwt.sign(payload, secret);
           res.status(200).json({ message: 'Ok.', token });
         } else {
-          res.status(401).send('Incorrect password or email. Try again.');
+          res.status(401).json({
+            message: 'Incorrect password or email. Try again.'
+          });
         }
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**

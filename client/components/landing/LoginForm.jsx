@@ -19,18 +19,18 @@ class LoginForm extends React.Component {
       password: ''
     };
 
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     this.props.userLogin(this.state).then(() => {
       browserHistory.push('/documents');
@@ -42,12 +42,12 @@ class LoginForm extends React.Component {
 
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
@@ -59,14 +59,14 @@ class LoginForm extends React.Component {
   render() {
     return (
       <div className="input-field col s12">
-        <form onSubmit={this.onSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div>
             <span>Email</span>
             <div className="input-field">
               <input
                 className="validate"
                 value={this.state.email}
-                onChange={this.onChange}
+                onChange={this.handleChange}
                 type="email"
                 id="email"
                 name="email" required
@@ -78,7 +78,7 @@ class LoginForm extends React.Component {
             <div className="input-field">
               <input
                 value={this.state.password}
-                onChange={this.onChange}
+                onChange={this.handleChange}
                 type="password"
                 id="password"
                 name="password"

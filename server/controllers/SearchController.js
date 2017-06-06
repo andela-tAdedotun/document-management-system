@@ -36,12 +36,14 @@ export default {
       .then((userMatches) => {
         const paginationInfo = pagination(searchOptions.limit,
         searchOptions.offset, userMatches.count);
-        res.status(200).send({
+        res.status(200).json({
           users: userMatches.rows,
           paginationInfo
         });
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
 
@@ -80,12 +82,14 @@ export default {
       .then((documentMatches) => {
         const paginationInfo = pagination(searchOptions.limit,
         searchOptions.offset, documentMatches.count);
-        res.status(200).send({
+        res.status(200).json({
           documents: documentMatches.rows,
           paginationInfo
         });
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -140,16 +144,16 @@ export default {
             { access: 'public' },
             { access: 'private',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               },
               $or: {
                 '$User.id$': req.user.id,
-                '$User.RoleId$': { $gt: 2 }
+                '$User.roleId$': { $gt: 2 }
               }
             },
             { access: 'role',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               }
             },
           ]
@@ -159,7 +163,7 @@ export default {
       searchOptions.include = [
         {
           model: User,
-          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+          attributes: { exclude: ['password', 'privacy'] }
         }
       ];
       /*
@@ -187,7 +191,7 @@ export default {
             { access: 'public' },
             { access: 'role',
               $and: {
-                '$User.RoleId$': req.user.roleId
+                '$User.roleId$': req.user.roleId
               }
             },
             { access: 'private',
@@ -202,7 +206,7 @@ export default {
       searchOptions.include = [
         {
           model: User,
-          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+          attributes: { exclude: ['password', 'privacy'] }
         }
       ];
     }
@@ -211,11 +215,13 @@ export default {
       .then((documentMatches) => {
         const paginationInfo = pagination(searchOptions.limit,
         searchOptions.offset, documentMatches.count);
-        res.status(200).send({
+        res.status(200).json({
           documents: documentMatches.rows,
           paginationInfo
         });
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   }
 };

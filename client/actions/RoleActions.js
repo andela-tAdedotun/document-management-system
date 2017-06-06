@@ -1,7 +1,7 @@
 import axios from 'axios';
-import types from './types';
+import types from './Types';
 import { dispatchAction, buildDispatchWithPost, buildDispatchWithGet }
-  from '../utilities/dispatchHelper';
+  from '../utilities/DispatchHelper';
 
 export const getRoles = () =>
   (dispatch) => {

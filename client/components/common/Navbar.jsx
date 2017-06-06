@@ -7,7 +7,17 @@ import displaySearchResults from '../../actions/SearchActions';
 /**
  *
  */
-class NavigationBar extends React.Component {
+class NavBar extends React.Component {
+  /**
+   * handleSubmit - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  static handleSubmit(event) {
+    event.preventDefault();
+  }
+
   /**
    * constructor - description
    *
@@ -20,17 +30,16 @@ class NavigationBar extends React.Component {
       searchQuery: ''
     };
     this.onClick = this.logOut.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
-
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -60,28 +69,30 @@ class NavigationBar extends React.Component {
     const currentState = this.props.currentState;
     const authorization = currentState.authorization;
     const searchQuery = currentState.searchParams.searchParams.searchQuery;
-    let showNavBar;
+    let showNavBarItems;
     if (location.match(/dashboard/)) {
       placeholder = 'Search users...';
       if (currentState.authorization.user.roleId !== 1 &&
        currentState.authorization.user.roleId !== 2) {
-        showNavBar = false;
+        showNavBarItems = false;
       } else {
-        showNavBar = true;
+        showNavBarItems = true;
       }
     } else if (location.match(/documents/)) {
       placeholder = 'Search your documents...';
-      showNavBar = true;
+      showNavBarItems = true;
     } else if (location.match(/explore/)) {
       placeholder = 'Search all documents...';
-      showNavBar = true;
+      showNavBarItems = true;
     }
 
     return (
       <nav>
         <div className="nav-wrapper">
-          <ul>
-            <span className="left"> <Link to="/"> Home </Link> </span>
+          <ul className="left">
+            <li className={location.match(/documents/) ? 'active' : ''}>
+              <Link to="/"> Home </Link>
+            </li>
           </ul>
           {
             authorization.isAuthenticated
@@ -89,7 +100,7 @@ class NavigationBar extends React.Component {
               <div>
                 <ul id="nav-mobile" className="right">
                   {
-                    showNavBar
+                    showNavBarItems
                     ?
                       <span>
                         <li>
@@ -98,14 +109,14 @@ class NavigationBar extends React.Component {
                           </span>
                         </li>
                         <li>
-                          <form onSubmit={this.onSubmit}>
+                          <form onSubmit={NavBar.handleSubmit}>
                             <input
                               name="searchQuery"
                               id="searchbar"
                               value={searchQuery || ''}
                               placeholder={placeholder}
                               className="validate"
-                              onChange={this.onChange}
+                              onChange={this.handleChange}
                             />
                           </form>
                         </li>
@@ -113,8 +124,12 @@ class NavigationBar extends React.Component {
                     :
                     ''
                   }
-                  <li> <Link to="dashboard"> Dashboard </Link> </li>
-                  <li> <Link to="explore"> Explore </Link> </li>
+                  <li className={location.match(/dashboard/) ? 'active' : ''}>
+                    <Link to="dashboard"> Dashboard </Link>
+                  </li>
+                  <li className={location.match(/explore/) ? 'active' : ''}>
+                    <Link to="explore"> Explore </Link>
+                  </li>
                   <li>
                     <a
                       href="/logout"
@@ -140,7 +155,7 @@ class NavigationBar extends React.Component {
   }
 }
 
-NavigationBar.propTypes = {
+NavBar.propTypes = {
   logUserOut: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
   location: PropTypes.string.isRequired,
@@ -161,4 +176,4 @@ function mapStateToProps(state) {
 }
 
 export default
-  connect(mapStateToProps, { displaySearchResults })(NavigationBar);
+  connect(mapStateToProps, { displaySearchResults })(NavBar);

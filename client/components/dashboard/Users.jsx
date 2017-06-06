@@ -24,42 +24,36 @@ class Users extends React.Component {
       3: 'Regular'
     };
     this.state = {
-      name: this.props.user.name,
-      email: this.props.user.email,
-      roleId: this.props.user.RoleId,
-      password: '',
-      confirmPassword: '',
-      errors: {}
+      roleId: this.props.user.roleId
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.deleteUser = this.deleteUser.bind(this);
   }
 
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
-    const stateCopy = Object.assign({}, this.state);
     this.props
-    .updateUser(this.props.user.id, stateCopy, true).then(() => {
+    .updateUser(this.props.user, this.state, true).then(() => {
       Materialize.toast('User details successfully updated', 4000);
     })
     .catch(() =>
@@ -91,7 +85,7 @@ class Users extends React.Component {
       <tr>
         <td> {user.name} </td>
         <td> {user.email} </td>
-        <td> {this.roles[user.RoleId]} </td>
+        <td> {this.roles[user.roleId]} </td>
         <td>
           <Modal
             trigger={
@@ -103,18 +97,18 @@ class Users extends React.Component {
               </a>
           }
           >
-            <form onSubmit={this.onSubmit}>
+            <form onSubmit={this.handleSubmit}>
               <div>
                 <div>
                   <Row>
                     <Input
                       s={12}
                       type="select"
-                      name="RoleId"
+                      name="roleId"
                       label="User's Role"
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                     >
-                      <option value={this.props.user.RoleId}>Unchanged</option>
+                      <option value={this.props.user.roleId}>Unchanged</option>
                       <option value={3}>Regular</option>
                       <option value={2}>Admin</option>
                       <option value={1}>Super Admin</option>

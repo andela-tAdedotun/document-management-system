@@ -10,6 +10,7 @@
     "test:client": "jest",
     "test:client:watch": "npm test -- --watch",
     "db:migrate": "sequelize db:migrate",
+    "seed": "NODE_ENV=development babel-node server/test/TestHelpers/SeedDatabaseData.js",
     "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
     "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
     "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha server/test/**/*.spec.js && gulp coveralls",
@@ -50,6 +51,7 @@
     "coveralls": "^2.13.0",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.1",
+    "dotenv": "^4.0.0",
     "draft-js": "^0.10.0",
     "enzyme": "^2.2.0",
     "eslint": "^3.19.0",
@@ -96,6 +98,7 @@
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
     "pg": "^6.2.3",
+    "postcss-loader": "^2.0.5",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-addons-test-utils": "^15.0.2",
@@ -123,7 +126,8 @@
     "webpack": "^2.6.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "^2.4.5",
-    "webpack-hot-middleware": "^2.10.0"
+    "webpack-hot-middleware": "^2.10.0",
+    "webpack-md5-hash": "0.0.5"
   },
   "devDependencies": {
     "babel-preset-stage-0": "^6.24.1",

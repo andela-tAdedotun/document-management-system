@@ -50,6 +50,17 @@ class ExplorePage extends React.Component {
     this.props.displayDocuments({ isHomepage: false });
   }
 
+
+  /**
+   * componentWillUnmount - description
+   *
+   * @return {type}  description
+   */
+  componentWillUnmount() {
+    this.props.currentState.allDocuments = {};
+  }
+
+
   /**
    * onSelect - description
    *

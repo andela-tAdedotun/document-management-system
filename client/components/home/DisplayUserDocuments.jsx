@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Row, Modal, Input } from 'react-materialize';
 import Prompt from '../common/Prompt';
+import ProtectedSelect from '../common/ProtectedSelect';
 
 /**
  *
@@ -23,29 +24,29 @@ class DisplayUserDocuments extends React.Component {
       isProtected: 'false'
     };
     this.deleteDocument = this.deleteDocument.bind(this);
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     this.props.editDocument(this.props.document.id, this.state).then(() =>
       Materialize.toast('Update successful.', 4000)
@@ -80,25 +81,40 @@ class DisplayUserDocuments extends React.Component {
 
     return (
       <div className="col m3">
-        <div className="card hoverable small #bdbdbd grey lighten-1">
+        <div id="card" className="card hoverable small #bdbdbd grey lighten-1">
           <div>
             <span className="right activator info-button" href="#">
               <i className="medium material-icons right">
                 info_outline
               </i>
             </span>
+            <span>
+              {
+                document.isProtected
+                ?
+                  <i id="locked" className="small material-icons">lock</i>
+                :
+                ''
+              }
+            </span>
           </div>
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
-              {content.slice(0, 150)}{content.length > 150 ? '...' : ''}
+              {content.slice(0, 90)}{content.length > 90 ? '...' : ''}
             </div>
-            <Modal
-              header={title}
-              trigger={<a href=""> Read More </a>}
-            >
-              {content}
-            </Modal>
+            {
+              content.length > 100
+              ?
+                <Modal
+                  header={title}
+                  trigger={<a className="read-more" href=""> Read More </a>}
+                >
+                  {content}
+                </Modal>
+              :
+              ''
+            }
           </div>
           <div className="card-reveal">
             <span className="card-title grey-text text-darken-4">
@@ -116,10 +132,12 @@ class DisplayUserDocuments extends React.Component {
             </p>
             <p> <span className="red-text"> Views: </span> { views } </p>
           </div>
-          <div className="card-action">
+          <div id="card-action" className="card-action">
 
             <Modal
+              style={{ width: '90%', minHeight: '90%' }}
               fixedFooter
+              actions={''}
               trigger={
                 <a className="btn-floating btn-large cyan">
                   <i className="large material-icons">mode_edit</i>
@@ -127,14 +145,14 @@ class DisplayUserDocuments extends React.Component {
               }
             >
 
-              <form onSubmit={this.onSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <div>
                   Title: <br />
                   <input
                     name="title"
                     value={this.state.title}
                     type="text"
-                    onChange={this.onChange}
+                    onChange={this.handleChange}
                     required
                   />
                 </div>
@@ -143,7 +161,7 @@ class DisplayUserDocuments extends React.Component {
                   <textarea
                     id="textarea1" className="materialize-textarea"
                     name="content"
-                    onChange={this.onChange}
+                    onChange={this.handleChange}
                     value={this.state.content}
                     required
                   />
@@ -158,7 +176,7 @@ class DisplayUserDocuments extends React.Component {
                       type="select"
                       name="access"
                       label="Access"
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                     >
                       <option value="public">Public</option>
                       <option value="private">Private</option>
@@ -168,23 +186,14 @@ class DisplayUserDocuments extends React.Component {
                 </div>
 
                 <div>
-                  <Row>
-                    <Input
-                      s={12}
-                      type="select"
-                      name="isProtected"
-                      label="Protected"
-                      onChange={this.onChange}
-                    >
-                      <option value="">Choose</option>
-                      <option value="true">Yes</option>
-                      <option value="false">No</option>
-                    </Input>
-                  </Row>
+                  <ProtectedSelect handleChange={this.handleChange} />
                 </div>
                 <br />
-                <button className="btn cyan" type="submit"> Submit </button>
+                <button className="btn cyan modal-close" type="submit">
+                  Submit
+                </button>
               </form>
+              <button className="btn red modal-close close-modal">Close</button>
             </Modal>
             <Prompt
               trigger={<button

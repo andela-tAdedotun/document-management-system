@@ -7,7 +7,7 @@ module.exports = (limit, offset, count) => {
   result.pageCount = Math.ceil(count / limit);
   result.pageSize = Number(limit);
   if (result.currentPage === result.pageCount && offset !== 0) {
-    result.pageSize = result.totalCount % offset === 0 ?
+    result.pageSize += result.totalCount % offset === 0 ?
       result.totalCount - offset : result.totalCount % offset;
     result.pageSize = Number(result.pageSize);
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Navbar from './common/Navbar';
-import logUserOut from '../actions/LogoutActions';
+import logUserOut from '../actions/LogoutAction';
 import Footer from './common/Footer';
 
 const App = ({ logout, children, location }) =>

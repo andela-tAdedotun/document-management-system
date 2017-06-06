@@ -1,8 +1,11 @@
 /* eslint-disable camelcase */
 import passport from 'passport';
+import dotenv from 'dotenv';
 import passportJwt from 'passport-jwt';
 import models from '../models/';
-import config from '../config/config';
+
+dotenv.config();
+const secret = process.env.SECRET;
 
 const User = models.User;
 const ExtractJwt = passportJwt.ExtractJwt;
@@ -10,7 +13,7 @@ const JwtStrategy = passportJwt.Strategy;
 
 const jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader();
-jwtOptions.secretOrKey = config.secret;
+jwtOptions.secretOrKey = secret;
 
 const jwtStrategy = new JwtStrategy(jwtOptions,
   (jwt_payload, next) => {

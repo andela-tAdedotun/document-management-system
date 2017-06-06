@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
+import Prompt from '../common/Prompt';
 
 /**
  * export default - description
@@ -28,17 +29,17 @@ class PersonalProfile extends React.Component {
       confirmPassword: '',
       errors: {}
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
@@ -46,12 +47,12 @@ class PersonalProfile extends React.Component {
 
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {} });
@@ -61,8 +62,9 @@ class PersonalProfile extends React.Component {
           delete stateCopy[eachField];
         }
       });
+      const currentUserDetails = this.props.currentState.authorization.user;
       this.props
-      .updateUser(this.props.currentState.authorization.user.id, stateCopy)
+      .updateUser(currentUserDetails, stateCopy)
       .then(() => {
         Materialize.toast('Account details updated.', 4000);
       })
@@ -79,7 +81,6 @@ class PersonalProfile extends React.Component {
    */
   isValid() {
     const { errors, isValid } = validate(this.state);
-
     if (!isValid) {
       this.setState({ errors });
     }
@@ -110,12 +111,12 @@ class PersonalProfile extends React.Component {
                     </a>
                   }
                 >
-                  <form onSubmit={this.onSubmit}>
+                  <form onSubmit={this.handleSubmit}>
                     <div>
                       <label htmlFor="name">Username</label>
                       <input
                         value={this.state.name}
-                        onChange={this.onChange}
+                        onChange={this.handleChange}
                         type="text"
                         name="name" required
                       />
@@ -141,12 +142,12 @@ class PersonalProfile extends React.Component {
                     </a>
                   }
                 >
-                  <form onSubmit={this.onSubmit}>
+                  <form onSubmit={this.handleSubmit}>
                     <div className="input-field">
                       <input
                         value={this.state.email}
                         className="validate active"
-                        onChange={this.onChange}
+                        onChange={this.handleChange}
                         id="email"
                         type="email"
                         name="email"
@@ -157,12 +158,17 @@ class PersonalProfile extends React.Component {
                           {errors.email}
                         </span>
                       }
-                      <button
-                        className="btn  modal-close cyan"
-                        type="submit"
-                      >
-                        Update
-                      </button>
+                      <Prompt
+                        trigger={
+                          <button
+                            className="btn modal-close cyan"
+                            type="submit"
+                          >
+                          Update
+                        </button>}
+
+                        onClickFunction={this.handleSubmit}
+                      />
                     </div>
                   </form>
                 </Modal>
@@ -179,12 +185,12 @@ class PersonalProfile extends React.Component {
                     </a>
                   }
                 >
-                  <form onSubmit={this.onSubmit}>
+                  <form onSubmit={this.handleSubmit}>
                     <div>
                       <div className="input-field">
                         <input
                           value={this.state.oldPassword}
-                          onChange={this.onChange}
+                          onChange={this.handleChange}
                           className="validate"
                           type="password"
                           name="oldPassword"
@@ -204,7 +210,7 @@ class PersonalProfile extends React.Component {
                         <input
                           value={this.state.password}
                           className="validate"
-                          onChange={this.onChange}
+                          onChange={this.handleChange}
                           type="password"
                           name="password"
                           required
@@ -226,7 +232,7 @@ class PersonalProfile extends React.Component {
                         <input
                           value={this.state.confirmPassword}
                           className="validate"
-                          onChange={this.onChange}
+                          onChange={this.handleChange}
                           type="password"
                           name="confirmPassword"
                           required
