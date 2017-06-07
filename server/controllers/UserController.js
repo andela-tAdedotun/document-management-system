@@ -366,7 +366,6 @@ export default {
         }
       })
       .catch((error) => {
-        console.log('it got here? no way, nigga!', error)
         res.status(400).json({
           message: error.message
         });

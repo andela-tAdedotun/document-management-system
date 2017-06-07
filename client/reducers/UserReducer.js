@@ -15,7 +15,6 @@ export default (state = initialState, action = {}) => {
     }
 
     case types.ADMIN_UPDATE_USER: {
-      console.log('set am', state)
       const index =
         findIndex(state.usersInDatabase.users, { id: action.userId });
       return Object.assign({}, state, {
@@ -28,11 +27,6 @@ export default (state = initialState, action = {}) => {
           ]
         }
       });
-      // const index =
-      // findIndex(state.usersInDatabase.users, { id: action.userId });
-      // const stateCopy = Object.assign({}, state);
-      // stateCopy.usersInDatabase.users[index] = action.updatedUser;
-      // return stateCopy;
     }
 
     case types.DELETE_USER: {
