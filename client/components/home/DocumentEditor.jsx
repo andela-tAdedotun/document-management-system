@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TinyMCE from 'react-tinymce';
 import ProtectedSelect from '../common/ProtectedSelect';
 import AccessSelect from '../common/AccessSelect';
 
@@ -24,6 +25,7 @@ class DocumentEditor extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
 
   /**
@@ -38,6 +40,18 @@ class DocumentEditor extends React.Component {
     });
   }
 
+
+  /**
+   * handleEditorChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleEditorChange(event) {
+    this.setState({
+      content: event.target.getContent({ format: 'raw' })
+    });
+  }
   /**
    * handleSubmit - description
    *
@@ -51,7 +65,7 @@ class DocumentEditor extends React.Component {
       this.setState({
         title: '',
         content: '',
-        access: 'public'
+        access: this.state.access
       });
     });
   }
@@ -76,18 +90,16 @@ class DocumentEditor extends React.Component {
               required
             />
           </div>
-          <div>
-            Content: <br />
-            <textarea
-              className="materialize-textarea"
-              name="content"
-              onChange={this.handleChange}
-              value={content}
-              required
-            />
-            <br />
-          </div>
-
+          <TinyMCE
+            content={content}
+            config={{
+              height: 300,
+              plugins: 'link image code',
+              toolbar:
+            'undo redo | bold italic | alignleft aligncenter alignright | code'
+            }}
+            onChange={this.handleEditorChange}
+          />
           <div>
             <AccessSelect handleChange={this.handleChange} />
           </div>
@@ -96,7 +108,11 @@ class DocumentEditor extends React.Component {
             <ProtectedSelect handleChange={this.handleChange} />
           </div>
           <br />
-          <button id="submit" className="btn cyan" type="submit">
+          <button
+            id="submit"
+            className="btn cyan"
+            type="submit"
+          >
             Submit
           </button>
         </form>

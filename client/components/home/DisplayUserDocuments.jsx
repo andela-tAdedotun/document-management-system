@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import renderHTML from 'react-render-html';
+import TinyMCE from 'react-tinymce';
 import { Row, Modal, Input } from 'react-materialize';
 import Prompt from '../common/Prompt';
 import ProtectedSelect from '../common/ProtectedSelect';
@@ -26,6 +28,7 @@ class DisplayUserDocuments extends React.Component {
     this.deleteDocument = this.deleteDocument.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
 
   /**
@@ -66,6 +69,18 @@ class DisplayUserDocuments extends React.Component {
   }
 
   /**
+   * handleEditorChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleEditorChange(event) {
+    this.setState({
+      content: event.target.getContent()
+    });
+  }
+
+  /**
    * render - description
    *
    * @return {type}  description
@@ -101,16 +116,17 @@ class DisplayUserDocuments extends React.Component {
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
-              {content.slice(0, 90)}{content.length > 90 ? '...' : ''}
+              { renderHTML(content.slice(0, 90)) }
             </div>
             {
               content.length > 100
               ?
                 <Modal
+                  style={{ width: '90%', minHeight: '90%' }}
                   header={title}
                   trigger={<a className="read-more" href=""> Read More </a>}
                 >
-                  {content}
+                  {renderHTML(content)}
                 </Modal>
               :
               ''
@@ -157,15 +173,16 @@ class DisplayUserDocuments extends React.Component {
                   />
                 </div>
                 <div className="input-field">
-                  Content: <br />
-                  <textarea
-                    id="textarea1" className="materialize-textarea"
-                    name="content"
-                    onChange={this.handleChange}
-                    value={this.state.content}
-                    required
+                  <TinyMCE
+                    content={this.state.content}
+                    config={{
+                      height: 300,
+                      plugins: 'link image code',
+                      toolbar:
+            'undo redo | bold italic | alignleft aligncenter alignright | code'
+                    }}
+                    onChange={this.handleEditorChange}
                   />
-
                   <br />
                 </div>
 
