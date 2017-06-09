@@ -46,6 +46,7 @@ class SignupForm extends React.Component {
    * @return {type}       description
    */
   handleSubmit(event) {
+    console.log('imisi')
     event.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {} });

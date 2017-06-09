@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'react-materialize';
+import renderHTML from 'react-render-html';
 import moment from 'moment';
 import Prompt from '../common/Prompt';
 import ProtectedSelect from '../common/ProtectedSelect';
@@ -112,16 +113,17 @@ class DisplayDocuments extends React.Component {
           <div className="card-content black-grey-text">
             <span className="card-title">{title}</span>
             <div>
-              {content.slice(0, 90)}{content.length > 90 ? '...' : ''}
+              {renderHTML(content.slice(0, 90))}
             </div>
             {
-              content.length > 100
+              content.length > 90
               ?
                 <Modal
+                  style={{ width: '90%' }}
                   header={title}
                   trigger={<a className="read-more" href=""> Read More </a>}
                 >
-                  {content}
+                  {renderHTML(content)}
                 </Modal>
               :
               ''

@@ -8,7 +8,7 @@ import userSignup from '../../actions/SignupAction';
 /**
  *
  */
-class SignupPage extends React.Component {
+export class SignupPage extends React.Component {
 
 
   /**

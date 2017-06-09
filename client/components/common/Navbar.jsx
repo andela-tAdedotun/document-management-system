@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import displaySearchResults from '../../actions/SearchActions';
 
 /**
  *
  */
-class NavBar extends React.Component {
+export class NavBar extends React.Component {
   /**
    * handleSubmit - description
    *
@@ -56,7 +56,9 @@ class NavBar extends React.Component {
    */
   logOut(event) {
     event.preventDefault();
-    this.props.logUserOut();
+    this.props.logUserOut().then(() => {
+      browserHistory.push('/');
+    });
   }
 
   /**

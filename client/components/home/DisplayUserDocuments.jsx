@@ -122,7 +122,7 @@ class DisplayUserDocuments extends React.Component {
               content.length > 100
               ?
                 <Modal
-                  style={{ width: '90%', minHeight: '90%' }}
+                  style={{ width: '90%' }}
                   header={title}
                   trigger={<a className="read-more" href=""> Read More </a>}
                 >

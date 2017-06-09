@@ -15,7 +15,7 @@ import validate from '../../../shared/Validator';
 /**
  *
  */
-class DashboardPage extends React.Component {
+export class DashboardPage extends React.Component {
 
   /**
    * constructor - description

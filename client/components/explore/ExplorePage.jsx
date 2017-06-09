@@ -11,7 +11,7 @@ import DisplayDocuments from './DisplayDocuments';
 /**
  *
  */
-class ExplorePage extends React.Component {
+export class ExplorePage extends React.Component {
 
   /**
    * filter - description
@@ -114,7 +114,7 @@ class ExplorePage extends React.Component {
     const documentsInStore =
       this.props.currentState.allDocuments.documents;
     const currentUser = this.props.currentState.authorization.user;
-    if (currentUser.roleId === 1 || currentUser.roleId === 1) {
+    if (currentUser.roleId === 1 || currentUser.roleId === 2) {
       showPrivate = true;
     }
 
@@ -156,24 +156,34 @@ class ExplorePage extends React.Component {
         <br />
         <div id="explore-top">
           <Row className="right">
-            <Input
-              className="input-field"
-              type="select"
-              name="access"
-              label="Filter:"
-              onChange={this.handleChange}
-            >
-              <option value="all">All</option>
-              <option value="public">Public</option>
-              <option value="role">Role</option>
-              {
-                showPrivate
-                ?
+            {
+              showPrivate
+              ?
+                <Input
+                  className="input-field"
+                  type="select"
+                  name="access"
+                  label="Filter:"
+                  onChange={this.handleChange}
+                >
+                  <option value="all">All</option>
+                  <option value="public">Public</option>
+                  <option value="role">Role</option>
                   <option value="private">Private</option>
-                :
-                  <option />
-              }
-            </Input>
+                </Input>
+              :
+                <Input
+                  className="input-field"
+                  type="select"
+                  name="access"
+                  label="Filter:"
+                  onChange={this.handleChange}
+                >
+                  <option value="all">All</option>
+                  <option value="public">Public</option>
+                  <option value="role">Role</option>
+                </Input>
+            }
           </Row>
         </div>
         <div className="row">

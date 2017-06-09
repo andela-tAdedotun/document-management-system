@@ -8,7 +8,7 @@ import userLogin from '../../actions/LoginAction';
 /**
  *
  */
-class LandingPage extends React.Component {
+export class LandingPage extends React.Component {
 
 
   /**

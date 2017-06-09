@@ -11,7 +11,7 @@ import DisplayUserDocuments from './DisplayUserDocuments';
 /**
  *
  */
-class Homepage extends React.Component {
+export class Homepage extends React.Component {
 
   /**
    * filter - description
@@ -47,7 +47,10 @@ class Homepage extends React.Component {
     * @return {type}  description
     */
   componentDidMount() {
-    this.props.displayDocuments({ isHomepage: true });
+    this.props.displayDocuments({
+      isHomepage: true,
+      userId: this.props.userId
+    });
   }
 
   /**
@@ -77,7 +80,11 @@ class Homepage extends React.Component {
         });
     } else {
       const offset = (pageNumber - 1) * 12;
-      this.props.displayDocuments({ offset, isHomepage: true });
+      this.props.displayDocuments({
+        offset,
+        isHomepage: true,
+        userId: this.props.userId
+      });
     }
   }
 
@@ -212,6 +219,7 @@ class Homepage extends React.Component {
 Homepage.propTypes = {
   displayDocuments: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
+  userId: PropTypes.number.isRequired,
   documentDelete: PropTypes.func.isRequired,
   documentCreate: PropTypes.func.isRequired,
   displaySearchResults: PropTypes.func.isRequired,
@@ -227,7 +235,8 @@ Homepage.propTypes = {
  */
 function mapStateToProps(state) {
   return {
-    currentState: state
+    currentState: state,
+    userId: state.authorization.user.id
   };
 }
 
