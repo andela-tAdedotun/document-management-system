@@ -3,7 +3,6 @@ import { displayDocuments } from './DocumentActions';
 import { getUsers } from './UserActions';
 import types from './Types';
 
-
 /**
  * buildSearchResults - description
  *
@@ -40,17 +39,17 @@ const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
       }
     });
     if (location.match(/documents/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
      `/api/search/users/${userId}/documents/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.DISPLAY_DOCUMENTS, 'documents',
           displayDocuments({ isHomepage: true }));
     } else if (location.match(/explore/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
         `/api/search/documents/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.DISPLAY_DOCUMENTS, 'documents',
           displayDocuments({ isHomepage: false }));
     } else if (location.match(/dashboard/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
         `/api/search/users/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.GET_ALL_USERS, 'allUsers',
           getUsers());

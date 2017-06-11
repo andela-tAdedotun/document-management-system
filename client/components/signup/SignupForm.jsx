@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import validate from '../../../shared/Validator';
 
@@ -46,11 +47,12 @@ class SignupForm extends React.Component {
    * @return {type}       description
    */
   handleSubmit(event) {
-    console.log('imisi')
     event.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {} });
-      this.props.userSignup(this.state);
+      this.props.userSignup(this.state).then(() => {
+        browserHistory.push('/documents');
+      });
     }
   }
 

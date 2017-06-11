@@ -13,8 +13,8 @@ export const getRoles = () =>
       }
     });
 
-    buildDispatchWithGet(
-        dispatch, '/api/roles/',
+    return buildDispatchWithGet(
+        dispatch, '/api/roles',
         types.GET_ALL_ROLES,
         'roles'
       );

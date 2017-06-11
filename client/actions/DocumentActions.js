@@ -1,14 +1,10 @@
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
 import types from './Types';
 import { buildDispatchWithGet, buildDispatchWithPost, dispatchAction }
   from '../utilities/DispatchHelper';
 
-export const displayDocuments = ({ offset, limit, isHomepage }) => {
-  const userToken = localStorage.getItem('jwtToken');
-  const userData = jwtDecode(userToken);
-  const userId = userData.id;
-  return (dispatch) => {
+export const displayDocuments = ({ offset, limit, isHomepage, userId }) =>
+  (dispatch) => {
     dispatchAction(dispatch, {
       type: types.IS_SEARCH,
       searchPayload: {
@@ -17,25 +13,24 @@ export const displayDocuments = ({ offset, limit, isHomepage }) => {
       }
     });
 
-    buildDispatchWithGet(
-         dispatch,
-        `/api${isHomepage ? `/users/${userId}` : ''}` +
-        `/documents/?offset=${offset}&limit=${limit}`,
-        types.DISPLAY_DOCUMENTS,
-        'documents'
-      )
-      .catch(() => {
-        dispatchAction(
-          dispatch,
-          {
-            type: types.NO_DOCUMENT,
-            errorMessage: 'You have not created any document. Go ahead and ' +
-            'create one. It\'s super easy'
-          }
-        );
-      });
+    return buildDispatchWithGet(
+      dispatch,
+      `/api${isHomepage ? `/users/${userId}` : ''}` +
+      `/documents/?offset=${offset}&limit=${limit}`,
+      types.DISPLAY_DOCUMENTS,
+      'documents'
+    )
+    .catch(() => {
+      dispatchAction(
+        dispatch,
+        {
+          type: types.NO_DOCUMENT,
+          errorMessage: 'You have not created any document. Go ahead and ' +
+          'create one. It\'s super easy'
+        }
+      );
+    });
   };
-};
 
 export const createDocument = documentData =>
   dispatch =>
