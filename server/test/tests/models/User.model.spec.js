@@ -1,6 +1,6 @@
 import chai from 'chai';
 import models from '../../../models';
-import databaseData from '../../TestHelpers/DatabaseData';
+import databaseData from '../../helpers/DatabaseData';
 
 const expect = chai.expect;
 const User = models.User;
@@ -10,10 +10,8 @@ const noPasswordUser = databaseData.noPasswordUser;
 const userHasUpperCaseEmail = databaseData.userHasUpperCaseEmail;
 const tooShortPasswordUser = databaseData.tooShortPasswordUser;
 const tooLongPasswordUser = databaseData.tooLongPasswordUser;
-const superAdminUser = databaseData.superAdminUser;
 
-describe('The User model', function () {
-  this.timeout(10000);
+describe('The User model', () => {
   describe('With invalid user details', () => {
     it('should not create user if name is not supplied', (done) => {
       User.create(noNameUser)

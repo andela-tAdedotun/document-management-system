@@ -1,6 +1,6 @@
 import chai from 'chai';
 import models from '../../../models';
-import databaseData from '../../TestHelpers/DatabaseData';
+import databaseData from '../../helpers/DatabaseData';
 
 const expect = chai.expect;
 const Document = models.Document;
@@ -10,8 +10,7 @@ const noAccessDocument = databaseData.noAccessDocument;
 const noOwnerDocument = databaseData.noOwnerDocument;
 const validDocument = databaseData.validDocument;
 
-describe('The Documents model', function () {
-  this.timeout(10000);
+describe('The Documents model', () => {
   describe('With invalid documents', () => {
     it('should throw error if title is empty', (done) => {
       Document.create(noTitleDocument)
