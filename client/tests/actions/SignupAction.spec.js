@@ -13,7 +13,7 @@ const userDetails = {
   password: '123456',
 };
 
-describe('LoginAction', () => {
+describe('SignupAction', () => {
   before(() => {
     /**
      * mockStorage - description
