@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import expect from 'expect';
 import app from '../../../../server';
-import databaseData from '../../TestHelpers/DatabaseData';
+import databaseData from '../../helpers/DatabaseData';
 
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
