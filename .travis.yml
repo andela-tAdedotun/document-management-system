@@ -9,12 +9,10 @@ services:
   - postgresql
 
 before_script:
-  - nvm install 6
   - npm install
   - npm install -g gulp
   - npm install -g sequelize-cli
   - sudo -u postgres createuser andeladeveloper
-  - psql -c 'create database travis_ci_test;' -U postgres
   - createdb DMS_TEST
   - NODE_ENV=test npm run db:migrate
 
