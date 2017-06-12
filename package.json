@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "npm-run-all seed:test test:server reset:test",
-    "start": "babel-node server.js",
+    "start": "NODE_ENV=production babel-node server.js",
+    "start:dev": "babel-node server.js",
     "e2e": "nightwatch",
     "test:client": "jest",
     "test:components": "babel-node ./node_modules/.bin/_mocha --require setup.js --recursive client/tests/**/**/*.spec.jsx",
@@ -127,6 +128,7 @@
     "sinon": "^2.3.2",
     "style-loader": "^0.13.1",
     "supertest": "^3.0.0",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "url-loader": "^0.5.7",
     "validator": "^7.0.0",
     "webpack": "^2.6.1",
