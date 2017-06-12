@@ -42,7 +42,7 @@ const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
       return buildSearchResults(dispatch,
      `/api/search/users/${userId}/documents/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.DISPLAY_DOCUMENTS, 'documents',
-          displayDocuments({ isHomepage: true }));
+          displayDocuments({ isHomepage: true, userId }));
     } else if (location.match(/explore/)) {
       return buildSearchResults(dispatch,
         `/api/search/documents/?q=${searchQuery}&offset=${offset}`,

@@ -18,7 +18,6 @@ export default {
       .pause(2000)
       .assert.urlContains('documents')
       .pause(2000)
-      // .pause(1000)
       .end();
   },
 
@@ -39,7 +38,6 @@ export default {
       .pause(2000)
       .assert.urlContains('signup')
       .pause(2000)
-      // .pause(1000)
       .end();
   },
 
@@ -60,7 +58,6 @@ export default {
       .pause(2000)
       .assert.urlContains('signup')
       .pause(2000)
-      // .pause(1000)
       .end();
   },
 };

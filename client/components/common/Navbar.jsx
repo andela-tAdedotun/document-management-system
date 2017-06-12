@@ -44,8 +44,11 @@ export class NavBar extends React.Component {
       [event.target.name]: event.target.value
     });
     this.props
-      .displaySearchResults({ searchQuery: event.target.value,
-        location: this.props.location });
+      .displaySearchResults({
+        searchQuery: event.target.value,
+        location: this.props.location,
+        userId: this.props.authorization.user.id
+      });
   }
 
   /**
@@ -161,6 +164,7 @@ export class NavBar extends React.Component {
 NavBar.propTypes = {
   logUserOut: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
+  authorization: PropTypes.object.isRequired,
   location: PropTypes.string.isRequired,
   displaySearchResults: PropTypes.func.isRequired
 };
@@ -174,7 +178,8 @@ NavBar.propTypes = {
  */
 function mapStateToProps(state) {
   return {
-    currentState: state
+    currentState: state,
+    authorization: state.authorization
   };
 }
 

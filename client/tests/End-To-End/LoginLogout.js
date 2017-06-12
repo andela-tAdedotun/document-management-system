@@ -13,7 +13,6 @@ export default {
       .click('#logout')
       .assert.urlContains('')
       .pause(2000)
-      // .pause(1000)
       .end();
   },
 
@@ -29,7 +28,6 @@ export default {
       .pause(2000)
       .assert.urlContains('')
       .pause(2000)
-      // .pause(1000)
       .end();
   }
 };

@@ -96,7 +96,7 @@ class DisplayUserDocuments extends React.Component {
 
     return (
       <div className="col m3">
-        <div id="card" className="card hoverable small #bdbdbd grey lighten-1">
+        <div id="card" className="card small hoverable #bdbdbd grey lighten-1">
           <div>
             <span className="right activator info-button" href="#">
               <i className="medium material-icons right">
@@ -118,19 +118,13 @@ class DisplayUserDocuments extends React.Component {
             <div>
               { renderHTML(content.slice(0, 90)) }
             </div>
-            {
-              content.length > 100
-              ?
-                <Modal
-                  style={{ width: '90%' }}
-                  header={title}
-                  trigger={<a className="read-more" href=""> Read More </a>}
-                >
-                  {renderHTML(content)}
-                </Modal>
-              :
-              ''
-            }
+            <Modal
+              style={{ width: '90%' }}
+              header={title}
+              trigger={<a className="read-more" href=""> View </a>}
+            >
+              {renderHTML(content)}
+            </Modal>
           </div>
           <div className="card-reveal">
             <span className="card-title grey-text text-darken-4">
@@ -155,8 +149,8 @@ class DisplayUserDocuments extends React.Component {
               fixedFooter
               actions={''}
               trigger={
-                <a className="btn-floating btn-large cyan">
-                  <i className="large material-icons">mode_edit</i>
+                <a className="btn-floating btn-large cyan edit">
+                  <i className="large material-icons" id="edit">mode_edit</i>
                 </a>
               }
             >
@@ -164,7 +158,8 @@ class DisplayUserDocuments extends React.Component {
               <form onSubmit={this.handleSubmit}>
                 <div>
                   Title: <br />
-                  <input
+                  <Input
+                    className="edit-title"
                     name="title"
                     value={this.state.title}
                     type="text"
@@ -206,7 +201,10 @@ class DisplayUserDocuments extends React.Component {
                   <ProtectedSelect handleChange={this.handleChange} />
                 </div>
                 <br />
-                <button className="btn cyan modal-close" type="submit">
+                <button
+                  className="btn cyan modal-close edit-submit"
+                  type="submit"
+                >
                   Submit
                 </button>
               </form>
@@ -216,7 +214,7 @@ class DisplayUserDocuments extends React.Component {
               trigger={
                 <button
                   className="btn-floating
-                  btn-large waves-effect waves-light cyan right"
+                  btn-large waves-effect waves-light cyan right delete-button"
                   disabled={document.isProtected ? 'disabled' : ''}
                 >
                   <i

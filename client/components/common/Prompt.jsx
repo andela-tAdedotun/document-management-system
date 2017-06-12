@@ -6,12 +6,12 @@ const Prompt = ({ trigger, onClickFunction, headerMessage }) =>
   (
     <Modal
       actions={[
-        <Button waves="light" modal="close" flat>
+        <Button waves="light" modal="close" className="no-delete" flat>
           NO
         </Button>,
         <Button
           onClick={onClickFunction} waves="light" modal="close" flat
-          className="red white-text"
+          className="red white-text yes-delete"
         >
         YES
         </Button>
