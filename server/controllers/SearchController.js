@@ -29,6 +29,8 @@ export default {
         ]
       }
     };
+
+    searchOptions.attributes = { exclude: ['password'] };
     searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     searchOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 

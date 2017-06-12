@@ -184,7 +184,8 @@ export default {
           document.increment('views');
           res.status(200).json(document);
         })
-        .catch(() => res.status(400).json({
+        .catch((error) => res.status(400).json({
+          error,
           message: 'Invalid parameters. Try again!'
         }));
     }
@@ -376,7 +377,8 @@ export default {
       })
       .catch(() => res.status(400)
       .json({
-        message: 'An error occurred. Check the parameters.'
+        message: 'An error occurred. Check the parameters. ' +
+        'Also, you may not have the permission to delete this document.'
       }));
   }
 };

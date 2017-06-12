@@ -150,15 +150,15 @@ const SpecHelper = {
   },
 
   testDocument2: {
-    title: faker.lorem.word(),
-    content: faker.lorem.paragraph(),
+    title: 'Soweto Baby',
+    content: 'Yeah, when you no dey',
     access: 'public',
     documentOwnerId: 3
   },
 
   testDocument3: {
-    title: faker.lorem.word(),
-    content: faker.lorem.paragraph(),
+    title: 'Dance',
+    content: 'I will show you the money o...',
     documentOwnerId: 6,
     access: 'private'
   },
@@ -172,8 +172,8 @@ const SpecHelper = {
   },
 
   testDocument5: {
-    title: faker.lorem.word(),
-    content: faker.lorem.paragraph(),
+    title: 'Mercy',
+    content: 'Are you serious? Are you for real?',
     access: 'role',
     isProtected: false,
     documentOwnerId: 6
@@ -188,11 +188,11 @@ const SpecHelper = {
 
   testDocument6: {
     title: 'Mobile Computing',
-    content: `Mobile has been much more of a challenge: while Android remains a
-     brilliant strategic move, its dominance is rooted more in its business
-     model than in its quality (that’s not to denigrate its quality in the
-     slightest, particularly the fact that Android runs on so many different
-     kinds of devices at so many different price points).`,
+    content: 'Mobile has been much more of a challenge: while Android remains' +
+     ' a brilliant strategic move, its dominance is rooted more in its ' +
+     'business model than in its quality (that’s not to denigrate its ' +
+     'quality in the slightest, particularly the fact that Android runs on ' +
+     'so many different kinds of devices at so many different price points).',
     access: 'role',
     documentOwnerId: 1
   },
@@ -211,7 +211,7 @@ const SpecHelper = {
 
   testDocument8: {
     title: 'Daddy',
-    content: faker.lorem.paragraph(),
+    content: 'I am gonna search for rhythm while she pulls up...',
     access: 'public',
     documentOwnerId: 3
   },

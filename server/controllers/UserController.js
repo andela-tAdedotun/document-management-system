@@ -113,7 +113,9 @@ export default {
           roleId: user.roleId,
         });
       })
-      .catch(error => res.status(400).json(error));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -214,7 +216,9 @@ export default {
           paginationInfo
         });
       })
-      .catch(error => res.status(400).json(error));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -288,7 +292,8 @@ export default {
           }));
       })
       .catch(() => res.status(400).json({
-        message: 'You have sent a bad request'
+        message:
+      'You have sent a bad request. User with that id probably does not exist.'
       }));
   },
 
@@ -324,7 +329,9 @@ export default {
             message: error.message
           }));
       })
-      .catch(error => res.status(400).json(error));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -346,7 +353,7 @@ export default {
       .then((user) => {
         if (!user) {
           return res.status(401).json({
-            message: 'Incorrect password or email. Try again.'
+            message: 'No user with that email exists.'
           });
         }
 
@@ -358,7 +365,7 @@ export default {
             email: user.email
           };
           const token = jwt.sign(payload, secret);
-          res.status(200).json({ message: 'Ok.', token });
+          res.status(200).json({ token });
         } else {
           res.status(401).json({
             message: 'Incorrect password or email. Try again.'

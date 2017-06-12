@@ -19,7 +19,7 @@ export default {
       .create({
         userRole: req.body.userRole
       })
-      .then(role => res.json(role))
+      .then(role => res.status(201).json(role))
       .catch(error => res.status(400).json(error));
   },
 
@@ -51,7 +51,7 @@ export default {
       .findById(req.params.id)
       .then((role) => {
         if (!role) {
-          res.status(404).json({
+          return res.status(404).json({
             message: 'No such role exists.'
           });
         }

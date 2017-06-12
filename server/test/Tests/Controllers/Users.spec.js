@@ -1,22 +1,23 @@
 import supertest from 'supertest';
-import chai from 'chai';
+import expect from 'expect';
 import app from '../../../../server';
 import databaseData from '../../TestHelpers/DatabaseData';
 
-const expect = chai.expect;
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
 const adminUser = databaseData.adminUser;
 const regularUser = databaseData.regularUser;
+const regularUser3 = databaseData.regularUser3;
+
 const invalidUser = databaseData.invalidUser;
 const validUser = databaseData.validUser;
 const validUser2 = databaseData.validUser2;
 
-describe('The User API', function () {
-  this.timeout(15000);
+describe('The User API', () => {
   let superAdminToken;
   let adminToken;
   let regularUserToken;
+  let regularUser3Token;
 
   before((done) => {
     request.post('/api/users/login')
@@ -31,7 +32,12 @@ describe('The User API', function () {
               .send(regularUser)
               .end((err, res) => {
                 regularUserToken = `JWT ${res.body.token}`;
-                done();
+                request.post('/api/users/login')
+                  .send(regularUser3)
+                  .end((err, res) => {
+                    regularUser3Token = `JWT ${res.body.token}`;
+                    done();
+                  });
               });
           });
       });
@@ -42,8 +48,34 @@ describe('The User API', function () {
       request.post('/api/users')
         .send(adminUser)
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          const expectedResponse =
+            {
+              message: 'Email already exists. Use another.'
+            };
+          expect(res.status).toEqual(400);
+          expect(res.body).toEqual(expectedResponse);
           done();
+        });
+    });
+
+    it('should raise error if roleId is in body but user is not ' +
+    'super admin or authorized',
+    () => {
+      const userWithRoleId = {
+        name: 'African Queen',
+        email: 'african@queen.com',
+        password: 'african',
+        roleId: 2
+      };
+
+      request.post('/api/users')
+        .send(userWithRoleId)
+        .end((err, res) => {
+          const expectedResponse = {
+            message: 'You are not allowed to do post role id.'
+          };
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(403);
         });
     });
 
@@ -51,7 +83,12 @@ describe('The User API', function () {
       request.post('/api/users')
         .send(invalidUser)
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          const expectedResponse =
+            {
+              message: 'Invalid signup parameters.'
+            };
+          expect(res.status).toEqual(400);
+          expect(res.body).toEqual(expectedResponse);
           done();
         });
     });
@@ -61,7 +98,9 @@ describe('The User API', function () {
        request.post('/api/users')
         .send(validUser)
         .end((err, res) => {
-          expect(res.status).to.equal(201);
+          expect(res.status).toEqual(201);
+          expect(res.body).toIncludeKey('token');
+          expect(res.body).toIncludeKey('user');
           done();
         });
      });
@@ -71,8 +110,9 @@ describe('The User API', function () {
         request.post('/api/users')
          .send(validUser2)
          .end((err, res) => {
-           expect(res.status).to.equal(201);
-           expect(res.body.token).to.not.equal(undefined);
+           expect(res.status).toEqual(201);
+           expect(res.body).toIncludeKey('token');
+           expect(res.body.token).toNotEqual(undefined);
            done();
          });
       });
@@ -83,30 +123,23 @@ describe('The User API', function () {
       request.get('/api/users')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).toEqual(200);
+          expect(res.body.users.length).toEqual(10);
           request.get('/api/users')
             .set({ Authorization: adminToken })
             .end((err, res) => {
-              expect(res.status).to.equal(200);
+              expect(res.status).toEqual(200);
+              expect(res.body.users.length).toEqual(10);
               request.get('/api/users')
                 .set({ Authorization: regularUserToken })
                 .end((err, res) => {
-                  expect(res.status).to.equal(200);
+                  expect(res.status).toEqual(200);
+                  expect(res.body.users.length).toEqual(10);
                   done();
                 });
             });
         });
     });
-
-    it('should return an error if query is invalid',
-      (done) => {
-        request.post('/api/users?limit={}')
-         .set({ Authorization: superAdminToken })
-         .end((err, res) => {
-           expect(res.status).to.equal(400);
-           done();
-         });
-      });
   });
 
   describe('GET: /api/users/:id', () => {
@@ -114,15 +147,30 @@ describe('The User API', function () {
       request.get('/api/users/1')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          const expectedResponse =
+            {
+              id: 1,
+              name: 'Taiwo Adedotun',
+              email: 'taiwo.adedotun@andela.com',
+              roleId: 1
+            };
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(200);
           request.get('/api/users/2')
             .set({ Authorization: adminToken })
             .end((err, res) => {
-              expect(res.status).to.equal(200);
+              const expectedRes = {
+                id: 2,
+                name: 'Sola Adigun',
+                email: 'sola@adigun.com',
+                roleId: 1
+              };
+              expect(res.status).toEqual(200);
+              expect(res.body).toEqual(expectedRes);
               request.get('/api/users/1')
                 .set({ Authorization: regularUserToken })
                 .end((err, res) => {
-                  expect(res.status).to.equal(200);
+                  expect(res.status).toEqual(200);
                   done();
                 });
             });
@@ -134,7 +182,11 @@ describe('The User API', function () {
         request.get('/api/users/44')
          .set({ Authorization: superAdminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(404);
+           const expectedResponse = {
+             message: 'User not found'
+           };
+           expect(res.status).toEqual(404);
+           expect(res.body).toEqual(expectedResponse);
            done();
          });
       });
@@ -144,7 +196,8 @@ describe('The User API', function () {
         request.get('/api/users/taiwo')
          .set({ Authorization: superAdminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(400);
+           expect(res.body).toIncludeKey('message');
+           expect(res.status).toEqual(400);
            done();
          });
       });
@@ -155,11 +208,48 @@ describe('The User API', function () {
       request.get('/api/users/1/documents')
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        const expectedResponse = {
+          documents:
+          [
+            { id: 1,
+              title: 'Daddy Yo',
+              content: 'Wizzy boy, make me dance...',
+              isProtected: true,
+              views: 0,
+              access: 'private',
+              createdAt: res.body.documents[0].createdAt,
+              updatedAt: res.body.documents[0].updatedAt,
+              documentOwnerId: 1
+            },
+            { id: 6,
+              title: 'Mobile Computing',
+              content:
+      'Mobile has been much more of a challenge: while Android remains' +
+      ' a brilliant strategic move, its dominance is rooted more in its ' +
+      'business model than in its quality (that’s not to denigrate its ' +
+      'quality in the slightest, particularly the fact that Android runs on ' +
+      'so many different kinds of devices at so many different price points).',
+              isProtected: false,
+              views: 0,
+              access: 'role',
+              createdAt: res.body.documents[1].createdAt,
+              updatedAt: res.body.documents[1].updatedAt,
+              documentOwnerId: 1
+            }
+          ],
+          paginationInfo: {
+            totalCount: 2,
+            currentPage: 1,
+            pageCount: 1,
+            pageSize: 2
+          }
+        };
+        expect(res.status).toEqual(200);
+        expect(res.body).toEqual(expectedResponse);
         request.get('/api/users/4/documents')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).toEqual(200);
           done();
         });
       });
@@ -170,7 +260,7 @@ describe('The User API', function () {
         request.get('/api/users/44/documents')
          .set({ Authorization: adminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(404);
+           expect(res.status).toEqual(404);
            done();
          });
       });
@@ -180,7 +270,11 @@ describe('The User API', function () {
         request.get('/api/users/8/documents')
          .set({ Authorization: adminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(404);
+           const expectedResponse = {
+             message: 'No documents yet.'
+           };
+           expect(res.status).toEqual(404);
+           expect(res.body).toEqual(expectedResponse);
            done();
          });
       });
@@ -190,7 +284,8 @@ describe('The User API', function () {
         request.get('/api/users/taiwo/documents')
          .set({ Authorization: adminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(400);
+           expect(res.status).toEqual(400);
+           expect(res.body).toIncludeKey('message');
            done();
          });
       });
@@ -200,7 +295,7 @@ describe('The User API', function () {
       request.get('/api/users/1/documents')
        .set({ Authorization: regularUserToken })
        .end((err, res) => {
-         expect(res.status).to.equal(404);
+         expect(res.status).toEqual(404);
          done();
        });
     });
@@ -212,7 +307,12 @@ describe('The User API', function () {
       .send({ name: 'Taiwo' })
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(404);
+        const expectedResponse = {
+          message:
+      'You have sent a bad request. User with that id probably does not exist.'
+        };
+        expect(res.status).toEqual(400);
+        expect(res.body).toEqual(expectedResponse);
         done();
       });
     });
@@ -221,7 +321,7 @@ describe('The User API', function () {
       request.put('/api/users/6')
       .send({ name: 'Taiwo' })
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        expect(res.status).toEqual(401);
         done();
       });
     });
@@ -231,22 +331,41 @@ describe('The User API', function () {
       .send({ name: 'Kiniun' })
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        const expectedResponse = {
+          id: 1,
+          name: 'Kiniun',
+          email: 'taiwo.adedotun@andela.com',
+          roleId: 1
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(200);
         request.get('/api/users/1')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.name).to.equal('Kiniun');
+          const expectedRes = { id: 1,
+            name: 'Kiniun',
+            email: 'taiwo.adedotun@andela.com',
+            roleId: 1
+          };
+          expect(res.status).toEqual(200);
+          expect(res.body.name).toEqual('Kiniun');
+          expect(res.body).toEqual(expectedRes);
           request.put('/api/users/2')
           .send({ email: 'ejanla@yahoo.com' })
           .set({ Authorization: superAdminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            expect(res.status).toEqual(200);
             request.get('/api/users/2')
             .set({ Authorization: superAdminToken })
             .end((err, res) => {
-              expect(res.status).to.equal(200);
-              expect(res.body.email).to.equal('ejanla@yahoo.com');
+              const expectedUser = { id: 2,
+                name: 'Sola Adigun',
+                email: 'ejanla@yahoo.com',
+                roleId: 1
+              };
+              expect(res.status).toEqual(200);
+              expect(res.body).toEqual(expectedUser);
+              expect(res.body.email).toEqual('ejanla@yahoo.com');
               done();
             });
           });
@@ -260,12 +379,17 @@ describe('The User API', function () {
         .send({ name: 'Kiniun' })
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          const expectedResponse = {
+            message: 'You are not authorized to do that.'
+          };
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(403);
           request.put('/api/users/4')
           .send({ name: 'Ajanlekoko' })
           .set({ Authorization: adminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(403);
+            expect(res.body).toEqual(expectedResponse);
+            expect(res.status).toEqual(403);
             done();
           });
         });
@@ -277,12 +401,17 @@ describe('The User API', function () {
         .send({ name: 'Kiniun' })
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          const expectedResponse = {
+            message: 'You are not authorized to do that.'
+          };
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(403);
           request.put('/api/users/4')
           .send({ name: 'Ajanlekoko' })
           .set({ Authorization: adminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(403);
+            expect(res.body).toEqual(expectedResponse);
+            expect(res.status).toEqual(403);
             done();
           });
         });
@@ -294,17 +423,29 @@ describe('The User API', function () {
         .send({ name: 'Kiniun' })
         .set({ Authorization: regularUserToken })
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          const expectedResponse = {
+            message: 'You are not authorized to do that.'
+          };
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(403);
           request.put('/api/users/6')
           .send({ name: 'Ajanlekoko' })
           .set({ Authorization: regularUserToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            const expectedRes = {
+              id: 6,
+              name: 'Ajanlekoko',
+              email: 'taiwo@xyz.com',
+              roleId: 3
+            };
+            expect(res.body).toEqual(expectedRes);
+            expect(res.status).toEqual(200);
             request.put('/api/users/7')
             .send({ name: 'Ajanlekoko' })
             .set({ Authorization: regularUserToken })
             .end((err, res) => {
-              expect(res.status).to.equal(403);
+              expect(res.body).toEqual(expectedResponse);
+              expect(res.status).toEqual(403);
               done();
             });
           });
@@ -317,7 +458,7 @@ describe('The User API', function () {
       .send({ password: 'Ajanlekoko' })
       .set({ Authorization: regularUserToken })
       .end((err, res) => {
-        expect(res.status).to.equal(403);
+        expect(res.status).toEqual(403);
         done();
       });
     });
@@ -331,21 +472,32 @@ describe('The User API', function () {
       })
       .set({ Authorization: regularUserToken })
       .end((err, res) => {
-        expect(res.status).to.equal(403);
+        const expectedResponse = {
+          type: 'Invalid password',
+          message: 'Incorrect old password. Try again.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(403);
         done();
       });
     });
 
     it('should allow password update if old password supplied is correct',
     (done) => {
-      request.put('/api/users/6')
+      request.put('/api/users/8')
       .send({
         password: 'Ajanlekoko',
-        oldPassword: '123456'
+        oldPassword: 'adeshola'
       })
-      .set({ Authorization: regularUserToken })
+      .set({ Authorization: regularUser3Token })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        const expectedResponse = { id: 8,
+          name: 'Adeshola Barbie',
+          email: 'adeshola@test.com',
+          roleId: 3
+        };
+        expect(res.status).toEqual(200);
+        expect(res.body).toEqual(expectedResponse);
         done();
       });
     });
@@ -359,7 +511,12 @@ describe('The User API', function () {
       })
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        const expectedResponse = {
+          message:
+      'You have sent a bad request. User with that id probably does not exist.'
+        };
+        expect(res.status).toEqual(400);
+        expect(res.body).toEqual(expectedResponse);
         done();
       });
     });
@@ -370,12 +527,30 @@ describe('The User API', function () {
       request.delete('/api/users/2')
       .set({ Authorization: adminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(403);
+        const expectedResponse = {
+          message: 'Only a super admin can do that.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(403);
         request.delete('/api/users/6')
         .set({ Authorization: regularUserToken })
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          expect(res.body).toEqual(expectedResponse);
+          expect(res.status).toEqual(403);
         });
+      });
+    });
+
+    it('should not allow the deletion of super admin', () => {
+      request.delete('/api/users/1')
+      .set({ Authorization: superAdminToken })
+      .end((err, res) => {
+        const expectedResponse = {
+          message: 'This app needs a super admin. ' +
+            'You cannot perform this operation.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(403);
       });
     });
 
@@ -383,7 +558,11 @@ describe('The User API', function () {
       request.delete('/api/users/22')
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(404);
+        const expectedResponse = {
+          message: 'User not found'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(404);
         done();
       });
     });
@@ -393,17 +572,22 @@ describe('The User API', function () {
       request.delete('/api/users/kehinde')
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(400);
+        expect(res.body).toIncludeKey('message');
+        expect(res.status).toEqual(400);
         done();
       });
     });
 
-    it('should delete user if admin deletes a user that exists',
+    it('should delete user if super admin deletes a user that exists',
     (done) => {
       request.delete('/api/users/9')
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        const expectedResponse = {
+          message: 'User successfully deleted.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(200);
         done();
       });
     });
@@ -417,13 +601,18 @@ describe('The User API', function () {
          email: 'sola@adigun.com'
        })
        .end((err, res) => {
-         expect(res.status).to.equal(400);
+         const expectedResponse = {
+           message: 'Please input your email and password'
+         };
+         expect(res.body).toEqual(expectedResponse);
+         expect(res.status).toEqual(400);
          request.post('/api/users/login')
          .send({
            password: 'adigun'
          })
          .end((err, res) => {
-           expect(res.status).to.equal(400);
+           expect(res.body).toEqual(expectedResponse);
+           expect(res.status).toEqual(400);
            done();
          });
        });
@@ -436,7 +625,11 @@ describe('The User API', function () {
         password: '123456'
       })
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        const expectedResponse = {
+          message: 'No user with that email exists.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(401);
         done();
       });
     });
@@ -448,7 +641,11 @@ describe('The User API', function () {
         password: 'taiwo'
       })
       .end((err, res) => {
-        expect(res.status).to.equal(401);
+        const expectedResponse = {
+          message: 'Incorrect password or email. Try again.'
+        };
+        expect(res.body).toEqual(expectedResponse);
+        expect(res.status).toEqual(401);
         done();
       });
     });
@@ -460,7 +657,8 @@ describe('The User API', function () {
         password: '123456'
       })
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        expect(res.body).toIncludeKey('token');
+        expect(res.status).toEqual(200);
         done();
       });
     });
@@ -470,7 +668,7 @@ describe('The User API', function () {
     it('should log user out', (done) => {
       request.post('/api/users/logout')
       .end((err, res) => {
-        expect(res.status).to.equal(200);
+        expect(res.status).toEqual(200);
         done();
       });
     });
