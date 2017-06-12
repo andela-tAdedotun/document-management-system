@@ -15,9 +15,9 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', '123456')
       .click('.btn')
-      .pause(5000)
+      .pause(2000)
       .assert.urlContains('documents')
-      .pause(5000)
+      .pause(2000)
       // .pause(1000)
       .end();
   },
@@ -36,9 +36,9 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', '123456')
       .click('.btn')
-      .pause(5000)
+      .pause(2000)
       .assert.urlContains('signup')
-      .pause(5000)
+      .pause(2000)
       // .pause(1000)
       .end();
   },
@@ -57,9 +57,9 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', 'adedotun')
       .click('.btn')
-      .pause(5000)
+      .pause(2000)
       .assert.urlContains('signup')
-      .pause(5000)
+      .pause(2000)
       // .pause(1000)
       .end();
   },

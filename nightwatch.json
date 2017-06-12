@@ -1,5 +1,5 @@
 {
-  "src_folders" : ["/Users/andeladeveloper/Documents/Code/Checkpoints/document-management-system/client/tests"],
+  "src_folders" : ["/Users/andeladeveloper/Documents/Code/Checkpoints/document-management-system/client/tests/End-To-End"],
   "output_folder" : "reports",
 
   "selenium" : {

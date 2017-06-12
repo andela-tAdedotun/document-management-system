@@ -16,7 +16,7 @@
     "seed": "NODE_ENV=development babel-node server/test/TestHelpers/SeedDatabaseData.js",
     "reset:test": "NODE_ENV=test babel-node server/test/TestHelpers/ResetDatabase.js",
     "seed:test": "NODE_ENV=test babel-node server/test/TestHelpers/SeedDatabaseData.js",
-    "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha server/test/**/*.spec.js && gulp coveralls",
+    "test:server": "NODE_ENV=test babel-node ./node_modules/babel-istanbul/lib/cli.js cover ./node_modules/.bin/_mocha -- --timeout 15000 server/test/**/*.spec.js && gulp coveralls",
     "build:dist": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./server/test,./client/test,./reports,./migrations,./coverage,docs --copy-files",
     "document": "rimraf docs/ && jsdoc -r -c ./conf.json --readme ./documentation/README.md --destination docs"
   },
@@ -24,7 +24,7 @@
     "type": "git",
     "url": "git+https://github.com/andela-tAdedotun/document-management-system.git"
   },
-  "author": "",
+  "author": "Taiwo Adedotun",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/andela-tAdedotun/document-management-system/issues"
