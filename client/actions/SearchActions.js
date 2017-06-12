@@ -1,9 +1,7 @@
 import axios from 'axios';
-import jwtDecode from 'jwt-decode';
-import { displayUserDocuments, displayDocuments } from './DocumentsActions';
+import { displayDocuments } from './DocumentActions';
 import { getUsers } from './UserActions';
-import types from './types';
-
+import types from './Types';
 
 /**
  * buildSearchResults - description
@@ -26,16 +24,13 @@ function buildSearchResults(dispatch, apiEndpoint, searchQuery, actionType,
             [`${payloadName}`]: res.data
           });
         } else {
-          dispatch(defaultAction());
+          dispatch(defaultAction);
         }
       });
 }
 
-const displaySearchResults = (searchQuery, location, offset) => {
-  const userToken = localStorage.getItem('jwtToken');
-  const userData = jwtDecode(userToken);
-  const userId = userData.id;
-  return (dispatch) => {
+const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
+  (dispatch) => {
     dispatch({
       type: types.IS_SEARCH,
       searchPayload: {
@@ -44,23 +39,21 @@ const displaySearchResults = (searchQuery, location, offset) => {
       }
     });
     if (location.match(/documents/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
      `/api/search/users/${userId}/documents/?q=${searchQuery}&offset=${offset}`,
-         searchQuery, types.DISPLAY_USER_DOCUMENTS, 'documents',
-          displayUserDocuments);
+         searchQuery, types.DISPLAY_DOCUMENTS, 'documents',
+          displayDocuments({ isHomepage: true, userId }));
     } else if (location.match(/explore/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
         `/api/search/documents/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.DISPLAY_DOCUMENTS, 'documents',
-          displayDocuments);
+          displayDocuments({ isHomepage: false }));
     } else if (location.match(/dashboard/)) {
-      buildSearchResults(dispatch,
+      return buildSearchResults(dispatch,
         `/api/search/users/?q=${searchQuery}&offset=${offset}`,
          searchQuery, types.GET_ALL_USERS, 'allUsers',
-          getUsers);
+          getUsers());
     }
   };
-};
-
 
 export default displaySearchResults;

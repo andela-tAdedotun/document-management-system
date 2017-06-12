@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { browserHistory } from 'react-router';
 import validate from '../../../shared/Validator';
 
 /**
@@ -24,37 +23,33 @@ class SignupForm extends React.Component {
       errors: {}
     };
 
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
     if (this.isValid()) {
       this.setState({ errors: {} });
-      this.props.userSignup(this.state).then(() => {
-        browserHistory.push('/documents');
-      })
-      .catch(error => Materialize.toast(error.message, 4000));
+      this.props.userSignup(this.state);
     }
   }
 
@@ -81,14 +76,12 @@ class SignupForm extends React.Component {
   render() {
     const { errors } = this.state;
     return (
-      <form onSubmit={this.onSubmit}>
-        <h3> In a bit... </h3>
-
+      <form onSubmit={this.handleSubmit}>
         <div>
           <div className="input-field">
             <input
               value={this.state.name}
-              onChange={this.onChange}
+              onChange={this.handleChange}
               id="name"
               type="text"
               name="name"
@@ -101,7 +94,7 @@ class SignupForm extends React.Component {
           <div className="input-field">
             <input
               value={this.state.email}
-              onChange={this.onChange}
+              onChange={this.handleChange}
               className="validate"
               type="email"
               id="email"
@@ -125,7 +118,7 @@ class SignupForm extends React.Component {
           <div className="input-field">
             <input
               value={this.state.password}
-              onChange={this.onChange}
+              onChange={this.handleChange}
               type="password"
               id="password"
               name="password"
@@ -144,7 +137,7 @@ class SignupForm extends React.Component {
           <div className="input-field">
             <input
               value={this.state.confirmPassword}
-              onChange={this.onChange}
+              onChange={this.handleChange}
               id="re-password"
               type="password"
               name="confirmPassword"
@@ -158,6 +151,12 @@ class SignupForm extends React.Component {
               </span>
             }
           </div>
+          <span className="red-text">
+            { this.props.authorization.signUpError
+              ? this.props.authorization.signUpError
+              : ''
+            }
+          </span>
           <br />
           <br />
           <button className="btn cyan" type="submit">Signup</button>
@@ -168,7 +167,8 @@ class SignupForm extends React.Component {
 }
 
 SignupForm.propTypes = {
-  userSignup: PropTypes.func.isRequired
+  userSignup: PropTypes.func.isRequired,
+  authorization: PropTypes.object.isRequired
 };
 
 export default SignupForm;

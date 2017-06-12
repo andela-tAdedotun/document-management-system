@@ -9,7 +9,7 @@ import jwtDecode from 'jwt-decode';
 import rootReducer from './RootReducer';
 import routes from './Routes';
 import setAuthorizationToken from './utilities/SetAuthorizationToken';
-import setCurrentUser from './actions/AuthActions';
+import setCurrentUser from './actions/SetCurrentUser';
 import './index.scss';
 
 const store = createStore(

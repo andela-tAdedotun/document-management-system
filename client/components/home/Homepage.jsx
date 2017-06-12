@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Modal, Pagination, Row, Input } from 'react-materialize';
 import DocumentEditor from './DocumentEditor';
-import { displayUserDocuments, createDocument, deleteDocument, editDocument }
-  from '../../actions/DocumentsActions';
+import { displayDocuments, createDocument, deleteDocument, editDocument }
+  from '../../actions/DocumentActions';
 import displaySearchResults from '../../actions/SearchActions';
 import DisplayUserDocuments from './DisplayUserDocuments';
 
 /**
  *
  */
-class Homepage extends React.Component {
+export class Homepage extends React.Component {
 
   /**
    * filter - description
@@ -38,15 +38,28 @@ class Homepage extends React.Component {
       access: 'all'
     };
     this.onSelect = this.onSelect.bind(this);
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
+
    /**
-    * componentDidMount - description
+    * componentDidMount - called after component renders
     *
     * @return {type}  description
     */
   componentDidMount() {
-    this.props.displayUserDocuments();
+    this.props.displayDocuments({
+      isHomepage: true,
+      userId: this.props.userId
+    });
+  }
+
+  /**
+   * componentWillUnmount - description
+   *
+   * @return {type}  description
+   */
+  componentWillUnmount() {
+    this.props.currentState.allDocuments = {};
   }
 
   /**
@@ -60,20 +73,28 @@ class Homepage extends React.Component {
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
-        .displaySearchResults(searchStatus.searchQuery, 'documents', offset);
+        .displaySearchResults({
+          searchQuery: searchStatus.searchQuery,
+          location: 'documents',
+          offset
+        });
     } else {
       const offset = (pageNumber - 1) * 12;
-      this.props.displayUserDocuments(offset);
+      this.props.displayDocuments({
+        offset,
+        isHomepage: true,
+        userId: this.props.userId
+      });
     }
   }
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
+  handleChange(event) {
     event.preventDefault();
     this.setState({
       [event.target.name]: event.target.value
@@ -93,7 +114,7 @@ class Homepage extends React.Component {
     let pageCount;
     let currentPage;
     const userDocumentsInStore = this.props
-      .currentState.displayUserDocuments.displayUserDocuments;
+      .currentState.allDocuments.documents;
     const searchStatus = this.props.currentState.searchParams.searchParams;
 
     if (userDocumentsInStore) {
@@ -137,6 +158,8 @@ class Homepage extends React.Component {
         <div id="homepage-top">
           <Modal
             fixedFooter
+            actions={''}
+            id="add-document-modal"
             trigger={
               <button
                 id="addDocument"
@@ -146,9 +169,6 @@ class Homepage extends React.Component {
                 <i className="material-icons">add</i>
               </button>
             }
-            modalOptions={{
-              complete: () => $('#submit').prop('disabled', false)
-            }}
           >
             <DocumentEditor createDocument={documentCreate} />
           </Modal>
@@ -159,7 +179,7 @@ class Homepage extends React.Component {
               type="select"
               name="access"
               label="Filter:"
-              onChange={this.onChange}
+              onChange={this.handleChange}
             >
               <option value="all">All</option>
               <option value="public">Public</option>
@@ -197,8 +217,9 @@ class Homepage extends React.Component {
 }
 
 Homepage.propTypes = {
-  displayUserDocuments: PropTypes.func.isRequired,
+  displayDocuments: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
+  userId: PropTypes.number.isRequired,
   documentDelete: PropTypes.func.isRequired,
   documentCreate: PropTypes.func.isRequired,
   displaySearchResults: PropTypes.func.isRequired,
@@ -214,12 +235,13 @@ Homepage.propTypes = {
  */
 function mapStateToProps(state) {
   return {
-    currentState: state
+    currentState: state,
+    userId: state.authorization.user.id
   };
 }
 
 export default connect(mapStateToProps,
-  { displayUserDocuments,
+  { displayDocuments,
     documentCreate: createDocument,
     documentDelete: deleteDocument,
     documentEdit: editDocument,

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Row, Input } from 'react-materialize';
+import TinyMCE from 'react-tinymce';
+import ProtectedSelect from '../common/ProtectedSelect';
+import AccessSelect from '../common/AccessSelect';
 
 /**
  *
@@ -21,39 +23,50 @@ class DocumentEditor extends React.Component {
       access: 'public',
       isProtected: 'false'
     };
-    this.onChange = this.onChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
 
   /**
-   * onChange - description
+   * handleChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onChange(event) {
-    $('#submit').prop('disabled', false);
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
+
   /**
-   * onSubmit - description
+   * handleEditorChange - description
    *
    * @param  {type} event description
    * @return {type}       description
    */
-  onSubmit(event) {
+  handleEditorChange(event) {
+    this.setState({
+      content: event.target.getContent({ format: 'raw' })
+    });
+  }
+  /**
+   * handleSubmit - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleSubmit(event) {
     event.preventDefault();
-    $('#submit').prop('disabled', true);
     this.props.createDocument(this.state).then(() => {
       Materialize.toast('Document successfully created.', 4000);
-      this.state = {
-        title: this.state.title,
-        content: this.state.content,
+      this.setState({
+        title: '',
+        content: '',
         access: this.state.access
-      };
+      });
     });
   }
 
@@ -65,63 +78,46 @@ class DocumentEditor extends React.Component {
   render() {
     const { title, content } = this.state;
     return (
-      <form onSubmit={this.onSubmit}>
-        <div>
-          Title: <br />
-          <input
-            name="title"
-            value={title}
-            type="text"
-            onChange={this.onChange}
-            required
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <div>
+            Title: <br />
+            <input
+              name="title"
+              value={title}
+              type="text"
+              onChange={this.handleChange}
+              required
+            />
+          </div>
+          <TinyMCE
+            content={content}
+            config={{
+              height: 300,
+              plugins: 'link image code',
+              toolbar:
+            'undo redo | bold italic | alignleft aligncenter alignright | code'
+            }}
+            onChange={this.handleEditorChange}
           />
-        </div>
-        <div>
-          Content: <br />
-          <textarea
-            className="materialize-textarea"
-            name="content"
-            onChange={this.onChange}
-            value={content}
-            required
-          />
+          <div>
+            <AccessSelect handleChange={this.handleChange} />
+          </div>
+
+          <div>
+            <ProtectedSelect handleChange={this.handleChange} />
+          </div>
           <br />
-        </div>
-
-        <div>
-          <Row>
-            <Input
-              s={12}
-              type="select"
-              name="access"
-              label="Who Can Access"
-              onChange={this.onChange}
-            >
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-              <option value="role">Role</option>
-            </Input>
-          </Row>
-        </div>
-
-        <div>
-          <Row>
-            <Input
-              s={12}
-              type="select"
-              name="isProtected"
-              label="Protected"
-              onChange={this.onChange}
-            >
-              <option value="false">Choose</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </Input>
-          </Row>
-        </div>
-        <br />
-        <button id="submit" className="btn cyan" type="submit"> Submit </button>
-      </form>
+          <button
+            id="submit"
+            className="btn cyan"
+            type="submit"
+          >
+            Submit
+          </button>
+        </form>
+        <button className="btn red modal-close close-modal">Close</button>
+      </div>
     );
   }
 }

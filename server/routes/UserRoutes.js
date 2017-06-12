@@ -9,6 +9,9 @@ userRouter.route('/')
   .post(userController.createUser)
   .get(passport.authenticate(), userController.getUsers);
 
+userRouter.route('/create')
+  .post(passport.authenticate(), userController.createUser);
+
 userRouter.route('/:id')
   .get(passport.authenticate(), userController.findUser)
   .put(passport.authenticate(), userController.updateUser)

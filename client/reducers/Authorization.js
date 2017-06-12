@@ -1,4 +1,4 @@
-import types from '../actions/types';
+import types from '../actions/Types';
 
 const initialState = {
   isAuthenticated: false,
@@ -13,6 +13,14 @@ export default (state = initialState, action = {}) => {
             action.user ? Object.keys(action.user).length > 0 : false,
         user: action.user
       };
+    }
+
+    case types.LOGIN_FAILURE: {
+      return Object.assign({}, state, { loginError: action.message });
+    }
+
+    case types.SIGNUP_FAILURE: {
+      return Object.assign({}, state, { signUpError: action.message });
     }
     default: return state;
   }

@@ -15,7 +15,7 @@ import validate from '../../../shared/Validator';
 /**
  *
  */
-class DashboardPage extends React.Component {
+export class DashboardPage extends React.Component {
 
   /**
    * constructor - description
@@ -35,7 +35,7 @@ class DashboardPage extends React.Component {
       userRole: '',
       errors: {}
     };
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
     this.createUser = this.createUser.bind(this);
     this.createRole = this.createRole.bind(this);
@@ -58,18 +58,6 @@ class DashboardPage extends React.Component {
   }
 
   /**
-   * onChange - description
-   *
-   * @param  {type} event description
-   * @return {type}       description
-   */
-  onChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
-  /**
    * onSelect - description
    *
    * @param  {type} pageNumber description
@@ -79,6 +67,18 @@ class DashboardPage extends React.Component {
     // calculate offset for endpoint to get all users. used for pagination
     const offset = (pageNumber - 1) * 15;
     this.props.getUsers(offset);
+  }
+
+  /**
+   * handleChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
   /**
@@ -114,7 +114,7 @@ class DashboardPage extends React.Component {
   }
 
   /**
-   * onSubmit - description
+   * handleSubmit - description
    *
    * @param  {type} event description
    * @return {type}       description
@@ -153,9 +153,8 @@ class DashboardPage extends React.Component {
     );
 
     let allRoles;
-    const rolesInStore = this.props.currentState.roles[0];
-    if (rolesInStore) {
-      const roles = rolesInStore.allRoles;
+    const roles = this.props.currentState.roles.allRoles;
+    if (roles) {
       allRoles = roles.map(eachRole =>
         <Roles
           key={eachRole.id}
@@ -203,21 +202,21 @@ class DashboardPage extends React.Component {
                     <label htmlFor="name">Username</label>
                     <input
                       value={this.state.name}
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                       type="text"
                       name="name" required
                     />
                     <label htmlFor="email">Email</label>
                     <input
                       value={this.state.email}
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                       type="text"
                       name="email"
                     />
                     <label htmlFor="password">Password</label>
                     <input
                       value={this.state.password}
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                       type="password"
                       name="password"
                     />
@@ -227,7 +226,7 @@ class DashboardPage extends React.Component {
                     <input
                       value={this.state.confirmPassword}
                       className="validate"
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                       type="password"
                       name="confirmPassword"
                       required
@@ -245,7 +244,7 @@ class DashboardPage extends React.Component {
                           type="select"
                           name="roleId"
                           label="User's Role"
-                          onChange={this.onChange}
+                          onChange={this.handleChange}
                         >
                           <option value={3}>Regular</option>
                           <option value={2}>Admin</option>
@@ -304,7 +303,7 @@ class DashboardPage extends React.Component {
                   <div className="input-field">
                     <input
                       value={this.state.userRole}
-                      onChange={this.onChange}
+                      onChange={this.handleChange}
                       type="text"
                       id="userRole"
                       name="userRole" required

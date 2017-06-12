@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Input, Row, Pagination } from 'react-materialize';
-import logUserOut from '../../actions/LogoutActions';
+import logUserOut from '../../actions/LogoutAction';
 import { displayDocuments, deleteDocument, editDocument }
-  from '../../actions/DocumentsActions';
+  from '../../actions/DocumentActions';
 import displaySearchResults from '../../actions/SearchActions';
 import DisplayDocuments from './DisplayDocuments';
 
 /**
  *
  */
-class ExplorePage extends React.Component {
+export class ExplorePage extends React.Component {
 
   /**
    * filter - description
@@ -37,7 +37,7 @@ class ExplorePage extends React.Component {
     this.state = {
       access: 'all'
     };
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.onSelect = this.onSelect.bind(this);
   }
 
@@ -47,21 +47,19 @@ class ExplorePage extends React.Component {
    * @return {type}  description
    */
   componentDidMount() {
-    this.props.displayDocuments();
+    this.props.displayDocuments({ isHomepage: false });
   }
 
+
   /**
-   * onChange - description
+   * componentWillUnmount - description
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @return {type}  description
    */
-  onChange(event) {
-    event.preventDefault();
-    this.setState({
-      [event.target.name]: event.target.value
-    });
+  componentWillUnmount() {
+    this.props.currentState.allDocuments = {};
   }
+
 
   /**
    * onSelect - description
@@ -74,11 +72,28 @@ class ExplorePage extends React.Component {
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
       this.props
-        .displaySearchResults(searchStatus.searchQuery, 'explore', offset);
+        .displaySearchResults({
+          searchQuery: searchStatus.searchQuery,
+          location: 'explore',
+          offset
+        });
     } else {
       const offset = (pageNumber - 1) * 12;
-      this.props.displayDocuments(offset);
+      this.props.displayDocuments({ offset, isHomepage: false });
     }
+  }
+
+  /**
+   * handleChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleChange(event) {
+    event.preventDefault();
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
 
 
@@ -97,9 +112,9 @@ class ExplorePage extends React.Component {
     let showPrivate;
     const searchStatus = this.props.currentState.searchParams.searchParams;
     const documentsInStore =
-      this.props.currentState.displayDocuments.displayDocuments;
+      this.props.currentState.allDocuments.documents;
     const currentUser = this.props.currentState.authorization.user;
-    if (currentUser.roleId === 1 || currentUser.roleId === 1) {
+    if (currentUser.roleId === 1 || currentUser.roleId === 2) {
       showPrivate = true;
     }
 
@@ -141,31 +156,44 @@ class ExplorePage extends React.Component {
         <br />
         <div id="explore-top">
           <Row className="right">
-            <Input
-              className="input-field"
-              type="select"
-              name="access"
-              label="Filter:"
-              onChange={this.onChange}
-            >
-              <option value="all">All</option>
-              <option value="public">Public</option>
-              <option value="role">Role</option>
-              {
-                showPrivate
-                ?
+            {
+              showPrivate
+              ?
+                <Input
+                  className="input-field"
+                  type="select"
+                  name="access"
+                  label="Filter:"
+                  onChange={this.handleChange}
+                >
+                  <option value="all">All</option>
+                  <option value="public">Public</option>
+                  <option value="role">Role</option>
                   <option value="private">Private</option>
-                :
-                  <option />
-              }
-            </Input>
+                </Input>
+              :
+                <Input
+                  className="input-field"
+                  type="select"
+                  name="access"
+                  label="Filter:"
+                  onChange={this.handleChange}
+                >
+                  <option value="all">All</option>
+                  <option value="public">Public</option>
+                  <option value="role">Role</option>
+                </Input>
+            }
           </Row>
         </div>
         <div className="row">
           {
             searchStatus && searchStatus.isSearch
             ?
-              <h5 className="searchResult"> Search results: </h5>
+              <h5 className="searchResult">
+                Search results ({`${documentsInStore.paginationInfo.pageSize} of
+                   ${documentsInStore.paginationInfo.totalCount}`}):
+              </h5>
             :
             ''
           }

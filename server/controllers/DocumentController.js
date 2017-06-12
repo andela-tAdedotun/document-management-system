@@ -20,8 +20,10 @@ export default {
         access: req.body.access,
         documentOwnerId: req.user.id
       })
-      .then(document => res.status(201).send(document))
-      .catch(error => res.status(400).send(error.message));
+      .then(document => res.status(201).json(document))
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -34,6 +36,12 @@ export default {
     const queryOptions = {};
     queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
+    queryOptions.include = [
+      {
+        model: User,
+        attributes: { exclude: ['password', 'privacy'] }
+      }
+    ];
 
     /*
       Document access for super admins and admins.
@@ -49,27 +57,20 @@ export default {
             { access: 'public' },
             { access: 'private',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               },
               $or: {
                 '$User.id$': req.user.id,
-                '$User.RoleId$': { $gt: 2 }
+                '$User.roleId$': { $gt: 2 }
               }
             },
             { access: 'role',
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               }
             },
           ]
         };
-
-        queryOptions.include = [
-          {
-            model: User,
-            attributes: { exclude: ['password', 'privacy', 'RoleId'] }
-          }
-        ];
       }
 
       return Document
@@ -77,12 +78,14 @@ export default {
         .then((documents) => {
           const paginationInfo = pagination(queryOptions.limit,
           queryOptions.offset, documents.count);
-          res.status(200).send({
+          res.status(200).json({
             paginationInfo,
             documents: documents.rows,
           });
         })
-        .catch(error => res.status(400).send(error.message));
+        .catch(error => res.status(400).json({
+          message: error.message
+        }));
     }
 
     /*
@@ -96,7 +99,7 @@ export default {
         { access: 'public' },
         { access: 'role',
           $and: {
-            '$User.RoleId$': req.user.roleId
+            '$User.roleId$': req.user.roleId
           }
         },
         { access: 'private',
@@ -107,22 +110,19 @@ export default {
       ]
     };
 
-    queryOptions.include = [
-      {
-        model: User,
-        attributes: { exclude: ['password', 'privacy', 'RoleId'] }
-      }
-    ];
-
     return Document
       .findAndCountAll(queryOptions)
       .then((documents) => {
         const paginationInfo = pagination(queryOptions.limit,
         queryOptions.offset, documents.count);
-        res.status(200).send({ paginationInfo,
-          documents: documents.rows });
+        res.status(200).json({
+          paginationInfo,
+          documents: documents.rows
+        });
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -150,16 +150,16 @@ export default {
               { access: 'public' },
               { access: 'private',
                 $not: {
-                  '$User.RoleId$': 1
+                  '$User.roleId$': 1
                 },
                 $or: {
                   '$User.id$': req.user.id,
-                  '$User.RoleId$': { $gt: 2 }
+                  '$User.roleId$': { $gt: 2 }
                 }
               },
               { access: 'role',
                 $not: {
-                  '$User.RoleId$': 1
+                  '$User.roleId$': 1
                 }
               },
             ]
@@ -169,7 +169,7 @@ export default {
         queryOptions.include = [
           {
             model: User,
-            attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+            attributes: { exclude: ['password', 'privacy', 'roleId'] }
           }
         ];
       } else {
@@ -182,9 +182,12 @@ export default {
         .findOne(queryOptions)
         .then((document) => {
           document.increment('views');
-          res.status(200).send(document);
+          res.status(200).json(document);
         })
-        .catch(() => res.status(400).send('Invalid parameters. Try again!'));
+        .catch((error) => res.status(400).json({
+          error,
+          message: 'Invalid parameters. Try again!'
+        }));
     }
 
     /*
@@ -200,7 +203,7 @@ export default {
           { access: 'public' },
           { access: 'role',
             $and: {
-              '$User.RoleId$': req.user.roleId
+              '$User.roleId$': req.user.roleId
             }
           },
           { access: 'private',
@@ -215,7 +218,7 @@ export default {
     queryOptions.include = [
       {
         model: User,
-        attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+        attributes: { exclude: ['password', 'privacy', 'roleId'] }
       }
     ];
 
@@ -223,9 +226,11 @@ export default {
       .findOne(queryOptions)
       .then((document) => {
         document.increment('views');
-        res.status(200).send(document);
+        res.status(200).json(document);
       })
-      .catch(error => res.status(400).send(error.message));
+      .catch(error => res.status(400).json({
+        message: error.message
+      }));
   },
 
   /**
@@ -236,6 +241,12 @@ export default {
   */
   updateDocument(req, res) {
     const queryOptions = {};
+    queryOptions.include = [
+      {
+        model: User,
+        attributes: { exclude: ['password', 'privacy'] }
+      }
+    ];
 
     /*
       Document access for super admins and admins.
@@ -250,11 +261,11 @@ export default {
             $or: [
               {
                 $not: {
-                  '$User.RoleId$': 1
+                  '$User.roleId$': 1
                 },
                 $or: {
                   '$User.id$': req.user.id,
-                  '$User.RoleId$': { $gt: 2 }
+                  '$User.roleId$': { $gt: 2 }
                 }
               },
             ]
@@ -264,7 +275,7 @@ export default {
         queryOptions.include = [
           {
             model: User,
-            attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+            attributes: { exclude: ['password', 'privacy', 'roleId'] }
           }
         ];
       } else {
@@ -287,9 +298,11 @@ export default {
       .then(document =>
         document
           .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedDocument => res.status(200).send(updatedDocument))
+          .then(updatedDocument => res.status(200).json(updatedDocument))
       )
-      .catch(() => res.status(400).send('You do not have permission'));
+      .catch(() => res.status(400).json({
+        message: 'You do not have permission'
+      }));
   },
 
   /**
@@ -313,11 +326,11 @@ export default {
           $or: [
             {
               $not: {
-                '$User.RoleId$': 1
+                '$User.roleId$': 1
               },
               $or: {
                 '$User.id$': req.user.id,
-                '$User.RoleId$': { $gt: 2 }
+                '$User.roleId$': { $gt: 2 }
               }
             },
           ]
@@ -327,7 +340,7 @@ export default {
       queryOptions.include = [
         {
           model: User,
-          attributes: { exclude: ['password', 'privacy', 'RoleId'] }
+          attributes: { exclude: ['password', 'privacy', 'roleId'] }
         }
       ];
 
@@ -350,15 +363,22 @@ export default {
       .findOne(queryOptions)
       .then((document) => {
         if (document.isProtected) {
-          return res.status(403).send('This document is protected. ' +
-           'Change this in the settings to delete it.');
+          return res.status(403).json({
+            message: 'This document is protected. ' +
+           'Change this in the settings to delete it.'
+          });
         }
 
         return document
           .destroy()
-          .then(() => res.status(200).send('Document deleted.'));
+          .then(() => res.status(200).json({
+            message: 'Document deleted.'
+          }));
       })
       .catch(() => res.status(400)
-      .send('An error occurred. Check the parameters.'));
+      .json({
+        message: 'An error occurred. Check the parameters. ' +
+        'Also, you may not have the permission to delete this document.'
+      }));
   }
 };

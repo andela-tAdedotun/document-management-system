@@ -20,23 +20,9 @@ class Roles extends React.Component {
     this.state = {
       userRole: ''
     };
-    this.onChange = this.onChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.onClick = this.onClick.bind(this);
   }
-
-
-  /**
-   * onChange - description
-   *
-   * @param  {type} event description
-   * @return {type}       description
-   */
-  onChange(event) {
-    this.setState({
-      [event.target.name]: event.target.value
-    });
-  }
-
 
   /**
    * onClick - description
@@ -50,6 +36,19 @@ class Roles extends React.Component {
       Materialize.toast('Role successfully deleted.', 4000);
     });
   }
+
+  /**
+   * handleChange - description
+   *
+   * @param  {type} event description
+   * @return {type}       description
+   */
+  handleChange(event) {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
   /**
    * render - description
    *

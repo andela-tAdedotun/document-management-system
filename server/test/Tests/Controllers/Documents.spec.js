@@ -1,9 +1,8 @@
 import supertest from 'supertest';
-import chai from 'chai';
+import expect from 'expect';
 import app from '../../../../server';
 import databaseData from '../../TestHelpers/DatabaseData';
 
-const expect = chai.expect;
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
 const adminUser = databaseData.adminUser;
@@ -11,8 +10,7 @@ const regularUser = databaseData.regularUser;
 const testDocument = databaseData.testDocument;
 const invalidDocument = databaseData.invalidDocument;
 
-describe('The Document API', function () {
-  this.timeout(4000);
+describe('The Document API', () => {
   let superAdminToken;
   let adminToken;
   let regularUserToken;
@@ -43,7 +41,20 @@ describe('The Document API', function () {
         .set({ Authorization: superAdminToken })
         .send(testDocument)
         .end((err, res) => {
-          expect(res.status).to.equal(201);
+          const expectedResponse =
+            {
+              access: 'private',
+              content: 'Wizzy boy, make me dance...',
+              createdAt: res.body.createdAt,
+              documentOwnerId: 1,
+              id: 10,
+              isProtected: true,
+              title: 'Daddy Yo',
+              updatedAt: res.body.createdAt,
+              views: 0
+            };
+          expect(res.status).toEqual(201);
+          expect(res.body).toEqual(expectedResponse);
           done();
         });
       });
@@ -53,7 +64,8 @@ describe('The Document API', function () {
         .set({ Authorization: regularUserToken })
         .send(invalidDocument)
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).toEqual(400);
+          expect(res.body.message).toNotBe(undefined);
           done();
         });
       });
@@ -64,8 +76,8 @@ describe('The Document API', function () {
         request.get('/api/documents')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.documents.length).to.equal(10);
+          expect(res.status).toEqual(200);
+          expect(res.body.documents.length).toEqual(10);
           done();
         });
       });
@@ -75,8 +87,8 @@ describe('The Document API', function () {
         request.get('/api/documents')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.documents.length).to.equal(6);
+          expect(res.status).toEqual(200);
+          expect(res.body.documents.length).toEqual(6);
           done();
         });
       });
@@ -86,22 +98,84 @@ describe('The Document API', function () {
         request.get('/api/documents')
         .set({ Authorization: regularUserToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.documents.length).to.equal(5);
+          expect(res.status).toEqual(200);
+          expect(res.body.documents.length).toEqual(5);
           done();
         });
       });
 
       it('should allow user specify limit and offset', (done) => {
-        request.get('/api/documents?limit=3&offset=3')
+        request.get('/api/documents?limit=3&offset=0')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.documents.length).to.equal(3);
-          expect(res.body.paginationInfo.pageSize).to.equal(3);
-          expect(res.body.paginationInfo.pageCount).to.equal(4);
-          expect(res.body.paginationInfo.totalCount).to.equal(10);
-          expect(res.body.paginationInfo.currentPage).to.equal(2);
+          const expectedDocuments =
+            [
+              {
+                User: {
+                  createdAt: res.body.documents[0].User.createdAt,
+                  email: 'taiwo.adedotun@andela.com',
+                  id: 1,
+                  name: 'Kiniun',
+                  roleId: 1,
+                  updatedAt: res.body.documents[0].User.updatedAt
+                },
+                access: 'private',
+                content: 'Wizzy boy, make me dance...',
+                createdAt: res.body.documents[0].createdAt,
+                documentOwnerId: 1,
+                id: 1,
+                isProtected: true,
+                title: 'Daddy Yo',
+                updatedAt: res.body.documents[0].updatedAt,
+                views: 0
+              },
+              {
+                User: {
+                  createdAt: res.body.documents[1].User.createdAt,
+                  email: 'kehinde.adedotun@xyz.com',
+                  id: 3,
+                  name: 'Kehinde Adedotun',
+                  roleId: 2,
+                  updatedAt: res.body.documents[1].User.updatedAt
+                },
+                access: 'public',
+                content: 'Yeah, when you no dey',
+                createdAt: res.body.documents[1].createdAt,
+                documentOwnerId: 3,
+                id: 2,
+                isProtected: false,
+                title: 'Soweto Baby',
+                updatedAt: res.body.documents[1].updatedAt,
+                views: 0
+              },
+              {
+                User: {
+                  createdAt: res.body.documents[2].User.createdAt,
+                  email: 'taiwo@xyz.com',
+                  id: 6,
+                  name: 'Ajanlekoko',
+                  roleId: 3,
+                  updatedAt: res.body.documents[2].User.updatedAt
+                },
+                access: 'private',
+                content: 'I will show you the money o...',
+                createdAt: res.body.documents[2].createdAt,
+                documentOwnerId: 6,
+                id: 3,
+                isProtected: false,
+                title: 'Dance',
+                updatedAt: res.body.documents[2].updatedAt,
+                views: 0
+              }
+            ];
+
+          expect(res.body.documents).toEqual(expectedDocuments);
+          expect(res.status).toEqual(200);
+          expect(res.body.documents.length).toEqual(3);
+          expect(res.body.paginationInfo.pageSize).toEqual(3);
+          expect(res.body.paginationInfo.pageCount).toEqual(4);
+          expect(res.body.paginationInfo.totalCount).toEqual(10);
+          expect(res.body.paginationInfo.currentPage).toEqual(1);
           done();
         });
       });
@@ -113,12 +187,36 @@ describe('The Document API', function () {
         request.get('/api/documents/3')
           .set({ Authorization: superAdminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            const expectedDocument = {
+              access: 'private',
+              content: 'I will show you the money o...',
+              createdAt: res.body.createdAt,
+              documentOwnerId: 6,
+              id: 3,
+              isProtected: false,
+              title: 'Dance',
+              updatedAt: res.body.updatedAt,
+              views: 0
+            };
+            expect(res.body).toEqual(expectedDocument);
+            expect(res.status).toEqual(200);
           // document with id 5 has access role and belongs to a regular user
             request.get('/api/documents/5')
               .set({ Authorization: superAdminToken })
               .end((err, res) => {
-                expect(res.status).to.equal(200);
+                const expectedDoc = {
+                  access: 'role',
+                  content: 'Are you serious? Are you for real?',
+                  createdAt: res.body.createdAt,
+                  documentOwnerId: 6,
+                  id: 5,
+                  isProtected: false,
+                  title: 'Mercy',
+                  updatedAt: res.body.updatedAt,
+                  views: 0
+                };
+                expect(res.body).toEqual(expectedDoc);
+                expect(res.status).toEqual(200);
                 done();
               });
           });
@@ -129,7 +227,7 @@ describe('The Document API', function () {
         request.get('/api/documents/1')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).toEqual(400);
           done();
         });
       });
@@ -138,11 +236,30 @@ describe('The Document API', function () {
         request.get('/api/documents/3')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).toEqual(200);
           request.get('/api/documents/5')
           .set({ Authorization: adminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            const expectedResponse = {
+              User: {
+                createdAt: res.body.User.createdAt,
+                email: 'taiwo@xyz.com',
+                id: 6,
+                name: 'Ajanlekoko',
+                updatedAt: res.body.User.updatedAt
+              },
+              access: 'role',
+              content: 'Are you serious? Are you for real?',
+              createdAt: res.body.createdAt,
+              documentOwnerId: 6,
+              id: 5,
+              isProtected: false,
+              title: 'Mercy',
+              updatedAt: res.body.updatedAt,
+              views: 1
+            };
+            expect(res.status).toEqual(200);
+            expect(res.body).toEqual(expectedResponse);
             done();
           });
         });
@@ -153,11 +270,11 @@ describe('The Document API', function () {
         request.get('/api/documents/1')
         .set({ Authorization: regularUserToken })
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).toEqual(400);
           request.get('/api/documents/4')
           .set({ Authorization: regularUserToken })
           .end((err, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
             done();
           });
         });
@@ -167,11 +284,11 @@ describe('The Document API', function () {
         request.get('/api/documents/90')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).toEqual(400);
           request.get('/api/documents/120')
           .set({ Authorization: regularUserToken })
           .end((err, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
             done();
           });
         });
@@ -182,11 +299,11 @@ describe('The Document API', function () {
         request.get('/api/documents/2')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).toEqual(200);
           request.get('/api/documents/5')
           .set({ Authorization: regularUserToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            expect(res.status).toEqual(200);
             done();
           });
         });
@@ -199,8 +316,8 @@ describe('The Document API', function () {
         .set({ Authorization: superAdminToken })
         .send({ title: 'Tayelolu' })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.title).to.equal('Tayelolu');
+          expect(res.status).toEqual(200);
+          expect(res.body.title).toEqual('Tayelolu');
           done();
         });
       });
@@ -211,8 +328,8 @@ describe('The Document API', function () {
         .set({ Authorization: adminToken })
         .send({ title: 'Kehinde' })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
-          expect(res.body.title).to.equal('Kehinde');
+          expect(res.status).toEqual(200);
+          expect(res.body.title).toEqual('Kehinde');
           done();
         });
       });
@@ -223,11 +340,11 @@ describe('The Document API', function () {
         .set({ Authorization: adminToken })
         .send({ title: 'Kehinde' })
         .end((err, res) => {
-          expect(res.status).to.equal(400);
+          expect(res.status).toEqual(400);
           request.put('/api/documents/1')
           .set({ Authorization: adminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
             done();
           });
         });
@@ -239,11 +356,16 @@ describe('The Document API', function () {
          .set({ Authorization: regularUserToken })
          .send({ title: 'Kehinde' })
          .end((err, res) => {
-           expect(res.status).to.equal(400);
+           expect(res.status).toEqual(400);
            request.put('/api/documents/1')
            .set({ Authorization: regularUserToken })
            .end((err, res) => {
-             expect(res.status).to.equal(400);
+             const expectedResponse =
+               {
+                 message: 'You do not have permission'
+               };
+             expect(res.status).toEqual(400);
+             expect(res.body).toEqual(expectedResponse);
              done();
            });
          });
@@ -255,11 +377,16 @@ describe('The Document API', function () {
         request.delete('/api/documents/3')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          expect(res.status).toEqual(200);
           request.delete('/api/documents/2')
           .set({ Authorization: superAdminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(200);
+            const expectedResponse =
+              {
+                message: 'Document deleted.'
+              };
+            expect(res.status).toEqual(200);
+            expect(res.body).toEqual(expectedResponse);
             done();
           });
         });
@@ -269,7 +396,12 @@ describe('The Document API', function () {
         request.delete('/api/documents/9')
         .set({ Authorization: adminToken })
         .end((err, res) => {
-          expect(res.status).to.equal(200);
+          const expectedResponse =
+            {
+              message: 'Document deleted.'
+            };
+          expect(res.status).toEqual(200);
+          expect(res.body).toEqual(expectedResponse);
           done();
         });
       });
@@ -279,11 +411,21 @@ describe('The Document API', function () {
          request.delete('/api/documents/6')
           .set({ Authorization: adminToken })
           .end((err, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
+            const expectedResponse = {
+              message: 'An error occurred. Check the parameters. ' +
+                'Also, you may not have the permission to delete this document.'
+            };
+            expect(res.body).toEqual(expectedResponse);
             request.delete('/api/documents/4')
              .set({ Authorization: adminToken })
              .end((err, res) => {
-               expect(res.status).to.equal(400);
+               expect(res.status).toEqual(400);
+               const expectedRes = {
+                 message: 'An error occurred. Check the parameters. ' +
+                'Also, you may not have the permission to delete this document.'
+               };
+               expect(res.body).toEqual(expectedRes);
                done();
              });
           });
@@ -293,7 +435,13 @@ describe('The Document API', function () {
         request.delete('/api/documents/1')
          .set({ Authorization: superAdminToken })
          .end((err, res) => {
-           expect(res.status).to.equal(403);
+           const expectedResponse =
+             {
+               message: 'This document is protected. ' +
+                'Change this in the settings to delete it.'
+             };
+           expect(res.status).toEqual(403);
+           expect(res.body).toEqual(expectedResponse);
            done();
          });
       });
@@ -303,11 +451,21 @@ describe('The Document API', function () {
         request.delete('/api/documents/5')
          .set({ Authorization: regularUserToken })
          .end((err, res) => {
-           expect(res.status).to.equal(200);
+           const expectedResponse =
+             {
+               message: 'Document deleted.'
+             };
+           expect(res.body).toEqual(expectedResponse);
+           expect(res.status).toEqual(200);
            request.delete('/api/documents/1')
             .set({ Authorization: regularUserToken })
             .end((err, res) => {
-              expect(res.status).to.equal(400);
+              const expectedRes = {
+                message: 'An error occurred. Check the parameters. ' +
+               'Also, you may not have the permission to delete this document.'
+              };
+              expect(res.body).toEqual(expectedRes);
+              expect(res.status).toEqual(400);
               done();
             });
          });

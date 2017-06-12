@@ -1,15 +1,13 @@
 import { combineReducers } from 'redux';
 import authorization from './reducers/Authorization';
-import displayDocuments from './reducers/DocumentsReducer';
-import displayUserDocuments from './reducers/UserDocumentsReducer';
-import usersInDatabase from './reducers/UserReducers';
-import roles from './reducers/RoleReducers';
+import allDocuments from './reducers/DocumentReducer';
+import usersInDatabase from './reducers/UserReducer';
+import roles from './reducers/RoleReducer';
 import searchParams from './reducers/SearchReducer';
 
 const appReducer = combineReducers({
   authorization,
-  displayUserDocuments,
-  displayDocuments,
+  allDocuments,
   usersInDatabase,
   roles,
   searchParams

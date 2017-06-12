@@ -9,7 +9,7 @@ import userRouter from './server/routes/UserRoutes';
 import documentRouter from './server/routes/DocumentRoutes';
 import searchRouter from './server/routes/SearchRoutes';
 import roleRouter from './server/routes/RoleRoutes';
-import config from './webpack.config.dev';
+import config from './webpack.config';
 import passport from './server/middlewares/Authentication';
 import db from './server/models';
 

@@ -1,5 +1,5 @@
 import findIndex from 'lodash/findIndex';
-import types from '../actions/types';
+import types from '../actions/Types';
 
 const initialState = {
   usersInDatabase: {
@@ -17,17 +17,26 @@ export default (state = initialState, action = {}) => {
     case types.ADMIN_UPDATE_USER: {
       const index =
         findIndex(state.usersInDatabase.users, { id: action.userId });
-      const stateCopy = Object.assign({}, state);
-      stateCopy.usersInDatabase.users[index] = action.updatedUser;
-      return stateCopy;
+      return Object.assign({}, state, {
+        usersInDatabase: {
+          paginationInfo: state.usersInDatabase.paginationInfo,
+          users: [
+            ...state.usersInDatabase.users.slice(0, index),
+            action.updatedUser,
+            ...state.usersInDatabase.users.slice(index + 1)
+          ]
+        }
+      });
     }
 
     case types.DELETE_USER: {
-      const index =
-        findIndex(state.usersInDatabase.users, { id: action.userId });
-      const stateCopy = Object.assign({}, state);
-      stateCopy.usersInDatabase.users.splice(index, 1);
-      return stateCopy;
+      return Object.assign({}, state, { usersInDatabase: {
+        paginationInfo: state.usersInDatabase.paginationInfo,
+        users: [
+          ...state.usersInDatabase.users.filter(user =>
+            user.id !== action.userId
+        )
+        ] } });
     }
 
     case types.CREATE_NEW_USER: {

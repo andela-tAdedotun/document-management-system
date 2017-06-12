@@ -1,17 +1,15 @@
 import supertest from 'supertest';
-import chai from 'chai';
+import expect from 'expect';
 import app from '../../../../server';
 import databaseData from '../../TestHelpers/DatabaseData';
 
-const expect = chai.expect;
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
 const adminUser = databaseData.adminUser;
 const regularUser = databaseData.regularUser;
 const testRole = databaseData.testRole;
 
-describe('The Role API', function () {
-  this.timeout(4000);
+describe('The Role API', () => {
   let superAdminToken;
   let adminToken;
   let regularUserToken;
@@ -42,7 +40,12 @@ describe('The Role API', function () {
         .set({ Authorization: regularUserToken })
         .send(testRole)
         .end((err, res) => {
-          expect(res.status).to.equal(403);
+          const expectedResponse =
+            {
+              message: 'Only a super admin can do that.'
+            };
+          expect(res.status).toEqual(403);
+          expect(res.body).toEqual(expectedResponse);
           done();
         });
       });
@@ -52,7 +55,12 @@ describe('The Role API', function () {
           .set({ Authorization: adminToken })
           .send(testRole)
           .end((error, res) => {
-            expect(res.status).to.equal(403);
+            const expectedResponse =
+              {
+                message: 'Only a super admin can do that.'
+              };
+            expect(res.body).toEqual(expectedResponse);
+            expect(res.status).toEqual(403);
             done();
           });
       });
@@ -61,7 +69,7 @@ describe('The Role API', function () {
         request.post('/api/roles')
           .send(testRole)
           .end((error, res) => {
-            expect(res.status).to.equal(401);
+            expect(res.status).toEqual(401);
             done();
           });
       });
@@ -74,7 +82,7 @@ describe('The Role API', function () {
           .set({ Authorization: superAdminToken })
           .send(newRole)
           .end((error, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
             done();
           });
       });
@@ -85,7 +93,14 @@ describe('The Role API', function () {
           .set({ Authorization: superAdminToken })
           .send(testRole)
           .end((error, res) => {
-            expect(res.status).to.equal(200);
+            const expectedResponse = {
+              createdAt: res.body.createdAt,
+              id: 4,
+              updatedAt: res.body.updatedAt,
+              userRole: 'Content Creator'
+            };
+            expect(res.body).toEqual(expectedResponse);
+            expect(res.status).toEqual(201);
             done();
           });
       });
@@ -95,7 +110,7 @@ describe('The Role API', function () {
           .set({ Authorization: superAdminToken })
           .send({ userRole: {} })
           .end((error, res) => {
-            expect(res.status).to.equal(400);
+            expect(res.status).toEqual(400);
             done();
           });
       });
@@ -106,7 +121,31 @@ describe('The Role API', function () {
         request.get('/api/roles')
           .set({ Authorization: superAdminToken })
           .end((error, res) => {
-            expect(res.status).to.equal(200);
+            const expectedResponse =
+              [
+                { id: 1,
+                  userRole: 'Super Admin',
+                  createdAt: res.body[0].createdAt,
+                  updatedAt: res.body[0].updatedAt,
+                },
+                { id: 2,
+                  userRole: 'Admin',
+                  createdAt: res.body[1].createdAt,
+                  updatedAt: res.body[1].updatedAt,
+                },
+                { id: 3,
+                  userRole: 'Regular',
+                  createdAt: res.body[2].createdAt,
+                  updatedAt: res.body[2].updatedAt,
+                },
+                { id: 4,
+                  userRole: 'Content Creator',
+                  createdAt: res.body[3].createdAt,
+                  updatedAt: res.body[3].updatedAt,
+                }
+              ];
+            expect(res.body).toEqual(expectedResponse);
+            expect(res.status).toEqual(200);
             done();
           });
       });
@@ -117,7 +156,7 @@ describe('The Role API', function () {
         request.delete('/api/roles/24')
           .set({ Authorization: superAdminToken })
           .end((error, res) => {
-            expect(res.status).to.equal(404);
+            expect(res.status).toEqual(404);
             done();
           });
       });
@@ -126,16 +165,47 @@ describe('The Role API', function () {
         request.delete('/api/roles/1')
           .set({ Authorization: superAdminToken })
           .end((error, res) => {
-            expect(res.status).to.equal(403);
+            const expectedResponse = {
+              message: 'You can\'t delete this role.'
+            };
+            expect(res.status).toEqual(403);
+            expect(res.body).toEqual(expectedResponse);
             done();
           });
       });
 
-      it('should delete role if role exists and not super admin', (done) => {
+      it('should not delete the admin role', (done) => {
+        request.delete('/api/roles/2')
+          .set({ Authorization: superAdminToken })
+          .end((error, res) => {
+            const expectedResponse = {
+              message: 'You can\'t delete this role.'
+            };
+            expect(res.status).toEqual(403);
+            expect(res.body).toEqual(expectedResponse);
+            done();
+          });
+      });
+
+      it('should not delete the regular role', (done) => {
+        request.delete('/api/roles/3')
+          .set({ Authorization: superAdminToken })
+          .end((error, res) => {
+            const expectedResponse = {
+              message: 'You can\'t delete this role.'
+            };
+            expect(res.status).toEqual(403);
+            expect(res.body).toEqual(expectedResponse);
+            done();
+          });
+      });
+
+      it('should delete role if role is not super admin, admin or regular',
+      (done) => {
         request.delete('/api/roles/4')
           .set({ Authorization: superAdminToken })
           .end((error, res) => {
-            expect(res.status).to.equal(200);
+            expect(res.status).toEqual(200);
             done();
           });
       });

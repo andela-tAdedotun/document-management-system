@@ -43,7 +43,7 @@ export default (sequelize, DataTypes) => {
         });
 
         User.belongsTo(models.Role, {
-          foreignKey: 'RoleId',
+          foreignKey: 'roleId',
           onDelete: 'SET NULL'
         });
       },
