@@ -1,0 +1,5 @@
+coverage/
+client/dist
+node_modules
+reports
+docs
