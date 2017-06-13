@@ -5,6 +5,14 @@ import Navbar from './common/Navbar';
 import logUserOut from '../actions/LogoutAction';
 import Footer from './common/Footer';
 
+/**
+ * App - top level component for all children component
+ *
+ * @param  {function} logout - logout function
+ * @param  {object} children - children compnents to be rendered
+ * @param  {object} location - object representing data about url location
+ * @return {object}       dom to be rendered
+ */
 export const App = ({ logout, children, location }) =>
     (
       <div className="body-wrapper" id="parent-container">

@@ -4,21 +4,20 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 
 /**
- * anonymous function - description
+ * anonymous function - checks if user is already authenticated
  *
- * @param  {type} ComponentRequiresAuth description
- * @return {type}                       description
+ * @param  {object} ComponentRequiresAuth component to be rendered
+ * @return {class} - none
  */
 export default function (ComponentRequiresAuth) {
   /**
    *
    */
   class AlreadyAuthenticated extends React.Component {
-
     /**
-     * componentWillMount - description
+     * componentWillMount - is called before dom renders
      *
-     * @return {type}  description
+     * @return {void}  none
      */
     componentWillMount() {
       if (this.props.isAuthenticated) {
@@ -27,9 +26,9 @@ export default function (ComponentRequiresAuth) {
     }
 
     /**
-     * render - description
+     * render - renders dom
      *
-     * @return {type}  description
+     * @return {object}  dom to be rendered
      */
     render() {
       return (
@@ -44,10 +43,10 @@ export default function (ComponentRequiresAuth) {
 
 
   /**
-   * mapStateToProps - description
+   * mapStateToProps - maps state to props
    *
-   * @param  {type} state description
-   * @return {type}       description
+   * @param  {object} state - object representing current state
+   * @return {object}       object representing current state
    */
   function mapStateToProps(state) {
     return {

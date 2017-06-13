@@ -8,6 +8,12 @@ const initialState = {
   }
 };
 
+/**
+ * anonymous function - reducer for user actions
+ *
+ * @param  {object} state - current state
+ * @return {object} - new state
+ */
 export default (state = initialState, action = {}) => {
   switch (action.type) {
     case types.GET_ALL_USERS: {

@@ -16,12 +16,11 @@ import validate from '../../../shared/Validator';
  *
  */
 export class DashboardPage extends React.Component {
-
   /**
-   * constructor - description
+   * constructor - constructor for DashboardPage class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -36,16 +35,16 @@ export class DashboardPage extends React.Component {
       errors: {}
     };
     this.handleChange = this.handleChange.bind(this);
-    this.onSelect = this.onSelect.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.createUser = this.createUser.bind(this);
     this.createRole = this.createRole.bind(this);
   }
 
 
   /**
-   * componentDidMount - description
+   * componentDidMount - is called after dom renders
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   componentDidMount() {
     if (this.currentUser.roleId !== 3) {
@@ -58,22 +57,22 @@ export class DashboardPage extends React.Component {
   }
 
   /**
-   * onSelect - description
+   * handleSelect - handler for select event
    *
-   * @param  {type} pageNumber description
-   * @return {type}            description
+   * @param  {integer} pageNumber - number of page
+   * @return {void}            none
    */
-  onSelect(pageNumber) {
+  handleSelect(pageNumber) {
     // calculate offset for endpoint to get all users. used for pagination
     const offset = (pageNumber - 1) * 15;
     this.props.getUsers(offset);
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -82,10 +81,10 @@ export class DashboardPage extends React.Component {
   }
 
   /**
-   * createUser - description
+   * createUser - handles creation of user. calls action
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - event from button click to create user
+   * @return {void}       none
    */
   createUser(event) {
     event.preventDefault();
@@ -99,9 +98,9 @@ export class DashboardPage extends React.Component {
   }
 
   /**
-   * isValid - description
+   * isValid - checks if data is valid
    *
-   * @return {type}  description
+   * @return {boolean}  - boolean value indicating if data is valid or not
    */
   isValid() {
     const { errors, isValid } = validate(this.state);
@@ -114,10 +113,10 @@ export class DashboardPage extends React.Component {
   }
 
   /**
-   * handleSubmit - description
+   * createRole - handles creation of roles. calls action.
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - event from button click to create role
+   * @return {void}
    */
   createRole(event) {
     event.preventDefault();
@@ -128,9 +127,9 @@ export class DashboardPage extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const { currentState, userUpdate } = this.props;
@@ -278,7 +277,7 @@ export class DashboardPage extends React.Component {
                     <Pagination
                       items={pageCount} activePage={currentPage}
                       maxButtons={10}
-                      onSelect={this.onSelect}
+                      handleSelect={this.handleSelect}
                     />
                   </div>
                 :
@@ -338,10 +337,10 @@ DashboardPage.propTypes = {
 
 
 /**
- * mapStateToProps - description
+ * mapStateToProps - maps state to props of component
  *
- * @param  {type} state description
- * @return {type}       description
+ * @param  {object} state current state
+ * @return {object}       properties of state to map to props
  */
 function mapStateToProps(state) {
   return {

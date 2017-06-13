@@ -12,10 +12,10 @@ import ProtectedSelect from '../common/ProtectedSelect';
  */
 class DisplayUserDocuments extends React.Component {
   /**
-   * constructor - description
+   * constructor - constructor for DisplayUserDocuments class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -32,10 +32,10 @@ class DisplayUserDocuments extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -44,10 +44,10 @@ class DisplayUserDocuments extends React.Component {
   }
 
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for submit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -59,9 +59,9 @@ class DisplayUserDocuments extends React.Component {
 
 
   /**
-   * editDocument - description
+   * deleteUser - deletes documents from explore page
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   deleteDocument() {
     this.props.deleteDocument(this.props.document.id)
@@ -69,10 +69,10 @@ class DisplayUserDocuments extends React.Component {
   }
 
   /**
-   * handleEditorChange - description
+   * handleEditorChange - handles change event for TinyMCE
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {type} event - the change event
+   * @return {void}       none
    */
   handleEditorChange(event) {
     this.setState({
@@ -81,9 +81,9 @@ class DisplayUserDocuments extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const document = this.props.document;

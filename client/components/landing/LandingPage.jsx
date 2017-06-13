@@ -9,12 +9,10 @@ import userLogin from '../../actions/LoginAction';
  *
  */
 export class LandingPage extends React.Component {
-
-
   /**
-   * componentWillUnmount - description
+   * componentWillUnmount - is called before component is removed
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   componentWillUnmount() {
     // remove error from state when component unmounts
@@ -22,9 +20,9 @@ export class LandingPage extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     return (
@@ -48,10 +46,10 @@ LandingPage.propTypes = {
 
 
 /**
- * mapStateToProps - description
+ * mapStateToProps - maps state to props of component
  *
- * @param  {type} state description
- * @return {type}       description
+ * @param  {object} state - current state
+ * @return {object}       properties of state to map to props
  */
 function mapStateToProps(state) {
   return {

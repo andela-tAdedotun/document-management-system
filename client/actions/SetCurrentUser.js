@@ -3,8 +3,8 @@ import types from './Types';
 /**
  * setCurrentUser - puts details of current user in state
  *
- * @param  {type} user object representing user
- * @return {type}      pure object
+ * @param  {object} user object representing user
+ * @return {object}      pure object representing action
  */
 function SetCurrentUser(user) {
   return {

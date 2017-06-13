@@ -12,13 +12,12 @@ import DisplayUserDocuments from './DisplayUserDocuments';
  *
  */
 export class Homepage extends React.Component {
-
   /**
-   * filter - description
+   * filter - filters documents on explore page
    *
-   * @param  {type} documents description
-   * @param  {type} filterBy  description
-   * @return {type}           description
+   * @param  {array} documents - array of documents to be filtered
+   * @param  {string} filterBy  - criterion to filter documents by
+   * @return {array}           array of filtered documents
    */
   static filter(documents, filterBy) {
     return documents.filter(document =>
@@ -27,25 +26,25 @@ export class Homepage extends React.Component {
   }
 
   /**
-   * constructor - description
+   * constructor - constructor for Homepage class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
     this.state = {
       access: 'all'
     };
-    this.onSelect = this.onSelect.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-   /**
-    * componentDidMount - called after component renders
-    *
-    * @return {type}  description
-    */
+  /**
+   * componentDidMount - is called after dom renders
+   *
+   * @return {void}  none
+   */
   componentDidMount() {
     this.props.displayDocuments({
       isHomepage: true,
@@ -54,21 +53,21 @@ export class Homepage extends React.Component {
   }
 
   /**
-   * componentWillUnmount - description
+   * componentWillUnmount - is called before component is removed
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   componentWillUnmount() {
     this.props.currentState.allDocuments = {};
   }
 
   /**
-   * onSelect - description
+   * handleSelect - handler for select event
    *
-   * @param  {type} pageNumber description
-   * @return {type}            description
+   * @param  {integer} pageNumber - number of page
+   * @return {void}            none
    */
-  onSelect(pageNumber) {
+  handleSelect(pageNumber) {
     const searchStatus = this.props.currentState.searchParams.searchParams;
     if (searchStatus.isSearch) {
       const offset = (pageNumber - 1) * 12;
@@ -89,10 +88,10 @@ export class Homepage extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     event.preventDefault();
@@ -102,9 +101,9 @@ export class Homepage extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const { documentCreate, documentDelete, documentEdit }
@@ -205,7 +204,7 @@ export class Homepage extends React.Component {
               <Pagination
                 items={pageCount} activePage={currentPage}
                 maxButtons={10}
-                onSelect={this.onSelect}
+                handleSelect={this.handleSelect}
               />
             </div>
           :
@@ -230,8 +229,8 @@ Homepage.propTypes = {
 /**
  * mapStateToProps - maps state to props
  *
- * @param  {type} state object representing current state
- * @return {type}       object representing current state
+ * @param  {object} state - object representing current state
+ * @return {object}       object representing current state
  */
 function mapStateToProps(state) {
   return {

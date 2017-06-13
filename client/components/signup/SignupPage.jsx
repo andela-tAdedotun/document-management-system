@@ -9,20 +9,19 @@ import userSignup from '../../actions/SignupAction';
  *
  */
 export class SignupPage extends React.Component {
-
-
   /**
-   * componentWillUnmount - description
+   * componentWillUnmount - is called before component is removed
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   componentWillUnmount() {
     this.props.currentState.authorization.signUpError = '';
   }
+
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     return (
@@ -42,10 +41,10 @@ SignupPage.propTypes = {
 };
 
 /**
- * mapStateToProps - description
+ * mapStateToProps - maps state to props of component
  *
- * @param  {type} state description
- * @return {type}       description
+ * @param  {object} state - current state
+ * @return {object}       properties of state to map to props
  */
 function mapStateToProps(state) {
   return {

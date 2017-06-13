@@ -2,18 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Prompt from '../common/Prompt';
 
+
 /**
- * export default - description
  *
- * @param  {type} props description
- * @return {type}       description
  */
 class Roles extends React.Component {
   /**
-   * constructor - description
+   * constructor - constructor for Roles class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -21,16 +19,16 @@ class Roles extends React.Component {
       userRole: ''
     };
     this.handleChange = this.handleChange.bind(this);
-    this.onClick = this.onClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   /**
-   * onClick - description
+   * handleSelect - handler for click event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the click event
+   * @return {void}            none
    */
-  onClick(event) {
+  handleClick(event) {
     event.preventDefault();
     this.props.deleteRole(this.props.role.id).then(() => {
       Materialize.toast('Role successfully deleted.', 4000);
@@ -38,10 +36,10 @@ class Roles extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -50,9 +48,9 @@ class Roles extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const role = this.props.role;
@@ -69,7 +67,7 @@ class Roles extends React.Component {
                 <i className="material-icons red">delete</i>
               </button>
             }
-            onClickFunction={this.onClick}
+            handleClickFunction={this.handleClick}
           />
         </td>
       </tr>

@@ -11,10 +11,10 @@ import ProtectedSelect from '../common/ProtectedSelect';
  */
 class DisplayDocuments extends React.Component {
   /**
-   * constructor - description
+   * constructor - constructor for DisplayDocuments class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -30,10 +30,10 @@ class DisplayDocuments extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -42,10 +42,10 @@ class DisplayDocuments extends React.Component {
   }
 
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for onSubmit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -56,9 +56,9 @@ class DisplayDocuments extends React.Component {
   }
 
   /**
-   * deleteDocument - description
+   * deleteUser - deletes documents from explore page
    *
-   * @return {type}  description
+   * @return {void}  none
    */
   deleteDocument() {
     this.props.deleteDocument(this.props.document.id, true)
@@ -66,9 +66,9 @@ class DisplayDocuments extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const document = this.props.document;

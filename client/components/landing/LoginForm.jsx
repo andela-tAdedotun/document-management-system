@@ -6,12 +6,11 @@ import { browserHistory } from 'react-router';
  *
  */
 class LoginForm extends React.Component {
-
   /**
-   * constructor - description
+   * constructor - constructor for LoginForm class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -24,12 +23,11 @@ class LoginForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for submit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -38,21 +36,20 @@ class LoginForm extends React.Component {
     });
   }
 
-
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     return (

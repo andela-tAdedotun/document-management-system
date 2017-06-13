@@ -4,18 +4,15 @@ import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
 
 /**
- * export default - description
  *
- * @param  {type} props description
- * @return {type}       description
  */
 class PersonalProfile extends React.Component {
 
   /**
-   * constructor - description
+   * constructor - constructor for PersonalProfile class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -32,10 +29,10 @@ class PersonalProfile extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -45,10 +42,10 @@ class PersonalProfile extends React.Component {
 
 
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for onSubmit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -73,9 +70,9 @@ class PersonalProfile extends React.Component {
   }
 
   /**
-   * isValid - description
+   * isValid - checks if data is valid
    *
-   * @return {type}  description
+   * @return {boolean}  - boolean value indicating if data is valid or not
    */
   isValid() {
     const { errors, isValid } = validate(this.state);
@@ -87,9 +84,9 @@ class PersonalProfile extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const user = this.props.currentState.authorization.user;

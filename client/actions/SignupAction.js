@@ -5,6 +5,12 @@ import types from './Types';
 import setAuthorizationToken from '../utilities/SetAuthorizationToken';
 import setCurrentUser from './SetCurrentUser';
 
+/**
+ * SignupAction - action triggered when user tries to signup up
+ *
+ * @param  {object} userData - data of user trying to sign up
+ * @return {Promise}       axios ajax call to backend
+ */
 const SignupAction = userData =>
   dispatch => axios.post('/api/users', userData).then((res) => {
     const token = res.data.token;
