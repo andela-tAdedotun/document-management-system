@@ -6,7 +6,7 @@
 The Document Management System API contains several API end points that allow users to create, edit, retrieve and delete documents. In addition, it
 contains API end points that allow the management of users i.e. create, edit, retrieve, delete users. Users can also have roles assigned to them with.
 
-[Documentation: ](https://andela-tadedotun.github.io/document-management-system/)
+#### [Find the Documentation Here](https://andela-tadedotun.github.io/document-management-system/)
 
 Development
 -----------
