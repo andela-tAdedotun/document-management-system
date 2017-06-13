@@ -11,7 +11,7 @@ import DisplayUserDocuments from './DisplayUserDocuments';
 /**
  *
  */
-export class Homepage extends React.Component {
+export class UserDocuments extends React.Component {
   /**
    * filter - filters documents on explore page
    *
@@ -127,7 +127,7 @@ export class Homepage extends React.Component {
 
       if (userDocuments && userDocuments.length > 0) {
         if (this.state.access !== 'all') {
-          userDocuments = Homepage
+          userDocuments = UserDocuments
             .filter(userDocuments, this.state.access);
         }
       }
@@ -220,7 +220,7 @@ export class Homepage extends React.Component {
   }
 }
 
-Homepage.propTypes = {
+UserDocuments.propTypes = {
   displayDocuments: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
   userId: PropTypes.number.isRequired,
@@ -250,4 +250,4 @@ export default connect(mapStateToProps,
     documentDelete: deleteDocument,
     documentEdit: editDocument,
     displaySearchResults
-  })(Homepage);
+  })(UserDocuments);
