@@ -191,7 +191,12 @@ export class Homepage extends React.Component {
           {
             searchStatus && searchStatus.isSearch
             ?
-              <h5 className="searchResult"> Search results: </h5>
+              <h5 className="searchResult">
+                {
+                `${paginationInfo.totalCount} Search Result` +
+                `${paginationInfo.totalCount > 1 ? 's' : ''}:`
+                }
+              </h5>
             :
             ''
           }
