@@ -6,6 +6,8 @@
 The Document Management System API contains several API end points that allow users to create, edit, retrieve and delete documents. In addition, it
 contains API end points that allow the management of users i.e. create, edit, retrieve, delete users. Users can also have roles assigned to them with.
 
+[Documentation: ](https://andela-tadedotun.github.io/document-management-system/)
+
 Development
 -----------
 The application was developed with [NodeJS](http://nodejs.org) and [Express](http://expressjs.com) is used for routing. The [Postgres](http://postgresql.com) database was used with [Sequelize](http://sequelizejs.com) as the ORM
