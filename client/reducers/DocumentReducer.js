@@ -2,9 +2,10 @@ import findIndex from 'lodash/findIndex';
 import types from '../actions/Types';
 
 /**
- * anonymous function - reducer for document actions
+ * anonymous function - reducer for user actions
  *
  * @param  {object} state - current state
+ * @param  {object} action - action dispatched
  * @return {object} - new state
  */
 export default (state = {}, action = {}) => {
