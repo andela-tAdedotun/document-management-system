@@ -4,6 +4,12 @@ const initialState = {
   searchParams: {}
 };
 
+/**
+ * anonymous function - reducer for search actions
+ *
+ * @param  {object} state - current state
+ * @return {object} - new state
+ */
 export default (state = initialState, action = {}) => {
   switch (action.type) {
     case types.IS_SEARCH: {

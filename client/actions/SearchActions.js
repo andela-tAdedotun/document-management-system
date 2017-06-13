@@ -29,6 +29,15 @@ function buildSearchResults(dispatch, apiEndpoint, searchQuery, actionType,
       });
 }
 
+/**
+* getRoles - performs search on users and documents
+*
+* @param  {string} location - url location
+* @param  {type} searchQuery   the search query
+* @param  {integer} offset - offset for pagination
+* @param  {integer} userId - id of user whose documents are to be searched
+* @return {Promise}       axios ajax call to backend
+*/
 const SearchActions = ({ searchQuery, location, offset, userId }) =>
   (dispatch) => {
     dispatch({

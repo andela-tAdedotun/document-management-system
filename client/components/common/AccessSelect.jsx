@@ -2,6 +2,13 @@ import React from 'react';
 import { Row, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 
+/**
+ * AccessSelect - component for selecting document access
+ *
+ * @param  {function} handleChange - function for onChange event
+ * @return {Promise}       axios ajax call to backend
+ * @return {object}       markup
+ */
 const AccessSelect = ({ handleChange }) =>
   (
     <Row>

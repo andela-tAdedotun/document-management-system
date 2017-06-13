@@ -6,12 +6,11 @@ import validate from '../../../shared/Validator';
  *
  */
 class SignupForm extends React.Component {
-
   /**
-   * constructor - description
+   * constructor - constructor for SignupForm class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -28,10 +27,10 @@ class SignupForm extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -40,10 +39,10 @@ class SignupForm extends React.Component {
   }
 
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for submit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -54,9 +53,9 @@ class SignupForm extends React.Component {
   }
 
   /**
-   * isValid - description
+   * isValid - checks if data is valid
    *
-   * @return {type}  description
+   * @return {boolean}  - boolean value indicating if data is valid or not
    */
   isValid() {
     const { errors, isValid } = validate(this.state);
@@ -69,9 +68,9 @@ class SignupForm extends React.Component {
   }
 
   /**
-   * render - description
+   * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  dom to be rendered
    */
   render() {
     const { errors } = this.state;

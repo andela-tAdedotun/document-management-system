@@ -2,6 +2,12 @@ import React from 'react';
 import { Row, Input } from 'react-materialize';
 import PropTypes from 'prop-types';
 
+/**
+ * ProtectedSelect - component for selecting document protection
+ *
+ * @param  {function} handleChange - function for onChange event
+ * @return {object}       markup
+ */
 const ProtectedSelect = ({ handleChange }) =>
   (
     <Row>

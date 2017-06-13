@@ -9,20 +9,20 @@ import displaySearchResults from '../../actions/SearchActions';
  */
 export class Navbar extends React.Component {
   /**
-   * handleSubmit - description
+   * handleSubmit - handler for onSubmit event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the submit event
+   * @return {void}
    */
   static handleSubmit(event) {
     event.preventDefault();
   }
 
   /**
-   * constructor - description
+   * constructor - constructor for Navbar class
    *
-   * @param  {type} props description
-   * @return {type}       description
+   * @param  {object} props - props for the class
+   * @return {void}       none
    */
   constructor(props) {
     super(props);
@@ -34,10 +34,10 @@ export class Navbar extends React.Component {
   }
 
   /**
-   * handleChange - description
+   * handleChange - handler for onChange event
    *
-   * @param  {type} event description
-   * @return {type}       description
+   * @param  {object} event - the change event
+   * @return {void}
    */
   handleChange(event) {
     this.setState({
@@ -54,8 +54,8 @@ export class Navbar extends React.Component {
   /**
    * logOut - logs a user out
    *
-   * @param  {type} event
-   * @return {type}       none
+   * @param  {object} event - the logout event
+   * @return {void}       none
    */
   logOut(event) {
     event.preventDefault();
@@ -67,7 +67,7 @@ export class Navbar extends React.Component {
   /**
    * render - renders dom
    *
-   * @return {type}  description
+   * @return {object}  - markup for navigation bar
    */
   render() {
     let placeholder;
@@ -171,10 +171,10 @@ Navbar.propTypes = {
 
 
 /**
- * mapStateToProps - maps state to props
+ * mapStateToProps - maps state to props of component
  *
- * @param  {type} state
- * @return {type} state
+ * @param  {object} state current state
+ * @return {object}       properties of state to map to props
  */
 function mapStateToProps(state) {
   return {
