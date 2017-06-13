@@ -29,7 +29,7 @@ function buildSearchResults(dispatch, apiEndpoint, searchQuery, actionType,
       });
 }
 
-const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
+const SearchActions = ({ searchQuery, location, offset, userId }) =>
   (dispatch) => {
     dispatch({
       type: types.IS_SEARCH,
@@ -56,4 +56,4 @@ const displaySearchResults = ({ searchQuery, location, offset, userId }) =>
     }
   };
 
-export default displaySearchResults;
+export default SearchActions;
