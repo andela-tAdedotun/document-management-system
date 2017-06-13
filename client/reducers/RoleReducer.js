@@ -1,5 +1,11 @@
 import types from '../actions/Types';
 
+/**
+ * anonymous function - reducer for role actions
+ *
+ * @param  {object} state - current state
+ * @return {object} - new state
+ */
 export default (state = {}, action = {}) => {
   switch (action.type) {
     case types.GET_ALL_ROLES: {

@@ -5,6 +5,12 @@ const initialState = {
   user: {}
 };
 
+/**
+ * anonymous function - reducer for authorization actions
+ *
+ * @param  {object} state - current state
+ * @return {object} - new state
+ */
 export default (state = initialState, action = {}) => {
   switch (action.type) {
     case types.SET_CURRENT_USER: {

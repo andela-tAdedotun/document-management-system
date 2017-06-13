@@ -1,5 +1,11 @@
 import React from 'react';
 
+/**
+ * ProtectedSelect - component for page footer
+ *
+ * @param  {void}
+ * @return {object}       markup for footer
+ */
 const Footer = () =>
   (
     <footer className="page-footer">

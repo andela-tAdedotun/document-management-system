@@ -1,6 +1,12 @@
 import findIndex from 'lodash/findIndex';
 import types from '../actions/Types';
 
+/**
+ * anonymous function - reducer for document actions
+ *
+ * @param  {object} state - current state
+ * @return {object} - new state
+ */
 export default (state = {}, action = {}) => {
   switch (action.type) {
     case types.CREATE_NEW_DOCUMENT: {
