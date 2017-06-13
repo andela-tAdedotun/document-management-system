@@ -5,17 +5,6 @@ Development
 -----------
 The application was developed with [NodeJS](http://nodejs.org) and [Express](http://expressjs.com) is used for routing. The [Postgres](http://postgresql.com) database was used with [Sequelize](http://sequelizejs.com) as the ORM
 
-Installation
-------------
-1.  Install NodeJS and Postgres
-2.  Clone the repository `https://github.com/andela-tAdedotun/document-management-system`
-3.  Change your directory `cd document-management-system`
-4.  Install all dependencies `npm install`
-5.  Run tests  `npm test`
-6.  Run integration test `npm run e2e`
-7.  Start the app `npm start` and use [postman](https://www.getpostman.com/) to test the API
-
-
 ## API ENDPOINTS
 **Users**
 
