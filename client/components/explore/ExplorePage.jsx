@@ -190,8 +190,10 @@ export class ExplorePage extends React.Component {
             searchStatus && searchStatus.isSearch
             ?
               <h5 className="searchResult">
-                Search results ({`${documentsInStore.paginationInfo.pageSize} of
-                   ${documentsInStore.paginationInfo.totalCount}`}):
+                {
+                `${documentsInStore.paginationInfo.totalCount} Search Result` +
+                `${documentsInStore.paginationInfo.totalCount > 1 ? 's' : ''}:`
+                }
               </h5>
             :
             ''

@@ -1,3 +1,10 @@
+/**
+* @desc - Find a particular document in the database
+* @param {integer} limit - highest number of elements per page
+* @param {integer} offset - offset for pagination
+* @param {integer} count - total number of elements
+* @return {Object} - object containing pagination data
+*/
 module.exports = (limit, offset, count) => {
   const result = {};
   limit = limit > count ? count : limit;

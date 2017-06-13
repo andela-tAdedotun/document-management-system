@@ -184,7 +184,7 @@ export default {
           document.increment('views');
           res.status(200).json(document);
         })
-        .catch((error) => res.status(400).json({
+        .catch(error => res.status(400).json({
           error,
           message: 'Invalid parameters. Try again!'
         }));
