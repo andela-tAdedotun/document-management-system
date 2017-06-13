@@ -7,7 +7,7 @@ import displaySearchResults from '../../actions/SearchActions';
 /**
  *
  */
-export class NavBar extends React.Component {
+export class Navbar extends React.Component {
   /**
    * handleSubmit - description
    *
@@ -75,21 +75,21 @@ export class NavBar extends React.Component {
     const currentState = this.props.currentState;
     const authorization = currentState.authorization;
     const searchQuery = currentState.searchParams.searchParams.searchQuery;
-    let showNavBarItems;
+    let showNavbarItems;
     if (location.match(/dashboard/)) {
       placeholder = 'Search users...';
       if (currentState.authorization.user.roleId !== 1 &&
        currentState.authorization.user.roleId !== 2) {
-        showNavBarItems = false;
+        showNavbarItems = false;
       } else {
-        showNavBarItems = true;
+        showNavbarItems = true;
       }
     } else if (location.match(/documents/)) {
       placeholder = 'Search your documents...';
-      showNavBarItems = true;
+      showNavbarItems = true;
     } else if (location.match(/explore/)) {
       placeholder = 'Search all documents...';
-      showNavBarItems = true;
+      showNavbarItems = true;
     }
 
     return (
@@ -106,7 +106,7 @@ export class NavBar extends React.Component {
               <div>
                 <ul id="nav-mobile" className="right">
                   {
-                    showNavBarItems
+                    showNavbarItems
                     ?
                       <span>
                         <li>
@@ -115,7 +115,7 @@ export class NavBar extends React.Component {
                           </span>
                         </li>
                         <li>
-                          <form onSubmit={NavBar.handleSubmit}>
+                          <form onSubmit={Navbar.handleSubmit}>
                             <input
                               name="searchQuery"
                               id="searchbar"
@@ -161,7 +161,7 @@ export class NavBar extends React.Component {
   }
 }
 
-NavBar.propTypes = {
+Navbar.propTypes = {
   logUserOut: PropTypes.func.isRequired,
   currentState: PropTypes.object.isRequired,
   authorization: PropTypes.object.isRequired,
@@ -184,4 +184,4 @@ function mapStateToProps(state) {
 }
 
 export default
-  connect(mapStateToProps, { displaySearchResults })(NavBar);
+  connect(mapStateToProps, { displaySearchResults })(Navbar);
