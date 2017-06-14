@@ -6,7 +6,7 @@ import { dispatchAction, buildDispatchWithPost, buildDispatchWithGet }
 /**
  * getRoles - gets all roles
  *
- * @param  {void}
+ * @param  {void} none
  * @return {Promise}       axios ajax call to backend
  */
 export const getRoles = () =>
@@ -29,7 +29,7 @@ export const getRoles = () =>
 /**
  * createRole - creates roles
  *
- * @param  {roleData} - data of role to be created
+ * @param  {object} roleData - data of role to be created
  * @return {Promise}       axios ajax call to backend
  */
 export const createRole = roleData =>

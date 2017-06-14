@@ -26,7 +26,7 @@ export class UserDocuments extends React.Component {
   }
 
   /**
-   * constructor - constructor for Homepage class
+   * constructor - constructor for UserDocuments class
    *
    * @param  {object} props - props for the class
    * @return {void}       none

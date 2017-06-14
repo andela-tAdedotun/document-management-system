@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { browserHistory } from 'react-router';
 import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
 
@@ -62,6 +63,7 @@ class PersonalProfile extends React.Component {
       .updateUser(currentUserDetails, stateCopy)
       .then(() => {
         Materialize.toast('Account details updated.', 4000);
+        browserHistory.push('/');
       })
       .catch((error) => {
         Materialize.toast(error.data.message, 4000);

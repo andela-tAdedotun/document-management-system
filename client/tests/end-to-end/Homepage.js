@@ -33,7 +33,7 @@ export default {
       .assert.visible('input[type=password]')
       .setValue('Input[type=password]', '123456')
       .click('.btn')
-      .pause(2000)
+      .waitForElementVisible('body', 2000)
       .assert.urlContains('documents')
       .waitForElementVisible('a.read-more', 2000)
       .click('a.read-more')

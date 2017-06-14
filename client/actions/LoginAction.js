@@ -27,11 +27,11 @@ const LoginAction = userData =>
     setAuthorizationToken(token);
     dispatch(setCurrentUser(jwtDecode(token)));
   })
-  .catch((res) => {
+  .catch(res =>
     dispatch({
       type: types.LOGIN_FAILURE,
       message: res.data.message
-    });
-  });
+    })
+  );
 
 export default LoginAction;
