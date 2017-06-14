@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import expect from 'expect';
 import app from '../../../../server';
 import databaseData from '../../helpers/DatabaseData';
+import Helpers from './Helpers';
 
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
@@ -41,18 +42,7 @@ describe('The Document API', () => {
         .set({ Authorization: superAdminToken })
         .send(testDocument)
         .end((err, res) => {
-          const expectedResponse =
-            {
-              access: 'private',
-              content: 'Wizzy boy, make me dance...',
-              createdAt: res.body.createdAt,
-              documentOwnerId: 1,
-              id: 10,
-              isProtected: true,
-              title: 'Daddy Yo',
-              updatedAt: res.body.createdAt,
-              views: 0
-            };
+          const expectedResponse = Helpers.validDocResponse(res);
           expect(res.status).toEqual(201);
           expect(res.body).toEqual(expectedResponse);
           done();
@@ -108,66 +98,7 @@ describe('The Document API', () => {
         request.get('/api/documents?limit=3&offset=0')
         .set({ Authorization: superAdminToken })
         .end((err, res) => {
-          const expectedDocuments =
-            [
-              {
-                User: {
-                  createdAt: res.body.documents[0].User.createdAt,
-                  email: 'taiwo.adedotun@andela.com',
-                  id: 1,
-                  name: 'Kiniun',
-                  roleId: 1,
-                  updatedAt: res.body.documents[0].User.updatedAt
-                },
-                access: 'private',
-                content: 'Wizzy boy, make me dance...',
-                createdAt: res.body.documents[0].createdAt,
-                documentOwnerId: 1,
-                id: 1,
-                isProtected: true,
-                title: 'Daddy Yo',
-                updatedAt: res.body.documents[0].updatedAt,
-                views: 0
-              },
-              {
-                User: {
-                  createdAt: res.body.documents[1].User.createdAt,
-                  email: 'kehinde.adedotun@xyz.com',
-                  id: 3,
-                  name: 'Kehinde Adedotun',
-                  roleId: 2,
-                  updatedAt: res.body.documents[1].User.updatedAt
-                },
-                access: 'public',
-                content: 'Yeah, when you no dey',
-                createdAt: res.body.documents[1].createdAt,
-                documentOwnerId: 3,
-                id: 2,
-                isProtected: false,
-                title: 'Soweto Baby',
-                updatedAt: res.body.documents[1].updatedAt,
-                views: 0
-              },
-              {
-                User: {
-                  createdAt: res.body.documents[2].User.createdAt,
-                  email: 'taiwo@xyz.com',
-                  id: 6,
-                  name: 'Ajanlekoko',
-                  roleId: 3,
-                  updatedAt: res.body.documents[2].User.updatedAt
-                },
-                access: 'private',
-                content: 'I will show you the money o...',
-                createdAt: res.body.documents[2].createdAt,
-                documentOwnerId: 6,
-                id: 3,
-                isProtected: false,
-                title: 'Dance',
-                updatedAt: res.body.documents[2].updatedAt,
-                views: 0
-              }
-            ];
+          const expectedDocuments = Helpers.getDocsWithLimitAndOffset(res);
 
           expect(res.body.documents).toEqual(expectedDocuments);
           expect(res.status).toEqual(200);

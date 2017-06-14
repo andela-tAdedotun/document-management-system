@@ -1,7 +1,7 @@
 import expect from 'expect';
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Homepage } from '../../../components/home/Homepage';
+import { UserDocuments } from '../../../components/home/UserDocuments';
 
 const setup = ({ pageCount }) => {
   const props = {
@@ -38,10 +38,10 @@ const setup = ({ pageCount }) => {
     displaySearchResults: () => {}
   };
 
-  return shallow(<Homepage {...props} />);
+  return shallow(<UserDocuments {...props} />);
 };
 
-describe('The Homepage component', () => {
+describe('The UserDocuments component', () => {
   it('should display pagination component if pageCount is one or above', () => {
     const wrapper = setup({ pageCount: 1 });
     expect(wrapper.find('Pagination').length).toEqual(1);

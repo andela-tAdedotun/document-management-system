@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import expect from 'expect';
 import app from '../../../../server';
+import Helpers from './Helpers';
 import databaseData from '../../helpers/DatabaseData';
 
 const request = supertest.agent(app);
@@ -121,29 +122,7 @@ describe('The Role API', () => {
         request.get('/api/roles')
           .set({ Authorization: superAdminToken })
           .end((error, res) => {
-            const expectedResponse =
-              [
-                { id: 1,
-                  userRole: 'Super Admin',
-                  createdAt: res.body[0].createdAt,
-                  updatedAt: res.body[0].updatedAt,
-                },
-                { id: 2,
-                  userRole: 'Admin',
-                  createdAt: res.body[1].createdAt,
-                  updatedAt: res.body[1].updatedAt,
-                },
-                { id: 3,
-                  userRole: 'Regular',
-                  createdAt: res.body[2].createdAt,
-                  updatedAt: res.body[2].updatedAt,
-                },
-                { id: 4,
-                  userRole: 'Content Creator',
-                  createdAt: res.body[3].createdAt,
-                  updatedAt: res.body[3].updatedAt,
-                }
-              ];
+            const expectedResponse = Helpers.getAllRoles(res);
             expect(res.body).toEqual(expectedResponse);
             expect(res.status).toEqual(200);
             done();
