@@ -54,6 +54,13 @@ class Roles extends React.Component {
    */
   render() {
     const role = this.props.role;
+    let deleteForbidden;
+    if (role.userRole === 'Super Admin' || role.userRole === 'Admin'
+        || role.userRole === 'Regular') {
+      deleteForbidden = true;
+    } else {
+      deleteForbidden = false;
+    }
     return (
       <tr>
         <td> {role.userRole} </td>
@@ -61,13 +68,20 @@ class Roles extends React.Component {
           <Prompt
             trigger={
               <button
+                disabled={deleteForbidden ? 'disabled' : ''}
                 className="btn-floating
                 btn-large waves-effect waves-light cyan"
               >
-                <i className="material-icons red">delete</i>
+                <i
+                  className={deleteForbidden
+                    ? 'grey material-icons'
+                    : 'red material-icons'}
+                >
+                    delete
+                </i>
               </button>
             }
-            handleClickFunction={this.handleClick}
+            onClickFunction={this.handleClick}
           />
         </td>
       </tr>
