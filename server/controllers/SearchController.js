@@ -4,14 +4,19 @@ import pagination from '../helpers/PaginationHelper';
 const User = models.User;
 const Document = models.Document;
 
-export default {
+
+/**
+ *
+ */
+class SearchController {
   /**
   * @desc - Search the database for users
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Array} - Search results
   */
-  searchUsers(req, res) {
+  static searchUsers(req, res) {
     const searchQuery = req.query.q;
     const searchOptions = {
       where: {
@@ -46,7 +51,7 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
 
   /**
@@ -56,7 +61,7 @@ export default {
    * @param  {type} res description
    * @return {type}     description
    */
-  searchOwnDocuments(req, res) {
+  static searchOwnDocuments(req, res) {
     const searchQuery = req.query.q;
     const searchOptions = {};
     searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
@@ -92,15 +97,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Search the database for documents
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Array} - Search results
   */
-  searchDocuments(req, res) {
+  static searchDocuments(req, res) {
     const searchQuery = req.query.q;
     const searchOptions = {};
     searchOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
@@ -127,12 +133,7 @@ export default {
         }
       ]
     };
-    /*
-      Document access for admins.
-      An admin can access all public documents, private and 'role' documents
-      belonging to users with less privilege, and 'role' documents belonging
-      to admins in addition to the admin's documents.
-    */
+    // Document access for admins.
     if (req.user.roleId === 2) {
       searchOptions.where = {
         $or: [
@@ -174,12 +175,7 @@ export default {
           attributes: { exclude: ['password', 'privacy'] }
         }
       ];
-      /*
-        Document access for regular users.
-        Regular users can only access another user's documents if those
-        documents are public or 'role'. They can access all their own
-        documents
-      */
+      // Document access for regular users.
     } else if (req.user.roleId > 2) {
       searchOptions.where = {
         $or: [
@@ -232,4 +228,6 @@ export default {
         message: error.message
       }));
   }
-};
+}
+
+export default SearchController;
