@@ -10,16 +10,17 @@ import { Modal, Button } from 'react-materialize';
  * @param  {string} headerMessage - message to be displayed in prompt(optional)
  * @return {void}
  */
-const Prompt = ({ trigger, onClickFunction, headerMessage }) =>
+const Prompt = ({ trigger, onClickFunction, headerMessage, buttonClass }) =>
   (
     <Modal
+      className="prompt"
       actions={[
         <Button waves="light" modal="close" className="no-delete" flat>
           NO
         </Button>,
         <Button
           onClick={onClickFunction} waves="light" modal="close" flat
-          className="red white-text yes-delete"
+          className={`red white-text ${buttonClass}`}
         >
         YES
         </Button>
@@ -34,11 +35,13 @@ const Prompt = ({ trigger, onClickFunction, headerMessage }) =>
 Prompt.propTypes = {
   trigger: PropTypes.object.isRequired,
   onClickFunction: PropTypes.func.isRequired,
-  headerMessage: PropTypes.string
+  headerMessage: PropTypes.string,
+  buttonClass: PropTypes.string
 };
 
 Prompt.defaultProps = {
-  headerMessage: 'Are you sure?'
+  headerMessage: 'Are you sure?',
+  buttonClass: 'yes-delete'
 };
 
 export default Prompt;

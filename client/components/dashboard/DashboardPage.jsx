@@ -182,7 +182,7 @@ export class DashboardPage extends React.Component {
           <Tab title="Your Profile" active>
             <PersonalProfile {...this.props} updateUser={userUpdate} />
           </Tab>
-          <Tab title="Users">
+          <Tab title="Users" className="users">
             <br />
             <div className="container">
               <Modal
@@ -265,7 +265,7 @@ export class DashboardPage extends React.Component {
                     <th> Role </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="user-table">
                   {allUsers}
                 </tbody>
               </Table>
@@ -277,7 +277,7 @@ export class DashboardPage extends React.Component {
                     <Pagination
                       items={pageCount} activePage={currentPage}
                       maxButtons={10}
-                      handleSelect={this.handleSelect}
+                      onSelect={this.handleSelect}
                     />
                   </div>
                 :
@@ -286,20 +286,20 @@ export class DashboardPage extends React.Component {
             </div>
           </Tab>
 
-          <Tab title="Roles">
+          <Tab title="Roles" className="roles">
             <br />
             <div className="container">
               <Modal
                 trigger={
                   <a
                     className="btn-floating btn-large waves-effect
-                    waves-light cyan"
+                    waves-light cyan add-role"
                   >
                     <i className="material-icons">add</i>
                   </a>}
               >
                 <form onSubmit={this.createRole}>
-                  <div className="input-field">
+                  <div className="input-field role-input">
                     <input
                       value={this.state.userRole}
                       onChange={this.handleChange}
@@ -309,7 +309,12 @@ export class DashboardPage extends React.Component {
                     />
                     <label className="active" htmlFor="userRole">Role</label>
 
-                    <button className="btn cyan" type="submit">Submit</button>
+                    <button
+                      className="btn cyan role-submit modal-close"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
                   </div>
                 </form>
               </Modal>

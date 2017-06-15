@@ -36,8 +36,12 @@ class RoleController {
   * @return {Promise} - Created role
   */
   static getAllRoles(req, res) {
+    const order = {
+      order: [['id', 'DESC']]
+    };
+
     return Role
-      .findAll()
+      .findAll(order)
       .then((userRoles) => {
         res.status(200).json(userRoles);
       })

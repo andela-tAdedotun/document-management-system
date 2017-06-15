@@ -5,7 +5,7 @@ export default {
     client
       .url('http://localhost:3000/')
       .click('#signup')
-      .waitForElementVisible('body', 2000)
+      .waitForElementVisible('body')
       .assert.visible('Input[type=text]')
       .setValue('Input[type=text]', faker.name.findName())
       .assert.visible('Input[type=email]')
@@ -15,9 +15,8 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', '123456')
       .click('.btn')
-      .pause(2000)
+      .waitForElementVisible('#logout')
       .assert.urlContains('documents')
-      .pause(2000)
       .end();
   },
 
@@ -25,7 +24,7 @@ export default {
     client
       .url('http://localhost:3000/')
       .click('#signup')
-      .waitForElementVisible('body', 2000)
+      .waitForElementVisible('body')
       .assert.visible('Input[type=text]')
       .setValue('Input[type=text]', 'Ajala')
       .assert.visible('Input[type=email]')
@@ -35,9 +34,7 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', '123456')
       .click('.btn')
-      .pause(2000)
       .assert.urlContains('signup')
-      .pause(2000)
       .end();
   },
 
@@ -45,7 +42,7 @@ export default {
     client
       .url('http://localhost:3000/')
       .click('#signup')
-      .waitForElementVisible('body', 2000)
+      .waitForElementVisible('body')
       .assert.visible('Input[type=text]')
       .setValue('Input[type=text]', 'Ajala')
       .assert.visible('Input[type=email]')
@@ -55,9 +52,7 @@ export default {
       .assert.visible('Input[name=confirmPassword]')
       .setValue('Input[name=confirmPassword]', 'adedotun')
       .click('.btn')
-      .pause(2000)
       .assert.urlContains('signup')
-      .pause(2000)
       .end();
   },
 };

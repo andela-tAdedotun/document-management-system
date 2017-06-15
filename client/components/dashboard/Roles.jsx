@@ -62,8 +62,8 @@ class Roles extends React.Component {
       deleteForbidden = false;
     }
     return (
-      <tr>
-        <td> {role.userRole} </td>
+      <tr className="role-rows">
+        <td className="role-name"> {role.userRole} </td>
         <td>
           <Prompt
             trigger={
@@ -75,13 +75,14 @@ class Roles extends React.Component {
                 <i
                   className={deleteForbidden
                     ? 'grey material-icons'
-                    : 'red material-icons'}
+                    : 'red material-icons role-delete-button'}
                 >
                     delete
                 </i>
               </button>
             }
             onClickFunction={this.handleClick}
+            buttonClass="role-delete"
           />
         </td>
       </tr>

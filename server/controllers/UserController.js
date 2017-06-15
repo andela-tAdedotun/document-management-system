@@ -77,7 +77,7 @@ class UserController {
     findQuery.limit = req.query.limit > 0 ? req.query.limit : 15;
     findQuery.offset = req.query.offset > 0 ? req.query.offset : 0;
     findQuery.attributes = { exclude: ['password'] };
-    findQuery.order = [['roleId']];
+    findQuery.order = [['roleId', 'DESC']];
 
     return User
       .findAndCountAll(findQuery)
