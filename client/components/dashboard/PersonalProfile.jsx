@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { browserHistory } from 'react-router';
 import { Table, Modal } from 'react-materialize';
 import validate from '../../../shared/Validator';
-
 /**
  *
  */
@@ -61,6 +61,9 @@ class PersonalProfile extends React.Component {
       this.props
       .updateUser(currentUserDetails, stateCopy)
       .then(() => {
+        if (this.state.email !== currentUserDetails.email) {
+          browserHistory.push('/');
+        }
         Materialize.toast('Account details updated.', 4000);
       })
       .catch((error) => {
@@ -97,7 +100,7 @@ class PersonalProfile extends React.Component {
           <tbody>
             <tr>
               <td>Name</td>
-              <td>{user.name}</td>
+              <td className="username">{user.name}</td>
               <td>
                 <Modal
                   trigger={
@@ -128,11 +131,11 @@ class PersonalProfile extends React.Component {
             </tr>
             <tr>
               <td>Email</td>
-              <td>{user.email}</td>
+              <td className="user-email">{user.email}</td>
               <td>
                 <Modal
                   trigger={
-                    <a className="btn-floating btn-large cyan">
+                    <a className="btn-floating btn-large cyan email-edit">
                       <i className="large material-icons">mode_edit</i>
                     </a>
                   }
@@ -158,7 +161,7 @@ class PersonalProfile extends React.Component {
                         </span>
                       }
                       <button
-                        className="btn modal-close cyan"
+                        className="btn modal-close cyan email-submit"
                         type="submit"
                       >
                         Update

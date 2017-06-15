@@ -2,14 +2,19 @@ import models from '../models/';
 
 const Role = models.Role;
 
-export default {
+
+/**
+ *
+ */
+class RoleController {
   /**
   * @desc - Creates a new user in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Created role
   */
-  createRole(req, res) {
+  static createRole(req, res) {
     if (!req.body.userRole) {
       return res.status(400).json({
         message: 'Request should have userRole in body'
@@ -21,32 +26,38 @@ export default {
       })
       .then(role => res.status(201).json(role))
       .catch(error => res.status(400).json(error));
-  },
+  }
 
   /**
   * @desc - Gets all roles from the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Created role
   */
-  getAllRoles(req, res) {
+  static getAllRoles(req, res) {
+    const order = {
+      order: [['id', 'DESC']]
+    };
+
     return Role
-      .findAll()
+      .findAll(order)
       .then((userRoles) => {
         res.status(200).json(userRoles);
       })
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Creates a new role in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - -
   */
-  deleteRole(req, res) {
+  static deleteRole(req, res) {
     return Role
       .findById(req.params.id)
       .then((role) => {
@@ -70,4 +81,6 @@ export default {
           }));
       });
   }
-};
+}
+
+export default RoleController;

@@ -1,6 +1,7 @@
 {
-  "src_folders" : ["/Users/andeladeveloper/Documents/Code/Checkpoints/document-management-system/client/tests/End-To-End"],
+  "src_folders" : ["/Users/andeladeveloper/Documents/Code/Checkpoints/document-management-system/client/tests/end-to-end"],
   "output_folder" : "reports",
+  "globals_path": "./client/tests/end-to-end/globals",
 
   "selenium" : {
     "start_process" : true,

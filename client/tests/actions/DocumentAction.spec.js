@@ -1,5 +1,6 @@
 import expect from 'expect';
 import configureMockStore from 'redux-mock-store';
+import dotenv from 'dotenv';
 import thunk from 'redux-thunk';
 import nock from 'nock';
 import { displayDocuments, createDocument, deleteDocument, editDocument }
@@ -7,6 +8,8 @@ import { displayDocuments, createDocument, deleteDocument, editDocument }
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+dotenv.config();
+const url = process.env.TEST_URL;
 
 const validDocument = {
   title: 'Mobile Computing',
@@ -39,7 +42,7 @@ describe('DocumentActions', () => {
 
     it('should dispatch DISPLAY_DOCUMENTS and IS_SEARCH',
     () => {
-      nock('http://localhost:80')
+      nock(url)
         .get('/api/documents/?offset=undefined&limit=undefined')
         .reply(200, validResponse);
 
@@ -68,7 +71,7 @@ describe('DocumentActions', () => {
     });
 
     it('should dispatch NO_DOCUMENT if there are no documents', () => {
-      nock('http://localhost:80')
+      nock(url)
         .get('/api/documents/?offset=undefined&limit=undefined')
         .reply(400, validResponse);
 
@@ -98,7 +101,7 @@ describe('DocumentActions', () => {
     });
 
     it('should dispatch CREATE_NEW_DOCUMENT if document is created', () => {
-      nock('http://localhost:80')
+      nock(url)
         .post('/api/documents', validDocument)
         .reply(201, validDocument);
 
@@ -121,7 +124,7 @@ describe('DocumentActions', () => {
     });
 
     it('should dispatch DELETE_DOCUMENT if document is deleted', () => {
-      nock('http://localhost:80')
+      nock(url)
         .delete('/api/documents/1')
         .reply(200, {
           message: 'Document deleted.'
@@ -145,7 +148,7 @@ describe('DocumentActions', () => {
        'Change this in the settings to delete it.'
       };
 
-      nock('http://localhost:80')
+      nock(url)
         .delete('/api/documents/1')
         .reply(403, response);
 
@@ -181,7 +184,7 @@ describe('DocumentActions', () => {
     };
 
     it('should dispatch CREATE_NEW_DOCUMENT if document is created', () => {
-      nock('http://localhost:80')
+      nock(url)
         .put('/api/documents/1', {
           title: 'Taiwo'
         })

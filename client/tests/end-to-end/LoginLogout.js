@@ -1,33 +1,30 @@
 export default {
-  'Valid login': (client) => {
+  'Valid Login and Logout': (client) => {
     client
       .url('http://localhost:3000')
-      .waitForElementVisible('body', 5000)
+      .waitForElementVisible('body')
       .assert.visible('Input[type=email]')
       .setValue('Input[type=email]', 'taiwo.adedotun@andela.com')
       .assert.visible('input[type=password]')
       .setValue('Input[type=password]', '123456')
       .click('.btn')
-      .pause(2000)
+      .waitForElementVisible('.card')
       .assert.urlContains('documents')
       .click('#logout')
       .assert.urlContains('')
-      .pause(2000)
       .end();
   },
 
-  'Invalid login': (client) => {
+  'Invalid Login': (client) => {
     client
       .url('http://localhost:3000')
-      .waitForElementVisible('body', 5000)
+      .waitForElementVisible('body')
       .assert.visible('Input[type=email]')
       .setValue('Input[type=email]', 'monkey@andela.com')
       .assert.visible('input[type=password]')
       .setValue('Input[type=password]', '123456')
       .click('.btn')
-      .pause(2000)
       .assert.urlContains('')
-      .pause(2000)
       .end();
   }
 };

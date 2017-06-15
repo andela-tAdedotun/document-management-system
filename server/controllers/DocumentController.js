@@ -4,14 +4,19 @@ import pagination from '../helpers/PaginationHelper';
 const User = models.User;
 const Document = models.Document;
 
-export default {
+
+/**
+ *
+ */
+class DocumentController {
   /**
   * @desc - Creates a new document in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Created document
   */
-  createDocument(req, res) {
+  static createDocument(req, res) {
     return Document
       .create({
         title: req.body.title,
@@ -24,15 +29,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Gets all documents stored in database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Found documents
   */
-  getDocuments(req, res) {
+  static getDocuments(req, res) {
     const queryOptions = {};
     queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
@@ -43,13 +49,7 @@ export default {
       }
     ];
 
-    /*
-      Document access for super admins and admins.
-      A super admin can access any document while an admin can access all
-      public documents, private and 'role' documents belonging to users with
-      less privilege, and 'role' documents belonging to admins in addition to
-      the admin's documents.
-    */
+    // Document access for super admins and admins.
     if (req.user.roleId === 1 || req.user.roleId === 2) {
       if (req.user.roleId === 2) {
         queryOptions.where = {
@@ -88,12 +88,7 @@ export default {
         }));
     }
 
-    /*
-      Document access for regular users.
-      Regular users can only access their own documents as well as
-      all public documents and 'role' documents belonging to other regular
-      users.
-    */
+    // Document access for regular users.
     queryOptions.where = {
       $or: [
         { access: 'public' },
@@ -123,24 +118,19 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Find a particular document in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - The document the database is queried for
   */
-  findDocument(req, res) {
+  static findDocument(req, res) {
     const queryOptions = {};
 
-    /*
-      Document access for super admins and admins.
-      A super admin can access any document while an admin can access all
-      public documents, private and 'role' documents belonging to users with
-      less privilege, and 'role' documents belonging to admins in addition to
-      the admin's documents.
-    */
+    // Document access for super admins and admins.
     if (req.user.roleId === 1 || req.user.roleId === 2) {
       if (req.user.roleId === 2) {
         queryOptions.where = {
@@ -190,12 +180,7 @@ export default {
         }));
     }
 
-    /*
-      Document access for regular users.
-      Regular users can only access their own documents as well as
-      all public documents and 'role' documents belonging to other regular
-      users.
-    */
+    // Document access for regular users.
     queryOptions.where = {
       id: req.params.id,
       $and: {
@@ -231,15 +216,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Update a particular document in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - The updated document
   */
-  updateDocument(req, res) {
+  static updateDocument(req, res) {
     const queryOptions = {};
     queryOptions.include = [
       {
@@ -248,11 +234,7 @@ export default {
       }
     ];
 
-    /*
-      Document access for super admins and admins.
-      A super admin can update any document while an admin can update any
-      document belonging to a user with less privilege and their own documents.
-    */
+    // Document update access for super admins and admins.
     if (req.user.roleId === 1 || req.user.roleId === 2) {
       if (req.user.roleId === 2) {
         queryOptions.where = {
@@ -303,22 +285,19 @@ export default {
       .catch(() => res.status(400).json({
         message: 'You do not have permission'
       }));
-  },
+  }
 
   /**
   * @desc - Delete a particular document in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - -
   */
-  deleteDocument(req, res) {
+  static deleteDocument(req, res) {
     const queryOptions = {};
 
-    /*
-      Document access for admins.
-      An admin can delete any document belonging to a user with less privilege
-      and their own documents.
-    */
+    // Document delete access for admins.
     if (req.user.roleId === 2) {
       queryOptions.where = {
         id: req.params.id,
@@ -381,4 +360,6 @@ export default {
         'Also, you may not have the permission to delete this document.'
       }));
   }
-};
+}
+
+export default DocumentController;
