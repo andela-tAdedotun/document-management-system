@@ -1,12 +1,15 @@
 import expect from 'expect';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import dotenv from 'dotenv';
 import nock from 'nock';
 import { getUsers, createUser, deleteUser, updateUser }
   from '../../actions/UserActions';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+dotenv.config();
+const url = process.env.TEST_URL;
 
 const userDetails = {
   id: 10,
@@ -34,7 +37,7 @@ describe('UserActions', () => {
         name: 'Kehinde'
       };
 
-      nock('http://localhost:80')
+      nock(url)
         .put('/api/users/10', update)
         .reply(200, response);
 
@@ -83,7 +86,7 @@ describe('UserActions', () => {
         ]
       };
 
-      nock('http://localhost:80')
+      nock(url)
         .get('/api/users/?offset=undefined&limit=undefined')
         .reply(200, response);
 
@@ -105,7 +108,7 @@ describe('UserActions', () => {
     });
 
     it('should dispatch DELETE_USER if user is deleted', () => {
-      nock('http://localhost:80')
+      nock(url)
         .delete('/api/users/10')
         .reply(200, {
           message: 'User successfuly deleted.'
@@ -130,7 +133,7 @@ describe('UserActions', () => {
     });
 
     it('should dispatch CREATE_NEW_USER if new user is created', () => {
-      nock('http://localhost:80')
+      nock(url)
         .post('/api/users/create', userDetails)
         .reply(201, {
           token: 'q29uoijkwe192ijojklwe192iohwejmnsd',
@@ -150,7 +153,7 @@ describe('UserActions', () => {
     });
 
     it('should dispatch CREATE_NEW_USER if new user is created', () => {
-      nock('http://localhost:80')
+      nock(url)
         .post('/api/users/create', userDetails)
         .reply(201, {
           token: 'q29uoijkwe192ijojklwe192iohwejmnsd',

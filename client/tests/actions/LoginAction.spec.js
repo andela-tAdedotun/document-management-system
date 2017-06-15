@@ -1,6 +1,7 @@
 import expect from 'expect';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import dotenv from 'dotenv';
 import nock from 'nock';
 import LoginAction from '../../actions/LoginAction';
 
@@ -11,6 +12,9 @@ const userData = {
   email: 'taiwo.adedotun@andela.com',
   password: '123456'
 };
+
+dotenv.config();
+const url = process.env.TEST_URL;
 
 describe('LoginAction', () => {
   before(() => {
@@ -58,7 +62,7 @@ describe('LoginAction', () => {
   });
 
   it('should dispatch SET_CURRENT_USER on successful login', () => {
-    nock('http://localhost:80/')
+    nock(url)
       .post('/api/users/login', userData)
       .reply(200, successResponse);
 
@@ -80,7 +84,7 @@ describe('LoginAction', () => {
   });
 
   it('should dispatch LOGIN_FAILURE if login is not successful', () => {
-    nock('http://localhost:80/')
+    nock(url)
       .post('/api/users/login', userData)
       .reply(401, failureResponse);
 

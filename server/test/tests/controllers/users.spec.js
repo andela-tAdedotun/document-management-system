@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import expect from 'expect';
 import app from '../../../../server';
 import databaseData from '../../helpers/DatabaseData';
+import Helpers from './Helpers';
 
 const request = supertest.agent(app);
 const superAdminUser = databaseData.superAdminUser;
@@ -208,42 +209,7 @@ describe('The User API', () => {
       request.get('/api/users/1/documents')
       .set({ Authorization: superAdminToken })
       .end((err, res) => {
-        const expectedResponse = {
-          documents:
-          [
-            { id: 1,
-              title: 'Daddy Yo',
-              content: 'Wizzy boy, make me dance...',
-              isProtected: true,
-              views: 0,
-              access: 'private',
-              createdAt: res.body.documents[0].createdAt,
-              updatedAt: res.body.documents[0].updatedAt,
-              documentOwnerId: 1
-            },
-            { id: 6,
-              title: 'Mobile Computing',
-              content:
-      'Mobile has been much more of a challenge: while Android remains' +
-      ' a brilliant strategic move, its dominance is rooted more in its ' +
-      'business model than in its quality (that’s not to denigrate its ' +
-      'quality in the slightest, particularly the fact that Android runs on ' +
-      'so many different kinds of devices at so many different price points).',
-              isProtected: false,
-              views: 0,
-              access: 'role',
-              createdAt: res.body.documents[1].createdAt,
-              updatedAt: res.body.documents[1].updatedAt,
-              documentOwnerId: 1
-            }
-          ],
-          paginationInfo: {
-            totalCount: 2,
-            currentPage: 1,
-            pageCount: 1,
-            pageSize: 2
-          }
-        };
+        const expectedResponse = Helpers.getUserDocuments(res);
         expect(res.status).toEqual(200);
         expect(res.body).toEqual(expectedResponse);
         request.get('/api/users/4/documents')

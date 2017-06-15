@@ -8,15 +8,18 @@ const Document = models.Document;
 
 dotenv.config();
 const secret = process.env.SECRET;
-
-export default {
+/**
+ *
+ */
+class UserController {
   /**
   * @desc - Creates a new user in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Created user
   */
-  createUser(req, res) {
+  static createUser(req, res) {
     User.findOne({ where: { email: req.body.email } })
       .then((existingUser) => {
         if (existingUser) {
@@ -60,20 +63,21 @@ export default {
             message: 'Invalid signup parameters.'
           }));
       });
-  },
+  }
 
   /**
   * @desc - Gets all users stored in database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - Found users
   */
-  getUsers(req, res) {
+  static getUsers(req, res) {
     const findQuery = {};
     findQuery.limit = req.query.limit > 0 ? req.query.limit : 15;
     findQuery.offset = req.query.offset > 0 ? req.query.offset : 0;
     findQuery.attributes = { exclude: ['password'] };
-    findQuery.order = [['roleId']];
+    findQuery.order = [['roleId', 'DESC']];
 
     return User
       .findAndCountAll(findQuery)
@@ -88,15 +92,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Find a particular user in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - The user the database is queried for
   */
-  findUser(req, res) {
+  static findUser(req, res) {
     return User
       .findById(req.params.id)
       .then((user) => {
@@ -116,27 +121,23 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Find a particular user and their documents in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - The user along with their documents
   */
-  findUserDocuments(req, res) {
+  static findUserDocuments(req, res) {
     // Default value for a super admin. Can access all documents.
     const queryOptions = {};
     queryOptions.where = { documentOwnerId: req.params.id };
     queryOptions.limit = req.query.limit > 0 ? req.query.limit : 12;
     queryOptions.offset = req.query.offset > 0 ? req.query.offset : 0;
 
-    /*
-      Document access for admins.
-      An admin can access all public documents, private and 'role' documents
-      belonging to users with less privilege, and 'role' documents belonging
-      to admins in addition to the admin's documents.
-    */
+    // Document access for admins.
     if (req.user.roleId === 2) {
       queryOptions.where = {
         documentOwnerId: req.params.id,
@@ -167,12 +168,7 @@ export default {
           attributes: { exclude: ['password', 'privacy', 'roleId'] }
         }
       ];
-      /*
-        Document access for regular users.
-        Regular users can only access another user's documents if those
-        documents are public or 'role'. They can access all their own
-        documents
-      */
+      // Document access for regular users.
     } else if (req.user.roleId > 2) {
       queryOptions.where = {
         documentOwnerId: req.params.id,
@@ -219,15 +215,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Update a particular user in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - The updated user
   */
-  updateUser(req, res) {
+  static updateUser(req, res) {
     return User
       .findById(req.params.id)
       .then((user) => {
@@ -295,15 +292,16 @@ export default {
         message:
       'You have sent a bad request. User with that id probably does not exist.'
       }));
-  },
+  }
 
   /**
   * @desc - Delete a particular user in the database
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - -
   */
-  deleteUser(req, res) {
+  static deleteUser(req, res) {
     return User
       .findById(req.params.id)
       .then((user) => {
@@ -332,15 +330,16 @@ export default {
       .catch(error => res.status(400).json({
         message: error.message
       }));
-  },
+  }
 
   /**
   * @desc - Logs user in to application
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Promise} - containing user trying to log in
   */
-  logUserIn(req, res) {
+  static logUserIn(req, res) {
     if (!req.body.email || !req.body.password) {
       return res.status(400).json({
         message: 'Please input your email and password'
@@ -377,16 +376,19 @@ export default {
           message: error.message
         });
       });
-  },
+  }
 
   /**
   * @desc - Logs user out of application
+  *
   * @param {Object} req - Request object
   * @param {Object} res - Response object
   * @return {Void} - None
   */
-  logUserOut(req, res) {
+  static logUserOut(req, res) {
     req.logOut();
     res.status(200).json({ redirectTo: '/' });
   }
-};
+}
+
+export default UserController;

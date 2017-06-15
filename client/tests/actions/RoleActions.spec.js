@@ -1,12 +1,15 @@
 import expect from 'expect';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
+import dotenv from 'dotenv';
 import nock from 'nock';
 import { createRole, deleteRole, getRoles }
   from '../../actions/RoleActions';
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+dotenv.config();
+const url = process.env.TEST_URL;
 
 describe('RoleActions', () => {
   describe('getRoles', () => {
@@ -22,7 +25,7 @@ describe('RoleActions', () => {
     ];
 
     it('should dispatch GET_ALL_ROLES and IS_SEARCH', () => {
-      nock('http://localhost:80')
+      nock(url)
         .get('/api/roles')
         .reply(200, allRoles);
 
@@ -49,7 +52,7 @@ describe('RoleActions', () => {
       };
 
     it('should dispatch CREATE_NEW_ROLE when new role is created', () => {
-      nock('http://localhost:80')
+      nock(url)
         .post('/api/roles', createdRole)
         .reply(200, createdRole);
 
@@ -69,7 +72,7 @@ describe('RoleActions', () => {
       message: 'Role successfully deleted.'
     };
     it('should dispatch DELETE_ROLE when role is deleted', () => {
-      nock('http://localhost:80')
+      nock(url)
         .delete('/api/roles/4')
         .reply(200, response);
 

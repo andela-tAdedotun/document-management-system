@@ -5,9 +5,10 @@ const initialState = {
 };
 
 /**
- * anonymous function - reducer for search actions
+ * anonymous function - reducer for user actions
  *
  * @param  {object} state - current state
+ * @param  {object} action - action dispatched
  * @return {object} - new state
  */
 export default (state = initialState, action = {}) => {

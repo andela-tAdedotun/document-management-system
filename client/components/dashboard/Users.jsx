@@ -81,15 +81,16 @@ class Users extends React.Component {
   render() {
     const user = this.props.user;
     return (
-      <tr>
-        <td> {user.name} </td>
-        <td> {user.email} </td>
-        <td> {this.roles[user.roleId]} </td>
+      <tr className="user-rows">
+        <td className="user-name"> {user.name} </td>
+        <td id="user-email"> {user.email} </td>
+        <td className="user-role"> {this.roles[user.roleId]} </td>
         <td>
           <Modal
             trigger={
               <a
                 className="btn-floating
+                admin-edit-user
                 btn-large waves-effect waves-light cyan"
               >
                 <i className="material-icons">edit</i>
@@ -102,6 +103,7 @@ class Users extends React.Component {
                   <Row>
                     <Input
                       s={12}
+                      className="role-list"
                       type="select"
                       name="roleId"
                       label="User's Role"
@@ -109,12 +111,17 @@ class Users extends React.Component {
                     >
                       <option value={this.props.user.roleId}>Unchanged</option>
                       <option value={3}>Regular</option>
-                      <option value={2}>Admin</option>
+                      <option value={2} className="admin">Admin</option>
                       <option value={1}>Super Admin</option>
                     </Input>
                   </Row>
                 </div>
-                <button className="btn cyan" type="submit">Update</button>
+                <button
+                  className="btn cyan modal-close role-update"
+                  type="submit"
+                >
+                  Update
+                </button>
               </div>
             </form>
           </Modal>
@@ -126,13 +133,13 @@ class Users extends React.Component {
                 trigger={
                   <button
                     className="btn-floating
-                    btn-large waves-effect waves-light cyan"
+                    btn-large waves-effect waves-light cyan delete-button"
                   >
                     <i className="material-icons red">delete</i>
                   </button>
                 }
-
                 onClickFunction={this.deleteUser}
+                buttonClass="user-delete"
               />
             :
             ''
